@@ -1,0 +1,80 @@
+{
+  "name": "transcribe",
+  "label": "Transcribe Workflow",
+  "retire_limit": 3,
+  "generates_subjects": true,
+  "generates_subjects_for": "verify",
+  "generates_subjects_after": 3,
+  "generates_subjects_max": 10,
+  "generates_subjects_method": "collect-unique",
+
+  "tasks": {
+
+
+    "sk_incipit": {
+      "tool": "textTool",
+      "tool_config": {},
+      "instruction": "Enter the first 6 to 10 words",
+      "examples": ["..."],
+      "help": {
+        "file": "t_incipit"
+      },
+      "generates_subject_type": "sk_transcribed_incipit"
+    },
+
+    "sk_sender_name": {
+      "tool": "textTool",
+      "tool_config": {},
+      "instruction": "Enter the sender's name",
+      "examples": ["Christian Wolff", "R.", "H. F. D."],
+      "help": {
+        "file": "t_sender_name"
+      },
+      "generates_subject_type": "sk_transcribed_sender_name"
+    },
+
+    "sk_recipient_name": {
+      "tool": "textTool",
+      "tool_config": {},
+      "instruction": "Enter the recipient's name",
+      "examples": ["Christian Wolff", "R.", "H. F. D."],
+      "help": {
+        "file": "t_recipient_name"
+      },
+      "generates_subject_type": "sk_transcribed_recipient_name"
+    },
+
+    "sk_date": {
+      "tool": "textTool",
+      "tool_config": {},
+      "instruction": "Enter the date as given",
+      "examples": ["14. Octobr. 1744", "15 Dec. 1744"],
+      "help": {
+        "file": "t_date"
+      },
+      "generates_subject_type": "sk_transcribed_date"
+    },
+
+    "sk_sender_place": {
+      "tool": "textTool",
+      "tool_config": {},
+      "instruction": "Enter the sender's place",
+      "examples": ["Hal.", "Halle"],
+      "help": {
+        "file": "t_sender_place"
+      },
+      "generates_subject_type": "sk_transcribed_sender_place"
+    },
+
+    "sk_recipient_place": {
+      "tool": "textTool",
+      "tool_config": {},
+      "instruction": "Enter the recipient's place",
+      "examples": ["Christian Wolff", "R.", "H. F. D."],
+      "help": {
+        "file": "t_recipient_place"
+      },
+      "generates_subject_type": "sk_transcribed_recipient_place"
+    }
+  }
+}

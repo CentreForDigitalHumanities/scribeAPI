@@ -1,0 +1,69 @@
+html, body,
+.home-page h1, .home-page p, .home-page li,
+.light-box-area #visibility-button {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/* Pages */
+.page-content {
+  width: 960px;
+  margin: 20px auto;
+  box-sizing: border-box;
+}
+@media screen and (max-width: 999px) {
+  .page-content {
+    width: auto;
+    margin: 20px;
+  }
+}
+.page-content > div {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  background: rgba(255,255,255,0.85);
+  padding: 20px 40px;
+}
+
+/* Introduction */
+.video-wrapper {
+  margin: 30px -20px;
+  padding: 20px 0 10px;
+  background: #ccc;
+  text-align: center;
+}
+.video-wrapper video {
+  display: inline-block;
+  box-shadow: 0 2px 2px rgba(0,0,0,0.3);
+}
+.page-content .video-wrapper {
+  margin: 30px -40px;
+}
+@media screen and (max-width: 800px) {
+  .video-wrapper video {
+    width: 90%;
+    height: auto;
+  }
+}
+@media screen and (min-width: 769px), print {
+  .columns:not(.is-desktop) {
+    display: flex;
+  }
+}
+.columns:not(:last-child) {
+  margin-bottom: calc(1.5rem - .75rem);
+}
+.columns {
+  margin-left: -.75rem;
+  margin-right: -.75rem;
+  margin-top: -.75rem;
+}
+.column {
+  display: block;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: .75rem;
+}
+.custom-footer .scribe-footer-credits {
+  background: #fefefe;
+  color: #555;
+}

@@ -1,0 +1,60 @@
+{
+    "title": "SKILLNET",
+    "short_title": "SKILLNET",
+    "summary": "Harvesting, with the help of the crowd, the metadata of letters from scanned versions of printed letter collections which are in the Open Domain",
+    "logo": "/images/logo.png",
+    "favicon": "/images/favicon.ico",
+    "background": "/images/cropped-Gysbrechts.jpg",
+    "terms_map": {
+        "group": "collection",
+        "subject set": "page",
+        "subject": "page",
+        "mark": "region"
+    },
+    "admin_email": "s.j.j.spoel@uu.nl",
+    "team_emails": [
+        "D.K.W.vanMiert@uu.nl",
+        "R.O.Buning@uu.nl"
+    ],
+    "team": [
+        {
+            "name": "Dr Dirk van Miert",
+            "role": "Project Leader",
+            "image": "https://skillnet.nl/wp-content/uploads/sites/330/2017/11/Foto-Dirk-100x100.jpeg",
+            "organization": "SKILLNET"
+        },
+        {
+            "name": "Isabelle Buhre MSc MA",
+            "role": "Research Assistant",
+            "image": "https://skillnet.nl/wp-content/uploads/sites/330/2018/05/Foto-Isabelle-Buhre-klein-100x100.jpg",
+            "organization": "SKILLNET"
+        },
+        {
+            "name": "Dr Robin Buning",
+            "role": "Project Assistant",
+            "image": "https://skillnet.nl/wp-content/uploads/sites/330/2018/04/Robin_UU-100x100.png",
+            "organization": "SKILLNET"
+        }
+    ],
+    "organizations": [
+        {
+            "title": "SKILLNET",
+            "description": "SKILLNET electronically unravels the social structure (size, density, aggregation-level) of the huge networks of the Republic of Letters.",
+            "url": "https://skillnet.nl/",
+            "logo": "https://skillnet.nl/wp-content/themes/UU2014/images/uu-logo.svg"
+        }
+    ],
+    "menus": {
+        "main": [
+            {
+                "label": "Intro",
+                "page": "intro"
+            },
+            {
+                "label": "About",
+                "page": "about"
+            }
+        ],
+        "footer": []
+    }
+}
