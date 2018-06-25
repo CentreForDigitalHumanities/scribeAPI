@@ -32,6 +32,9 @@ CompositeTool = React.createClass
       when 'rectangleTool'
         x = data.x
         y = parseFloat(data.y) + parseFloat(data.height) + yPad
+      when 'horizontalLineTool'
+        x = data.x
+        y = parseFloat(data.y) + parseFloat(data.height) + yPad
       when 'textRowTool'
         x = data.x
         y = data.yLower + yPad

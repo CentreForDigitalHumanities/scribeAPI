@@ -53,6 +53,9 @@ VerifyTool = React.createClass
   getPosition: (data) ->
     yPad = 20
     switch data.toolName
+      when 'horizontalLineTool'
+        x = data.x
+        y = parseFloat(data.y) + parseFloat(data.height) + yPad
       when 'rectangleTool'
         x = data.x
         y = parseFloat(data.y) + parseFloat(data.height) + yPad

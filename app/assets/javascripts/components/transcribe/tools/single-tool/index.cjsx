@@ -60,6 +60,9 @@ TextTool = React.createClass
       when 'pointTool'
         x = @props.subject.data.x + 40
         y = @props.subject.data.y + 40 # TODO: don't hard-wire dimensions
+      when 'horizontalLineTool'
+        x = @props.subject.data.x
+        y = @props.subject.data.y + @props.subject.data.height
       when 'rectangleTool'
         x = @props.subject.data.x
         y = @props.subject.data.y + @props.subject.data.height

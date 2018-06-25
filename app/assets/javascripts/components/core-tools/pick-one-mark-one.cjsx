@@ -17,6 +17,10 @@ icons =
     <line className="shape" x1="25" y1="90" x2="75" y2="10" />
   </svg>
 
+  horizontalLineTool: <svg viewBox="0 0 100 100">
+    <line className="shape" x1="25" y1="90" x2="75" y2="10" />
+  </svg>
+  
   rectangleTool: <svg viewBox="0 0 100 100">
     <rect className="shape" x="10" y="30" width="80" height="40" />
   </svg>

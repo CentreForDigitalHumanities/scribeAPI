@@ -18,6 +18,7 @@
         "tool_config" : {
           "displays_transcribe_button": false,
           "options": [
+            {"type": "horizontalLineTool", "label": "Letter start", "color": "magenta", "generates_subject_type": "sk_start", "help": {"file": "m_start"}},
             {"type": "rectangleTool", "label": "Incipit (first 6-10 words)", "color": "green", "generates_subject_type": "sk_incipit", "help": {"file": "m_incipit"}},
             {"type": "rectangleTool", "label": "Sender", "color": "red", "generates_subject_type": "sk_sender_name", "help": {"file": "m_sender_name"}},
             {"type": "rectangleTool", "label": "Recipient", "color": "blue", "generates_subject_type": "sk_recipient_name", "help":  {"file": "m_recipient_name"}},
