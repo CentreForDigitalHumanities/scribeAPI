@@ -6,8 +6,6 @@ Use the menu on the right to select a field (e.g. "Sender"). Then, use your mous
 
 You may see existing rectangles on the page. If this is the case, someone has already marked the field and there's no need to mark an area twice.
 
-You can manipulate the digitized pages with tools on the left hand side of the screen. Here you'll find the zoom tool and a mark toggle. 
+You can manipulate the digitized pages with tools on the left hand side of the screen. Here you'll find the zoom tool and a mark toggle.
 
 The marks created in this task identify the fields to be transcribed in the next task phase.
-
-<!--add screenshot of help?-->

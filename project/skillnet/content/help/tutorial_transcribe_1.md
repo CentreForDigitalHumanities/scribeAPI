@@ -1,4 +1,4 @@
-#Transcribe
+# Transcribe
 
 Transcribe the text exactly as you see it. For additional help and sample transcriptions, each transcription prompt has an "Need some help" button providing field specific context.
 
