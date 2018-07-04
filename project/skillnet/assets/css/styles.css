@@ -4,6 +4,15 @@ html, body,
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+.main-header-item.logo {
+  transform: none;
+}
+.main-header-item.logo img {
+  width: auto;
+  height: 68px;
+  margin-top: 2px;
+}
+
 /* Pages */
 .page-content {
   width: 960px;
