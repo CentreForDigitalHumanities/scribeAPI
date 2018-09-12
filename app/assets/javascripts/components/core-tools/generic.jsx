@@ -1,7 +1,9 @@
-const React = require("react");
-const createReactClass = require("create-react-class");
+import React from "react";
+import createReactClass from "create-react-class";
 
-module.exports = createReactClass({
+import marked from 'marked';
+
+export default createReactClass({
   displayName: "GenericTask",
 
   getDefaultProps() {
