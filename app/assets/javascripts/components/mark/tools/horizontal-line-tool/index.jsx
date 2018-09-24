@@ -1,19 +1,16 @@
-React = require('react');
-const createReactClass = require("create-react-class");
-const PropTypes = require('prop-types');
-const Draggable = require("../../../../lib/draggable.jsx");
-DragHandle = require('./drag-handle.jsx');
-const DeleteButton = require("../../../../components/buttons/delete-mark.jsx");
-const MarkButtonMixin = require("../../../../lib/mark-button-mixin.jsx");
+import React from 'react';
+import createReactClass from "create-react-class";
+import PropTypes from 'prop-types';
+import Draggable from "../../../../lib/draggable.jsx";
+import DeleteButton from "../../../../components/buttons/delete-mark.jsx";
+import MarkButtonMixin from "../../../../lib/mark-button-mixin.jsx";
 
-STROKE_WIDTH = 10
-DEFAULT_WIDTH = 1000
-DELETE_BUTTON_ANGLE = 45
-DELETE_BUTTON_DISTANCE_X = 12
-DELETE_BUTTON_DISTANCE_Y = 0
-DEBUG = false
+const STROKE_WIDTH = 10
+const DEFAULT_WIDTH = 1000
+const DELETE_BUTTON_DISTANCE_X = 12
+const DELETE_BUTTON_DISTANCE_Y = 0
 
-module.exports = createReactClass({
+export default createReactClass({
   displayName: 'HorizontalLineTool',
 
   mixins: [MarkButtonMixin],
@@ -39,6 +36,7 @@ module.exports = createReactClass({
     },
 
     initMove: (cursor, mark) => {
+      let width, height, x, y
       if (cursor.x > this.initCoords.x) {
         width = cursor.x - mark.x
         x = 0
@@ -69,16 +67,10 @@ module.exports = createReactClass({
     },
   },
   getInitialState() {
-    mark = this.props.mark
+    let mark = this.props.mark
     if (mark.status == null) {
       mark.status = 'mark'
     }
-
-    // set up the state in order to caluclate the polyline as horizontal line
-    x1 = 0
-    x2 = x1 + this.props.mark.width
-    y1 = this.props.mark.y
-    y2 = y1 + this.props.mark.height
 
     return {
       mark: mark,
@@ -116,15 +108,15 @@ module.exports = createReactClass({
     return x >= 0 && x + w <= this.props.sizeRect.attributes.width.value
   },
   getDeleteButtonPosition() {
-    points = [this.props.mark.x + this.props.mark.width, this.props.mark.y]
-    x = points[0] + DELETE_BUTTON_DISTANCE_X / this.props.xScale
-    y = points[1] + DELETE_BUTTON_DISTANCE_Y / this.props.yScale
-    x = Math.min(x, this.props.sizeRect.attributes.width.value - 15 / this.props.xScale)
-    y = Math.max(y, 15 / this.props.yScale)
+    let points = [this.props.mark.x + this.props.mark.width, this.props.mark.y],
+      x = points[0] + DELETE_BUTTON_DISTANCE_X / this.props.xScale,
+      y = points[1] + DELETE_BUTTON_DISTANCE_Y / this.props.yScale
+    x = Math.min(x, this.props.sizeRect.attributes.width.value - 15 / this.props.xScale),
+      y = Math.max(y, 15 / this.props.yScale)
     return { x, y }
   },
   getMarkButtonPosition() {
-    points = [this.props.mark.x + this.props.mark.width, this.props.mark.y + this.props.mark.height]
+    let points = [this.props.mark.x + this.props.mark.width, this.props.mark.y + this.props.mark.height]
     return {
       x: Math.min(points[0], this.props.sizeRect.attributes.width.value - 40 / this.props.xScale),
       y: Math.min(points[1] + 20 / this.props.yScale, this.props.sizeRect.attributes.height.value - 15 / this.props.yScale)
@@ -145,7 +137,7 @@ module.exports = createReactClass({
     return this.props.onChange()
   },
   render() {
-    classes = []
+    let classes = []
     if (this.props.isTranscribable) {
       classes.push('transcribable')
     }
@@ -157,26 +149,27 @@ module.exports = createReactClass({
       classes.push("tanscribing")
     }
 
-    x1 = this.props.mark.x
-    width = this.props.mark.width
-    x2 = x1 + width
-    y1 = this.props.mark.y
-    height = STROKE_WIDTH
-    y2 = y1 + height
+    let x1 = this.props.mark.x,
+      width = this.props.mark.width,
+      x2 = x1 + width,
+      y1 = this.props.mark.y,
+      height = STROKE_WIDTH,
+      y2 = y1 + height,
 
-    x = this.props.mark.x
-    y = this.props.mark.y
+      x = this.props.mark.x,
+      y = this.props.mark.y,
 
-    scale = (this.props.xScale + this.props.yScale) / 2
+      scale = (this.props.xScale + this.props.yScale) / 2,
 
-    points = [
-      [x1, y1].join(','),
-      [x2, y1].join(','),
-      [x2, y2].join(','),
-      [x1, y2].join(','),
-      [x1, y1].join(',')
-    ].join('\n')
+      points = [
+        [x1, y1].join(','),
+        [x2, y1].join(','),
+        [x2, y2].join(','),
+        [x1, y2].join(','),
+        [x1, y1].join(',')
+      ].join('\n')
 
+    let deleteButtonPos
     return (
       <g
         data-tool={this}
