@@ -3278,6 +3278,16 @@ hash.js@^1.0.0, hash.js@^1.0.3:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
 
+historical-dates-ui@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/historical-dates-ui/-/historical-dates-ui-0.0.2.tgz#6a4e92fc5b39a94d2b109c70e159ba6c5cba3bc1"
+  dependencies:
+    historical-dates "^0.1.1"
+
+historical-dates@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/historical-dates/-/historical-dates-0.1.1.tgz#c42c4f191ded367cc113fbce57ec6d6060ef43a2"
+
 history@^4.7.2:
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/history/-/history-4.7.2.tgz#22b5c7f31633c5b8021c7f4a8a954ac139ee8d5b"

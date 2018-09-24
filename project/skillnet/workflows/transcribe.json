@@ -45,7 +45,7 @@
     },
 
     "sk_date": {
-      "tool": "textTool",
+      "tool": "HistoricalDateTool",
       "tool_config": {},
       "instruction": "Enter the date as given",
       "examples": ["14. Octobr. 1744", "15 Dec. 1744"],

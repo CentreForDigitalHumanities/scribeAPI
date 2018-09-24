@@ -1,4 +1,5 @@
 import compositeTool from "./composite-tool/index.jsx";
+import HistoricalDateTool from './historical-date-tool.jsx';
 import singleTool from "./single-tool/index.jsx";
 
 import textTool from "./text-tool/index.jsx";
@@ -9,6 +10,7 @@ import textAreaTool from "./text-area-tool/index.jsx";
 export default {
   // transcribeTool:   require './transcribe-row-tool'
   compositeTool,
+  HistoricalDateTool,
   singleTool,
 
   textTool, // this will soon be subsumed by single-tool
