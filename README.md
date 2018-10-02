@@ -11,6 +11,7 @@ Are you an organization or individual interested in using Scribe for your next c
 
 * What is Scribe and is it for me? Read our [Scribe Primer](https://github.com/zooniverse/scribeAPI/wiki/Getting-started)
 * Ready to set up your project? Head over to our [Project Setup page](https://github.com/zooniverse/scribeAPI/wiki/Setting-up-your-project)
+* !! Use yarn instead of npm !!
 
 ## For Contributors
 
