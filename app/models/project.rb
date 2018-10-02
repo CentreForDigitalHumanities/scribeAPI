@@ -15,6 +15,8 @@ class Project
   field  :organizations,     type: Array,  default: []
   field  :scientists,        type: Array,  default: []
   field  :developers,        type: Array,  default: []
+  # External API calls
+  field  :externals,         type: Array,  default: []
   field  :pages,             type: Array,  default: []
   field  :menus,             type: Hash,   default: {}
   field  :partials,          type: Hash,   default: {}
