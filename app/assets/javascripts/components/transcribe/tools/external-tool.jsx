@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { DateAnnotatorComponent } from 'historical-dates-ui'
+import Autocomplete from 'react-autocomplete'
 import marked from '../../../lib/marked.min.js';
 import DraggableModal from "../../draggable-modal.jsx";
 import SmallButton from "../../buttons/small-button.jsx";
@@ -8,11 +8,17 @@ import HelpButton from "../../buttons/help-button.jsx";
 import BadSubjectButton from "../../buttons/bad-subject-button.jsx";
 import IllegibleSubjectButton from "../../buttons/illegible-subject-button.jsx";
 
-export default class HistoricalDateTool extends React.Component {
+export default class ExternalTool extends React.Component {
+  // keep track of the number of searches - do not let the results
+  // of an old search overwrite newer results
+  searchCounter = 0;
+  searchResolved = -1;
+
   constructor(props) {
     super(props);
     this.state = {
       annotation: props.annotation != null ? props.annotation : {},
+      matches: [],
       viewerSize: props.viewerSize
     };
   }
@@ -105,27 +111,13 @@ export default class HistoricalDateTool extends React.Component {
   // NOTE: doesn't get called unless @props.standalone is true
   commitAnnotation() {
     const ann = this.state.annotation;
-    const value = ann[this.fieldKey()];
-    function dateToPlainObject(date, key) {
-      if (date[key])
-        date[key] = {
-          year: date[key].year,
-          month: date[key].month,
-          day: date[key].month
-        }
-    }
-    dateToPlainObject(value, 'gregorianDate')
-    dateToPlainObject(value, 'julianDate')
-
     this.props.onComplete(ann);
 
-    if (
-      this.props.transcribeMode === "page" ||
-      this.props.transcribeMode === "single"
-    ) {
-      if (this.props.isLastSubject && this.props.task.next_task == null) {
-        this.props.returnToMarking();
-      }
+    if ((this.props.transcribeMode === "page" ||
+      this.props.transcribeMode === "single") &&
+      this.props.isLastSubject &&
+      this.props.task.next_task == null) {
+      this.props.returnToMarking();
     }
   }
 
@@ -148,16 +140,12 @@ export default class HistoricalDateTool extends React.Component {
     })
   } // report updated annotation to parent
 
-  handleChangeDate(e) {
-    this.updateValue(e);
-  }
-
-  handleChangeText(e) {
-    this.updateValue({ text: e.target.value });
+  handleChangeText(text) {
+    this.updateValue({ text });
   }
 
   handleKeyDown(e) {
-    this.handleChangeText(e); // notifies the date entry component
+    this.handleChangeText(e); // updates any autocomplete values
 
     if ([13].indexOf(e.keyCode) >= 0 && !e.shiftKey) {
       // ENTER
@@ -168,6 +156,23 @@ export default class HistoricalDateTool extends React.Component {
   handleBadMark() {
     const newAnnotation = [];
     return newAnnotation["low_quality_subject"];
+  }
+
+  searchExternal(query, callback) {
+    const id = this.toolConfig().id
+    const searchCounter = this.searchCounter++;
+    $.ajax(`/externals/search/${id}`, {
+      data: {
+        query
+      },
+      method: 'get',
+      dataType: 'json'
+    }).then((data) => {
+      if (searchCounter > this.searchResolved) {
+        this.searchResolved = searchCounter;
+        callback(data);
+      }
+    });
   }
 
   render() {
@@ -210,20 +215,40 @@ export default class HistoricalDateTool extends React.Component {
             ))}
           </ul>
         )}
-        <input {...Object.assign({ type: "text", value: val.text }, {
+        <Autocomplete inputProps={{
           ref,
           key: `${this.props.task.key}.${this.props.annotation_key}`,
-          "data-task_key": this.props.task.key,
-          onKeyDown: this.handleKeyDown.bind(this),
-          onChange: this.handleChangeText.bind(this),
-          onFocus: () =>
-            typeof this.props.onInputFocus === "function"
-              ? this.props.onInputFocus(this.props.annotation_key)
-              : undefined,
-          value: val.text,
           disabled: this.props.badSubject
-        })} />
-        <DateAnnotatorComponent {...Object.assign({ onChange: this.handleChangeDate.bind(this) }, { text: val.text })} />
+        }}
+          wrapperStyle={{ position: 'relative', display: 'inline-block' }}
+          value={val.text}
+          items={this.state.matches}
+          getItemValue={(item) => item.display}
+          onSelect={(value, item) => {
+            // set the menu to only the selected item
+            // this.updateValue({ text: value, });
+            this.setState({ matches: [item] })
+            // or you could reset it to a default list again
+            // this.setState({ unitedStates: getStates() })
+          }}
+          onChange={(event, value) => {
+            console.log({ event, value })
+            this.updateValue({ text: value });
+            this.searchExternal(value, (items) => {
+              this.setState({ matches: items })
+            })
+          }}
+          renderMenu={children => (
+            <div className="menu">
+              {children}
+            </div>
+          )}
+          renderItem={(item, isHighlighted) => (
+            <div
+              className={`item ${isHighlighted ? 'item-highlighted' : ''}`}
+              key={item.id}
+            >{item.display}</div>
+          )} />
       </div>
     );
 
@@ -294,7 +319,7 @@ export default class HistoricalDateTool extends React.Component {
   }
 }
 
-HistoricalDateTool.defaultProps = {
+ExternalTool.defaultProps = {
   annotation: {},
   annotation_key: null,
   task: null,
