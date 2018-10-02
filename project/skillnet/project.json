@@ -60,13 +60,13 @@
     "externals": [
       {
         "id": "emlo_people",
-        "uri": "https://emlo-collect.bodleian.ox.ac.uk/api/people/{search}?key={env:EMLO_KEY}",
+        "uri": "https://emlo-collect.bodleian.ox.ac.uk/api/people/{query}?key={env:EMLO_KEY}",
         "id_field": "uuid",
         "display_field": "name"
       },
       {
         "id": "emlo_places",
-        "uri": "https://emlo-collect.bodleian.ox.ac.uk/api/places/{search}?key={env:EMLO_KEY}",
+        "uri": "https://emlo-collect.bodleian.ox.ac.uk/api/places/{query}?key={env:EMLO_KEY}",
         "id_field": "uuid",
         "display_field": "loc"
       }

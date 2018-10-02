@@ -33,6 +33,9 @@ API::Application.routes.draw do
   get '/classifications/terms/:workflow_id/:annotation_key',  to: 'classifications#terms'
   post '/classifications',                                    to: 'classifications#create'  
 
+  # Externals
+  get '/externals/search/:id',                                to: 'externals#search'
+
   resources :groups, only: [:show, :index], :defaults => { :format => 'json' }
 
   namespace :admin do

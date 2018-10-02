@@ -23,8 +23,10 @@
     },
 
     "sk_sender_name": {
-      "tool": "textTool",
-      "tool_config": {},
+      "tool": "ExternalTool",
+      "tool_config": {
+        "id": "emlo_people"
+      },
       "instruction": "Enter the sender's name",
       "examples": ["Christian Wolff", "R.", "H. F. D."],
       "help": {
@@ -34,8 +36,10 @@
     },
 
     "sk_recipient_name": {
-      "tool": "textTool",
-      "tool_config": {},
+      "tool": "ExternalTool",
+      "tool_config": {
+        "id": "emlo_people"
+      },
       "instruction": "Enter the recipient's name",
       "examples": ["Christian Wolff", "R.", "H. F. D."],
       "help": {
@@ -56,8 +60,10 @@
     },
 
     "sk_sender_place": {
-      "tool": "textTool",
-      "tool_config": {},
+      "tool": "ExternalTool",
+      "tool_config": {
+        "id": "emlo_places"
+      },
       "instruction": "Enter the sender's place",
       "examples": ["Hal.", "Halle"],
       "help": {
@@ -67,8 +73,10 @@
     },
 
     "sk_recipient_place": {
-      "tool": "textTool",
-      "tool_config": {},
+      "tool": "ExternalTool",
+      "tool_config": {
+        "id": "emlo_places"
+      },
       "instruction": "Enter the recipient's place",
       "examples": ["Christian Wolff", "R.", "H. F. D."],
       "help": {
