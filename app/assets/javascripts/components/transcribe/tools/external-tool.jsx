@@ -232,7 +232,6 @@ export default class ExternalTool extends React.Component {
             // this.setState({ unitedStates: getStates() })
           }}
           onChange={(event, value) => {
-            console.log({ event, value })
             this.updateValue({ text: value });
             this.searchExternal(value, (items) => {
               this.setState({ matches: items })
