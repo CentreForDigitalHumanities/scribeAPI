@@ -1,42 +1,112 @@
 {
-    "name":"mark",
-    "label":"Mark Workflow",
-    "subject_fetch_limit":"10",
-    "generates_subjects": true,
-    "generates_subjects_for": "transcribe",
-  
-    "first_task":"mark_primary",
-  
-    "tasks": {
-      "mark_primary": {
-        "tool": "pickOneMarkOne",
-        "instruction": "",
-        "generates_subjects": true,
-        "help": {
-          "file": "mark_primary"
-        },
-        "tool_config" : {
-          "displays_transcribe_button": false,
-          "options": [
-            {"type": "horizontalLineTool", "label": "Letter start", "color": "magenta", "generates_subject_type": "sk_start", "help": {"file": "m_start"}},
-            {"type": "rectangleTool", "label": "Incipit (first 6-10 words)", "color": "green", "generates_subject_type": "sk_incipit", "help": {"file": "m_incipit"}},
-            {"type": "rectangleTool", "label": "Sender", "color": "red", "generates_subject_type": "sk_sender_name", "help": {"file": "m_sender_name"}},
-            {"type": "rectangleTool", "label": "Recipient", "color": "blue", "generates_subject_type": "sk_recipient_name", "help":  {"file": "m_recipient_name"}},
-            {"type": "rectangleTool", "label": "Date", "color": "teal", "generates_subject_type": "sk_date", "help": {"file": "m_date"}},
-            {"type": "rectangleTool", "label": "Place of Sender", "color": "sienna", "generates_subject_type": "sk_sender_place", "help": {"file": "m_sender_place"}},
-            {"type": "rectangleTool", "label": "Place of Recipient", "color": "purple", "generates_subject_type": "sk_recipient_place", "help": {"file": "m_recipient_place"}},
-            {"type": "rectangleTool", "label": "Page Number", "color": "darkorange", "generates_subject_type": "sk_page_number", "help": {"file": "m_page_number"}},
-            {"type": "rectangleTool", "label": "Topic", "color": "magenta", "generates_subject_type": "sk_topic", "help": {"file": "m_topic"}}
-          ]
-        },
-        "next_task": null
+  "name": "mark",
+  "label": "Mark Workflow",
+  "order": 0,
+  "subject_fetch_limit": "10",
+  "generates_subjects": true,
+  "generates_subjects_for": "transcribe",
+  "first_task": "mark_primary",
+
+  "tasks": {
+    "mark_primary": {
+      "tool": "pickOneMarkOne",
+      "instruction": "",
+      "generates_subjects": true,
+      "help": {
+        "file": "mark_primary"
       },
-  
-      "completion_assessment_task": {
-        "tool_config": {
-          "displays_transcribe_button": false
-        }
+      "tool_config": {
+        "displays_transcribe_button": false,
+        "options": [{
+            "type": "horizontalLineTool",
+            "label": "Letter start",
+            "color": "magenta",
+            "generates_subject_type": "sk_start",
+            "help": {
+              "file": "m_start"
+            }
+          },
+          {
+            "type": "rectangleTool",
+            "label": "Incipit (first 6-10 words)",
+            "color": "green",
+            "generates_subject_type": "sk_incipit",
+            "help": {
+              "file": "m_incipit"
+            }
+          },
+          {
+            "type": "rectangleTool",
+            "label": "Sender",
+            "color": "red",
+            "generates_subject_type": "sk_sender_name",
+            "help": {
+              "file": "m_sender_name"
+            }
+          },
+          {
+            "type": "rectangleTool",
+            "label": "Recipient",
+            "color": "blue",
+            "generates_subject_type": "sk_recipient_name",
+            "help": {
+              "file": "m_recipient_name"
+            }
+          },
+          {
+            "type": "rectangleTool",
+            "label": "Date",
+            "color": "teal",
+            "generates_subject_type": "sk_date",
+            "help": {
+              "file": "m_date"
+            }
+          },
+          {
+            "type": "rectangleTool",
+            "label": "Place of Sender",
+            "color": "sienna",
+            "generates_subject_type": "sk_sender_place",
+            "help": {
+              "file": "m_sender_place"
+            }
+          },
+          {
+            "type": "rectangleTool",
+            "label": "Place of Recipient",
+            "color": "purple",
+            "generates_subject_type": "sk_recipient_place",
+            "help": {
+              "file": "m_recipient_place"
+            }
+          },
+          {
+            "type": "rectangleTool",
+            "label": "Page Number",
+            "color": "darkorange",
+            "generates_subject_type": "sk_page_number",
+            "help": {
+              "file": "m_page_number"
+            }
+          },
+          {
+            "type": "rectangleTool",
+            "label": "Topic",
+            "color": "magenta",
+            "generates_subject_type": "sk_topic",
+            "help": {
+              "file": "m_topic"
+            }
+          }
+        ]
+      },
+      "next_task": null
+    },
+
+    "completion_assessment_task": {
+      "tool_config": {
+        "displays_transcribe_button": false
       }
     }
   }
-  
+}

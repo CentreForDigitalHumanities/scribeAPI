@@ -1,6 +1,7 @@
 {
   "name": "verify",
   "label": "Verify Workflow",
+  "order": 2,
   "retire_limit": 3,
   "generates_subjects": true,
   "generates_subjects_method": "most-popular",
@@ -17,7 +18,9 @@
       "tool_config": {
         "displays_transcribe_button": true
       },
-      "help": { "file": "v_date" },
+      "help": {
+        "file": "v_date"
+      },
       "generates_subject_type": "consensus_date"
     },
 
@@ -27,7 +30,9 @@
       "tool_config": {
         "displays_transcribe_button": true
       },
-      "help": { "file": "v_text" },
+      "help": {
+        "file": "v_text"
+      },
       "generates_subject_type": "consensus_record_number"
     },
 
@@ -37,7 +42,9 @@
       "tool_config": {
         "displays_transcribe_button": true
       },
-      "help": { "file": "v_text" },
+      "help": {
+        "file": "v_text"
+      },
       "generates_subject_type": "consensus_mortgager"
     },
 
@@ -47,7 +54,9 @@
       "tool_config": {
         "displays_transcribe_button": true
       },
-      "help": { "file": "v_text" },
+      "help": {
+        "file": "v_text"
+      },
       "generates_subject_type": "consensus_address"
     },
 
@@ -57,7 +66,9 @@
       "tool_config": {
         "displays_transcribe_button": true
       },
-      "help": { "file": "v_currency" },
+      "help": {
+        "file": "v_currency"
+      },
       "generates_subject_type": "consensus_amount_loaned"
     },
 
@@ -67,7 +78,9 @@
       "tool_config": {
         "displays_transcribe_button": true
       },
-      "help": { "file": "v_date" },
+      "help": {
+        "file": "v_date"
+      },
       "generates_subject_type": "consensus_valuation_date"
     },
 
@@ -77,7 +90,9 @@
       "tool_config": {
         "displays_transcribe_button": true
       },
-      "help": { "file": "v_currency" },
+      "help": {
+        "file": "v_currency"
+      },
       "generates_subject_type": "consensus_valuation_itemized"
     },
 
@@ -87,7 +102,9 @@
       "tool_config": {
         "displays_transcribe_button": true
       },
-      "help": { "file": "v_currency" },
+      "help": {
+        "file": "v_currency"
+      },
       "generates_subject_type": "consensus_valuation_total"
     },
 
@@ -97,7 +114,9 @@
       "tool_config": {
         "displays_transcribe_button": true
       },
-      "help": { "file": "v_text" },
+      "help": {
+        "file": "v_text"
+      },
       "generates_subject_type": "consensus_survey"
     },
 
@@ -107,7 +126,9 @@
       "tool_config": {
         "displays_transcribe_button": true
       },
-      "help": { "file": "v_text" },
+      "help": {
+        "file": "v_text"
+      },
       "generates_subject_type": "consensus_stories_materials"
     }
   }
