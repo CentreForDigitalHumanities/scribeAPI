@@ -24,10 +24,11 @@ export default class SubjectZoomPan extends React.Component {
         y: 0
       }
     };
+    this._handleZoomKeys = this._handleZoomKeys.bind(this);
   }
 
   componentDidMount() {
-    window.addEventListener("keydown", this._handleZoomKeys.bind(this));
+    window.addEventListener("keydown", this._handleZoomKeys);
   }
 
   componentWillUnmount() {
