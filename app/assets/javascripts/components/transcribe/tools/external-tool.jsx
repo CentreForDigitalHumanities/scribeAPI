@@ -1,12 +1,63 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Autocomplete from 'react-autocomplete'
 import marked from '../../../lib/marked.min.js';
 import DraggableModal from "../../draggable-modal.jsx";
 import SmallButton from "../../buttons/small-button.jsx";
 import HelpButton from "../../buttons/help-button.jsx";
 import BadSubjectButton from "../../buttons/bad-subject-button.jsx";
 import IllegibleSubjectButton from "../../buttons/illegible-subject-button.jsx";
+
+class EntitySelector extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { selected: props.selected || 'unknown' };
+  }
+
+  componentWillReceiveProps(newProps) {
+    let selected = newProps.selected || this.state.selected;
+    let items = newProps.items || this.state.items;
+
+    // check that the selection is still valid
+    if (items && selected != 'unknown') {
+      for (let item of items) {
+        if (item.id == selected) {
+          return;
+        }
+      }
+
+      this.setSelected('unknown');
+    }
+  }
+
+  setSelected(item) {
+    if (item == 'unknown') {
+      item = { id: 'unknown', display: 'Unknown entity' };
+    }
+    this.props.onChange(item);
+    this.setState({ selected: item.id });
+  }
+
+  render() {
+    function renderItem(self, item) {
+      return <label className="radio" key={item.id}>
+        <input type="radio" value={item.id}
+          checked={self.state.selected === item.id}
+          onChange={() => self.setSelected(item)} />
+        {item.display}
+      </label>
+    }
+
+    return this.props.items.length && <div>
+      <p>Select if this matches any of the results in the list:</p>
+      <div className="entity-list">
+        {
+          this.props.items.map((item) => renderItem(this, item))
+        }
+        {renderItem(this, { id: 'unknown', display: 'Unknown / Other' })}
+      </div>
+    </div> || null
+  }
+}
 
 export default class ExternalTool extends React.Component {
   // keep track of the number of searches - do not let the results
@@ -144,15 +195,6 @@ export default class ExternalTool extends React.Component {
     this.updateValue({ text });
   }
 
-  handleKeyDown(e) {
-    this.handleChangeText(e); // updates any autocomplete values
-
-    if ([13].indexOf(e.keyCode) >= 0 && !e.shiftKey) {
-      // ENTER
-      this.commitAnnotation();
-    }
-  }
-
   handleBadMark() {
     const newAnnotation = [];
     return newAnnotation["low_quality_subject"];
@@ -161,6 +203,10 @@ export default class ExternalTool extends React.Component {
   searchExternal(query, callback) {
     const id = this.toolConfig().id
     const searchCounter = this.searchCounter++;
+    if (!query) {
+      callback([]);
+      return;
+    }
     $.ajax(`/externals/search/${id}`, {
       data: {
         query
@@ -176,13 +222,13 @@ export default class ExternalTool extends React.Component {
   }
 
   render() {
-    let atts, label;
+    let label;
     if (this.props.loading) {
       return null;
     } // hide transcribe tool while loading image
 
     let val = this.state.annotation[this.fieldKey()]
-      || { text: '', date: null };
+      || { text: '', entityText: '', id: null };
 
     if (!this.props.standalone) {
       label = this.props.label != null ? this.props.label : "";
@@ -215,39 +261,25 @@ export default class ExternalTool extends React.Component {
             ))}
           </ul>
         )}
-        <Autocomplete inputProps={{
-          ref,
-          key: `${this.props.task.key}.${this.props.annotation_key}`,
-          disabled: this.props.badSubject
-        }}
-          wrapperStyle={{ position: 'relative', display: 'inline-block' }}
+        <input
+          ref={ref}
+          key={`${this.props.task.key}.${this.props.annotation_key}`}
+          disabled={this.props.badSubject}
           value={val.text}
-          items={this.state.matches}
-          getItemValue={(item) => item.display}
-          onSelect={(value, item) => {
-            // set the menu to only the selected item
-            // this.updateValue({ text: value, });
-            this.setState({ matches: [item] })
-            // or you could reset it to a default list again
-            // this.setState({ unitedStates: getStates() })
-          }}
-          onChange={(event, value) => {
-            this.updateValue({ text: value });
-            this.searchExternal(value, (items) => {
+          onChange={(event) => {
+            let text = event.target.value;
+            this.updateValue({ text });
+            this.searchExternal(text.trim(), (items) => {
               this.setState({ matches: items })
             })
           }}
-          renderMenu={children => (
-            <div className="menu">
-              {children}
-            </div>
-          )}
-          renderItem={(item, isHighlighted) => (
-            <div
-              className={`item ${isHighlighted ? 'item-highlighted' : ''}`}
-              key={item.id}
-            >{item.display}</div>
-          )} />
+        />
+        <EntitySelector items={this.state.matches}
+          getItemValue={(item) => item.display}
+          selected={val.id}
+          onChange={({ display, id }) => {
+            this.updateValue({ entityText: display, id });
+          }} />
       </div>
     );
 
@@ -307,7 +339,7 @@ export default class ExternalTool extends React.Component {
           x={x * this.props.scale.horizontal + this.props.scale.offsetX}
           y={y * this.props.scale.vertical + this.props.scale.offsetY}
           buttons={buttons}
-          classes="transcribe-tool historical-date-tool"
+          classes="transcribe-tool external-tool"
         >
           {toolContent}
         </DraggableModal>
