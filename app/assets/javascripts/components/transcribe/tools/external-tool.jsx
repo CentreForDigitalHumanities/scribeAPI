@@ -1,5 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
+
+import { BehaviorSubject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
 import marked from '../../../lib/marked.min.js';
 import DraggableModal from "../../draggable-modal.jsx";
 import SmallButton from "../../buttons/small-button.jsx";
@@ -134,6 +138,17 @@ export default class ExternalTool extends React.Component {
     return true;
   }
 
+  componentWillMount() {
+    this.textValue = new BehaviorSubject('');
+    this.textValue.pipe(debounceTime(300)).subscribe(textValue => {
+      this.setState({ loading: true });
+      this.searchExternal(textValue, (items) => {
+        this.setState({ matches: items });
+        this.setState({ loading: false });
+      });
+    })
+  }
+
   componentDidMount() {
     if (this.props.focus) {
       this.focus();
@@ -144,6 +159,10 @@ export default class ExternalTool extends React.Component {
     if (this.props.focus) {
       this.focus();
     }
+  }
+
+  componentWillUnmount() {
+    this.textValue.complete()
   }
 
   // Expects size hash with:
@@ -207,16 +226,16 @@ export default class ExternalTool extends React.Component {
       callback([]);
       return;
     }
-    $.ajax(`/externals/search/${id}`, {
+    return $.ajax(`/externals/search/${id}`, {
       data: {
         query
       },
       method: 'get',
       dataType: 'json'
-    }).then((data) => {
+    }).then((items) => {
       if (searchCounter > this.searchResolved) {
         this.searchResolved = searchCounter;
-        callback(data);
+        callback(items);
       }
     });
   }
@@ -269,11 +288,10 @@ export default class ExternalTool extends React.Component {
           onChange={(event) => {
             let text = event.target.value;
             this.updateValue({ text });
-            this.searchExternal(text.trim(), (items) => {
-              this.setState({ matches: items })
-            })
+            this.textValue.next(text.trim());
           }}
         />
+        {this.state.loading && <p>Searching...</p>}
         <EntitySelector items={this.state.matches}
           getItemValue={(item) => item.display}
           selected={val.id}
