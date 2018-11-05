@@ -81,3 +81,6 @@ html, body,
   background: #fefefe;
   color: #555;
 }
+.scribe-footer .scribe-footer-credits > div {
+  max-width: 1200px;
+}
