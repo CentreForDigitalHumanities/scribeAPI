@@ -1,4 +1,5 @@
 key,name,description,cover_image_url,external_url,retire_count
-test,Test Set,Example set,skillnet/images/cropped-Gysbrechts.jpg,https://skillnet.nl/,2
-A,Arenhold A,Arenhold,skillnet/images/cropped-Gysbrechts.jpg,https://skillnet.nl/,2
-B,Arenhold B,Arenhold,skillnet/images/cropped-Gysbrechts.jpg,https://skillnet.nl/,2
+test,Test Set,Example set,images/cropped-Gysbrechts.jpg,https://skillnet.nl/,2
+A,Arenhold A,Arenhold,images/cropped-Gysbrechts.jpg,https://skillnet.nl/,2
+B,Arenhold B,Arenhold,images/cropped-Gysbrechts.jpg,https://skillnet.nl/,2
+C,Arenhold C,Arenhold,images/cropped-Gysbrechts.jpg,https://skillnet.nl/,2
