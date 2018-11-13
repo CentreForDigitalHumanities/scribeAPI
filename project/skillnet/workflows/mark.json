@@ -5,107 +5,323 @@
   "subject_fetch_limit": "10",
   "generates_subjects": true,
   "generates_subjects_for": "transcribe",
-  "first_task": "mark_primary",
+  "first_task": "letter_start_present",
 
   "tasks": {
-    "mark_primary": {
+    "letter_start_present": {
+      "tool": "pickOne",
+      "instruction": "Are there any *unmarked* letter starts present?",
+      "help": {
+        "title": "Letter starts",
+        "body": "Select 'yes' if you can see the start of a letter on this page."
+      },
+      "tool_config": {
+        "options": [{
+            "value": "yes",
+            "label": "Yes",
+            "next_task": "letter_start"
+          },
+          {
+            "value": "no",
+            "label": "No"
+          }
+        ]
+      },
+      "next_task": "recipient_present"
+    },
+    "letter_start": {
+      "generates_subjects": true,
+      "tool": "pickOneMarkOne",
+      "instruction": "Draw a line before each *unmarked* letter start.",
+      "help": {
+        "file": "m_start"
+      },
+      "tool_config": {
+        "options": [{
+          "type": "horizontalLineTool",
+          "label": "Letter start",
+          "color": "magenta",
+          "generates_subject_type": "sk_start"
+        }]
+      },
+      "next_task": "recipient_present"
+    },
+    "recipient_present": {
+      "tool": "pickOne",
+      "instruction": "Are there any *unmarked* recipients present?",
+      "help": {
+        "title": "Recipient",
+        "body": "Select 'yes' if you see any recipient mentioned anywhere on the page."
+      },
+      "tool_config": {
+        "options": [{
+            "value": "yes",
+            "label": "Yes",
+            "next_task": "recipient"
+          },
+          {
+            "value": "no",
+            "label": "No"
+          }
+        ]
+      },
+      "next_task": "recipient_place_present"
+    },
+    "recipient": {
       "tool": "pickOneMarkOne",
       "instruction": "",
       "generates_subjects": true,
       "help": {
-        "file": "mark_primary"
+        "file": "m_recipient_name"
       },
       "tool_config": {
-        "displays_transcribe_button": false,
+        "displays_transcribe_button": true,
         "options": [{
-            "type": "horizontalLineTool",
-            "label": "Letter start",
-            "color": "magenta",
-            "generates_subject_type": "sk_start",
-            "help": {
-              "file": "m_start"
-            }
+          "type": "rectangleTool",
+          "label": "Recipient",
+          "color": "blue",
+          "generates_subject_type": "sk_recipient_name"
+        }]
+      },
+      "next_task": "recipient_place_present"
+    },
+    "recipient_place_present": {
+      "tool": "pickOne",
+      "instruction": "Are there any *unmarked* places of recipients present?",
+      "help": {
+        "title": "Place of recipient",
+        "body": "Select 'yes' if you see any place of a recipient mentioned anywhere on the page."
+      },
+      "tool_config": {
+        "options": [{
+            "value": "yes",
+            "label": "Yes",
+            "next_task": "recipient_place"
           },
           {
-            "type": "rectangleTool",
-            "label": "Incipit (first 6-10 words)",
-            "color": "green",
-            "generates_subject_type": "sk_incipit",
-            "help": {
-              "file": "m_incipit"
-            }
+            "value": "no",
+            "label": "No"
+          }
+        ]
+      },
+      "next_task": "incipit_present"
+    },
+    "recipient_place": {
+      "tool": "pickOneMarkOne",
+      "instruction": "",
+      "generates_subjects": true,
+      "help": {
+        "file": "m_recipient_place"
+      },
+      "tool_config": {
+        "displays_transcribe_button": true,
+        "options": [{
+          "type": "rectangleTool",
+          "label": "Place of Recipient",
+          "color": "purple",
+          "generates_subject_type": "sk_recipient_place"
+        }]
+      },
+      "next_task": "incipit_present"
+    },
+    "incipit_present": {
+      "tool": "pickOne",
+      "instruction": "Are there any *unmarked* incipts (the first 6-10 words) of a letter present?",
+      "help": {
+        "title": "Incipit",
+        "body": "Select 'yes' if you can see the first words of a letter on this page."
+      },
+      "tool_config": {
+        "options": [{
+            "value": "yes",
+            "label": "Yes",
+            "next_task": "incipit"
           },
           {
-            "type": "rectangleTool",
-            "label": "Sender",
-            "color": "red",
-            "generates_subject_type": "sk_sender_name",
-            "help": {
-              "file": "m_sender_name"
-            }
+            "value": "no",
+            "label": "No"
+          }
+        ]
+      },
+      "next_task": "sender_present"
+    },
+    "incipit": {
+      "tool": "pickOneMarkOne",
+      "instruction": "",
+      "generates_subjects": true,
+      "help": {
+        "file": "m_incipit"
+      },
+      "tool_config": {
+        "displays_transcribe_button": true,
+        "options": [{
+          "type": "rectangleTool",
+          "label": "Incipit (first 6-10 words)",
+          "color": "green",
+          "generates_subject_type": "sk_incipit"
+        }]
+      },
+      "next_task": "sender_present"
+    },
+    "sender_present": {
+      "tool": "pickOne",
+      "instruction": "Are there any *unmarked* senders of a letter present?",
+      "help": {
+        "title": "Sender",
+        "body": "Select 'yes' if you can see the name of the sender of a letter on this page."
+      },
+      "tool_config": {
+        "options": [{
+            "value": "yes",
+            "label": "Yes",
+            "next_task": "sender"
           },
           {
-            "type": "rectangleTool",
-            "label": "Recipient",
-            "color": "blue",
-            "generates_subject_type": "sk_recipient_name",
-            "help": {
-              "file": "m_recipient_name"
-            }
+            "value": "no",
+            "label": "No"
+          }
+        ]
+      },
+      "next_task": "sender_place_present"
+    },
+    "sender": {
+      "tool": "pickOneMarkOne",
+      "instruction": "",
+      "generates_subjects": true,
+      "help": {
+        "file": "m_sender_name"
+      },
+      "tool_config": {
+        "displays_transcribe_button": true,
+        "options": [{
+          "type": "rectangleTool",
+          "label": "Sender",
+          "color": "red",
+          "generates_subject_type": "sk_sender_name"
+        }]
+      },
+      "next_task": "sender_place_present"
+    },
+    "sender_place_present": {
+      "tool": "pickOne",
+      "instruction": "Are there any *unmarked* places of senders of a letter present?",
+      "help": {
+        "title": "Place of sender",
+        "body": "Select 'yes' if you can see the place of the sender of a letter on this page."
+      },
+      "tool_config": {
+        "options": [{
+            "value": "yes",
+            "label": "Yes",
+            "next_task": "sender_place"
           },
           {
-            "type": "rectangleTool",
-            "label": "Date",
-            "color": "teal",
-            "generates_subject_type": "sk_date",
-            "help": {
-              "file": "m_date"
-            }
+            "value": "no",
+            "label": "No"
+          }
+        ]
+      },
+      "next_task": "date_present"
+    },
+    "sender_place": {
+      "tool": "pickOneMarkOne",
+      "instruction": "",
+      "generates_subjects": true,
+      "help": {
+        "file": "m_sender_place"
+      },
+      "tool_config": {
+        "displays_transcribe_button": true,
+        "options": [{
+          "type": "rectangleTool",
+          "label": "Place of Sender",
+          "color": "sienna",
+          "generates_subject_type": "sk_sender_place"
+        }]
+      },
+      "next_task": "date_present"
+    },
+    "date_present": {
+      "tool": "pickOne",
+      "instruction": "Are there any *unmarked* dates of a letter present?",
+      "help": {
+        "title": "Date",
+        "body": "Select 'yes' if you can see the date of a letter on this page."
+      },
+      "tool_config": {
+        "options": [{
+            "value": "yes",
+            "label": "Yes",
+            "next_task": "date"
           },
           {
-            "type": "rectangleTool",
-            "label": "Place of Sender",
-            "color": "sienna",
-            "generates_subject_type": "sk_sender_place",
-            "help": {
-              "file": "m_sender_place"
-            }
+            "value": "no",
+            "label": "No"
+          }
+        ]
+      },
+      "next_task": "letter_end_present"
+    },
+    "date": {
+      "tool": "pickOneMarkOne",
+      "instruction": "",
+      "generates_subjects": true,
+      "help": {
+        "file": "m_date"
+      },
+      "tool_config": {
+        "displays_transcribe_button": true,
+        "options": [{
+          "type": "rectangleTool",
+          "label": "Date",
+          "color": "teal",
+          "generates_subject_type": "sk_date"
+        }]
+      },
+      "next_task": "letter_end_present"
+    },
+    "letter_end_present": {
+      "tool": "pickOne",
+      "instruction": "Are there any *unmarked* letter endings present?",
+      "help": {
+        "title": "Letter end",
+        "body": "Select 'yes' if you can see the end of a letter on this page."
+      },
+      "tool_config": {
+        "options": [{
+            "value": "yes",
+            "label": "Yes",
+            "next_task": "letter_end"
           },
           {
-            "type": "rectangleTool",
-            "label": "Place of Recipient",
-            "color": "purple",
-            "generates_subject_type": "sk_recipient_place",
-            "help": {
-              "file": "m_recipient_place"
-            }
-          },
-          {
-            "type": "rectangleTool",
-            "label": "Page Number",
-            "color": "darkorange",
-            "generates_subject_type": "sk_page_number",
-            "help": {
-              "file": "m_page_number"
-            }
-          },
-          {
-            "type": "rectangleTool",
-            "label": "Topic",
-            "color": "magenta",
-            "generates_subject_type": "sk_topic",
-            "help": {
-              "file": "m_topic"
-            }
+            "value": "no",
+            "label": "No"
           }
         ]
       },
       "next_task": null
     },
-
+    "letter_end": {
+      "tool": "pickOneMarkOne",
+      "instruction": "",
+      "generates_subjects": true,
+      "help": {
+        "file": "m_end"
+      },
+      "tool_config": {
+        "displays_transcribe_button": true,
+        "options": [{
+          "type": "horizontalLineTool",
+          "label": "Letter end",
+          "color": "darkorange",
+          "generates_subject_type": "sk_end"
+        }]
+      },
+      "next_task": null
+    },
     "completion_assessment_task": {
       "tool_config": {
-        "displays_transcribe_button": false
+        "displays_transcribe_button": true
       }
     }
   }
