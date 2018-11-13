@@ -11,6 +11,28 @@
 
   "tasks": {
 
+    "sk_start": {
+      "tool": "textTool",
+      "tool_config": {},
+      "instruction": "Enter the page number",
+      "examples": ["1", "2", "42"],
+      "help": {
+        "file": "t_page_number"
+      },
+      "generates_subject_type": "sk_transcribed_start"
+    },
+
+    "sk_end": {
+      "tool": "textTool",
+      "tool_config": {},
+      "instruction": "Enter the page number",
+      "examples": ["1", "2", "42"],
+      "help": {
+        "file": "t_page_number"
+      },
+      "generates_subject_type": "sk_transcribed_end"
+    },
+
 
     "sk_incipit": {
       "tool": "textTool",

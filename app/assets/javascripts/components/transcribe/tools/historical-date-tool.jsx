@@ -114,9 +114,10 @@ export default class HistoricalDateTool extends React.Component {
           day: date[key].month
         }
     }
-    dateToPlainObject(value, 'gregorianDate')
-    dateToPlainObject(value, 'julianDate')
-
+    if (value) {
+      dateToPlainObject(value, 'gregorianDate')
+      dateToPlainObject(value, 'julianDate')
+    }
     this.props.onComplete(ann);
 
     if (
