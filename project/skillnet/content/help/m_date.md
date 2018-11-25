@@ -1,1 +1,1 @@
-Explanation about marking.
+Mark the date of the letter, usually given in the last sentences of the letter. If you cannot find the date, look for Roman numerals, the words Anno (a.o, ao, Ao), Anno Domino (ad, AD), Anno Domini Salutis (Salvationis, Sal), or Cal. (Kal., Kalendas). If present, also mark information about whether the old Julian calendar is used or the new Gregorian calendar, e.g. ‘new style’, ‘n.s.’, or ‘stylo Gregoriano’.

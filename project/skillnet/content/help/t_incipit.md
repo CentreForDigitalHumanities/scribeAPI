@@ -1,1 +1,1 @@
-Explanation about marking.
+Incipit comes from the Latin verb “incipere”, which means ‘to start’ or ‘begin’. In the context of letter-writing this refers to the first five or six words of a letter, even if more words appear in the box.

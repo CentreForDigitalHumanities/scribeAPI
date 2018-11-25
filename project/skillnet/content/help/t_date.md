@@ -1,1 +1,1 @@
-Explanation about marking.
+First, type the date as given. The box may contain words that are not part of the date. If you cannot find the date, look for Roman numerals, the words Anno (ao, Ao) , Anno Domini (ad, AD), Anno Domini Salutis (Salvationis, Sal.), a.d., ante diem, or Cal. (Kal., Kalendas), Non. (Nonas), Id. (Idus). Secondly, you can select which calendar has been used. If it is unclear whether the Julian or Gregorian calendar was used, select ‘unknown’.

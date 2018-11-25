@@ -1,5 +1,5 @@
-# Additional Help  
+# Additional Help
 
-If you have any questions, select "View A Tutorial" to return to this tutorial at any time or peruse the forum.
+If you have any additional questions, have a look at the homepage, click the question marks next to each field, or get in touch with us.
 
-Have fun and thanks for your help!  
+Have fun!
