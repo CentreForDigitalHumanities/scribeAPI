@@ -495,14 +495,6 @@ export default AppContext(createReactClass({
                 >
                   <i className="fa fa-twitter-square" />
                 </a>
-                <a
-                  href={`https://plus.google.com/share?url=${encodeURIComponent(
-                    pageURL
-                  )}`}
-                  target="_blank"
-                >
-                  <i className="fa fa-google-plus-square" />
-                </a>
               </div>
             </div>
           </div>

@@ -39,7 +39,7 @@ export default createReactClass({
                 const
                   title = workflow.name.charAt(0).toUpperCase() + workflow.name.slice(1)
                 return (
-                  <NavLink key={key} to={`/${workflow.name}`} activeClassName="selected" className="main-header-item">{title}</NavLink>
+                  <NavLink key={key} to={`/${workflow.name}`} activeClassName="selected" className={`main-header-item ${workflow.name}`}>{title}</NavLink>
                 );
               })
           }

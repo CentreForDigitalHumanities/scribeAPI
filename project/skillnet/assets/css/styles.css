@@ -13,6 +13,10 @@ html, body,
   margin-top: 2px;
 }
 
+.main-header-item.verify {
+  display: none;
+}
+
 /* Pages */
 .page-content.custom-page {
   width: 960px;
@@ -83,4 +87,7 @@ html, body,
 }
 .scribe-footer .scribe-footer-credits > div {
   max-width: 1200px;
+}
+.login {
+  display: none;
 }
