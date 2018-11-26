@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Draggable from "../../../../lib/draggable.jsx";
 import DeleteButton from "../../../../components/buttons/delete-mark.jsx";
 import MarkButtonMixin from "../../../../lib/mark-button-mixin.jsx";
+import MarkLabel from '../mark-label.jsx';
 
 const STROKE_WIDTH = 10
 const DEFAULT_WIDTH = 1000
@@ -206,8 +207,8 @@ export default createReactClass({
               `
               }}
             />
-
           </Draggable>
+          <MarkLabel x={x1 + width / 2} y={y1 + height / 2} label={this.props.mark.label} />
 
           {this.props.selected &&
             (deleteButtonPos = this.getDeleteButtonPosition()) &&
