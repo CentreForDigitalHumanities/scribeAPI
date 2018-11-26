@@ -1,1 +1,1 @@
-Explanation about marking.
+Senders are typically found at the and of a letter. In Latin, however, they very often appear in the heading of a letter. Sometimes the name of the sender is given nowhere, because all the letters in the printed collection are written by the same person.

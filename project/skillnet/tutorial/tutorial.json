@@ -3,17 +3,9 @@
     "first_task": "learn_marking",
     "tasks": {
         "learn_marking": {
-            "next_task": "learn_transcribing",
             "help": {
                 "title": "Marking Regions",
                 "file": "learn_marking"
-            }
-        },
-        "learn_transcribing": {
-            "next_task": "learn_transcribing",
-            "help": {
-                "title": "Transcribing",
-                "file": "learn_transcribing"
             }
         }
     },
@@ -55,19 +47,6 @@
               "help": {
                   "title": "Additional Help",
                   "file": "tutorial_mark_5"
-              }
-          }
-        }
-      },
-      "transcribe": {
-        "name": "Transcribe Tutorial",
-        "first_task": "learn_transcribing",
-        "tasks": {
-          "learn_transcribing": {
-              "next_task": null,
-              "help": {
-                  "title": "Transcribing Fields",
-                  "file": "tutorial_transcribe_1"
               }
           }
         }

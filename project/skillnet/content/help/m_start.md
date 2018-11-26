@@ -1,1 +1,1 @@
-Mark the absolute beginning of a letter, including any other information such as the sender, recipient and topic.
+Draw a line above the absolute beginning of a letter, above for instance the sender, recipient or topic.

@@ -1,1 +1,1 @@
-Explanation about marking.
+Mark the place name of the sender, the origin of the letter. If you are unsure if the word(s) you see refers to a place, look it up in Orbis Latinus online: http://www.columbia.edu/acis/ets/Graesse/contents.html Please note that sometimes abbreviations are used (for example, ‘Par.’ for ‘Parisii’  or ‘L.B.’ for ‘Lugduni Batavorum’ = Leiden).
