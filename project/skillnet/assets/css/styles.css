@@ -158,6 +158,7 @@ print {
 
 .group-browser .group {
   border: none;
+  border-radius: 3px;
   padding: 0;
   background-size: 372px;
   width: 372px;
