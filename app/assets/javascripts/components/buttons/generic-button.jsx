@@ -1,26 +1,6 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 import React from "react";
-import createReactClass from "create-react-class";
 
-export default createReactClass({
-  displayName: "GenericButton",
-
-  getDefaultProps() {
-    return {
-      label: "Okay",
-      disabled: false,
-      className: "",
-      major: false,
-      onClick: null,
-      href: null
-    };
-  },
-
+export default class GenericButton extends React.Component {
   render() {
     const classes = this.props.className.split(/\s+/);
     classes.push(this.props.major ? "major-button" : "minor-button");
@@ -40,15 +20,24 @@ export default createReactClass({
       };
     }
 
-    const key = this.props.href != null ? this.props.href : this.props.onClick;
+    const key = this.props.href || this.props.onClick;
 
     return (
       <button key={key}
         className={classes.join(" ")}
         onClick={onClick}
         disabled={this.props.disabled ? "disabled" : undefined}>
-        {this.props.label}
+        <span>{this.props.label}</span>
       </button>
     );
   }
-});
+};
+
+GenericButton.defaultProps = {
+  label: "Okay",
+  disabled: false,
+  className: "",
+  major: false,
+  onClick: null,
+  href: null
+};

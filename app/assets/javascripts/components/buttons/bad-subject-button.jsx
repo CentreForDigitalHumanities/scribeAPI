@@ -1,22 +1,11 @@
-/*
- * decaffeinate suggestions:
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 import React from "react";
-import createReactClass from "create-react-class";
 import SmallButton from "./small-button.jsx";
 
-export default createReactClass({
-  displayName: "BadSubjectButton",
-
+export default class BadSubjectButton extends React.Component {
   render() {
-    const label =
-      this.props.label != null
-        ? this.props.label
-        : this.props.active
-          ? "Bad Subject"
-          : "Bad Subject?";
+    const label = this.props.label || this.props.active
+      ? "Bad Subject"
+      : "Bad Subject?";
 
     const additional_classes = [];
     if (this.props.active) {
@@ -30,8 +19,8 @@ export default createReactClass({
         key="bad-subject-button"
         label={label}
         onClick={this.props.onClick}
-        className={`ghost toggle-button ${additional_classes.join(" ")}`}
+        className={`bad-subject ghost toggle-button ${additional_classes.join(" ")}`}
       />
     );
   }
-});
+};

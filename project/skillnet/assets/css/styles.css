@@ -194,3 +194,15 @@ print {
   padding: 15px;
   text-transform: none;
 }
+
+.bad-subject span,
+.bad-subject-marked span {
+  display: none;
+}
+
+.bad-subject:after  {
+  content: "Nothing to Mark"
+}
+.bad-subject-marked:before {
+  content: "You’ve marked that this page contains nothing to mark. "
+}

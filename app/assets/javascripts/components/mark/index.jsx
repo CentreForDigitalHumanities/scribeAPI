@@ -417,9 +417,10 @@ export default AppContext(createReactClass({
                         undefined
                       )}
                     {this.state.badSubject ? (
-                      <p>
+                      <p className="bad-subject-marked">
+                        <span>
                         You've marked this {this.props.project.term("subject")} as
-                      BAD. Thanks for flagging the issue!{" "}
+                      BAD. Thanks for flagging the issue!{" "}</span>
                         <strong>Press DONE to continue.</strong>
                       </p>
                     ) : (
