@@ -1,6 +1,5 @@
 key,name,description,cover_image_url,external_url,retire_count
-GER,German,Books containing only German letters,images/cropped-Gysbrechts.jpg,https://skillnet.nl/,2
-GR-LAT,Greek+Latin,Books containing Greek and Latin letters,images/cropped-Gysbrechts.jpg,https://skillnet.nl/,2
-LAT-IT,Latin+Italian,Books containing Latin and Italian letters,images/cropped-Gysbrechts.jpg,https://skillnet.nl/,2
-LAT,Latin,Books containing only Latin letters,images/cropped-Gysbrechts.jpg,https://skillnet.nl/,2
-SPAN,Spanish,Books containing only Spanish letters,images/cropped-Gysbrechts.jpg,https://skillnet.nl/,2
+GER,German,Books containing German letters,images/German_letter.jpg,https://skillnet.nl/,2
+LAT-IT,Italian & Latin,Books containing Italian and Latin letters,images/Italian_letter.jpg,https://skillnet.nl/,2
+LAT,Latin,Books containing Latin letters,images/Latin_letter.jpg,https://skillnet.nl/,2
+SPAN,Spanish,Books containing Spanish letters,images/Spanish_letter.jpg,https://skillnet.nl/,2

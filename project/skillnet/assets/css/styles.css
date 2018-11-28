@@ -1,12 +1,61 @@
-html, body,
-.home-page h1, .home-page p, .home-page li,
+@import url('https://fonts.googleapis.com/css?family=Goudy+Bookletter+1911');
+
+html {
+  background-image: url(/images/cropped-Gysbrechts.jpg);
+  background-attachment: scroll;
+  background-size: cover;
+}
+
+.readymade-site-background {
+  display: none;
+}
+
+html,
+body,
+.home-page p,
+.home-page li,
 .light-box-area #visibility-button {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+
+h1,
+.home-page h2,
+.home-page h3,
+.custom-page h2,
+.custom-page h3 {
+  font-family: 'Goudy Bookletter 1911';
+  text-transform: none;
+}
+
+h1,
+.custom-page h1 {
+  font-size: 5em;
+}
+
+.home-page h2,
+.custom-page h2 {
+  font-size: 3em;
+}
+
+.home-page h3,
+.custom-page h3 {
+  font-size: 2em;
+  line-height: 1.3em;
+  margin: 0.5em 0;
+}
+
+h1,
+.home-page .title,
+.home-page .groups-header,
+.home-page .text-shadow {
+  text-shadow: 0 2px 5px rgba(0, 0, 0, .75);
 }
 
 .main-header-item.logo {
   transform: none;
 }
+
 .main-header-item.logo img {
   width: auto;
   height: 68px;
@@ -23,24 +72,28 @@ html, body,
   margin: 20px auto;
   box-sizing: border-box;
 }
+
 @media screen and (max-width: 999px) {
   .page-content {
     width: auto;
     margin: 20px;
   }
 }
-.page-content > div {
+
+.page-content>div {
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
-  background: rgba(255,255,255,0.85);
+  background: rgba(255, 255, 255, 0.85);
   padding: 20px 40px;
 }
-.page-content > div.updated-at {
+
+.page-content>div.updated-at {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
 }
+
 /* Introduction */
 .video-wrapper {
   margin: 30px -20px;
@@ -48,32 +101,40 @@ html, body,
   background: #ccc;
   text-align: center;
 }
+
 .video-wrapper video {
   display: inline-block;
-  box-shadow: 0 2px 2px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
 }
+
 .page-content .video-wrapper {
   margin: 30px -40px;
 }
+
 @media screen and (max-width: 800px) {
   .video-wrapper video {
     width: 90%;
     height: auto;
   }
 }
-@media screen and (min-width: 769px), print {
+
+@media screen and (min-width: 769px),
+print {
   .columns:not(.is-desktop) {
     display: flex;
   }
 }
+
 .columns:not(:last-child) {
   margin-bottom: calc(1.5rem - .75rem);
 }
+
 .columns {
   margin-left: -.75rem;
   margin-right: -.75rem;
   margin-top: -.75rem;
 }
+
 .column {
   display: block;
   flex-basis: 0;
@@ -81,13 +142,53 @@ html, body,
   flex-shrink: 1;
   padding: .75rem;
 }
+
 .custom-footer .scribe-footer-credits {
   background: #fefefe;
   color: #555;
 }
-.scribe-footer .scribe-footer-credits > div {
+
+.scribe-footer .scribe-footer-credits>div {
   max-width: 1200px;
 }
+
 .login {
   display: none;
+}
+
+.group-browser .group {
+  border: none;
+  padding: 0;
+  background-size: 372px;
+  width: 372px;
+  height: 310px;
+  margin: 0 0 30px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .75);
+}
+
+.group .button-container {
+  height: 320px;
+  width: 382px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.group .button-container a {
+  font-size: 25px;
+  line-height: 25px;
+  width: 250px;
+}
+
+.groups {
+  justify-content: space-between;
+}
+
+.group .group-name {
+  background: rgba(140, 188, 140, 0.8);
+  font-family: 'Goudy Bookletter 1911';
+  font-weight: normal;
+  font-size: 36px;
+  padding: 15px;
+  text-transform: none;
 }
