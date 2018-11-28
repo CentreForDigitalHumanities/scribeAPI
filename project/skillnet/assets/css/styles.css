@@ -167,8 +167,10 @@ print {
 }
 
 .group .button-container {
-  height: 320px;
-  width: 382px;
+  height: 310px;
+  width: 372px;
+  top: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
