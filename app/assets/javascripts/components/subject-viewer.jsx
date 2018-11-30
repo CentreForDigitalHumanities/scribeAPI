@@ -1,8 +1,6 @@
 /*
  * decaffeinate suggestions:
  * DS101: Remove unnecessary use of Array.from
- * DS102: Remove unnecessary code created because of implicit returns
- * DS103: Rewrite code to no longer use __guard__
  * DS205: Consider reworking code to avoid use of IIFEs
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
@@ -64,14 +62,14 @@ export default createReactClass({
     });
 
     if (new_props.subject.id === this.props.subject.id) {
-      return this.scrollToSubject();
+      this.scrollToSubject();
     }
   },
 
   componentDidMount() {
     this.setView(0, 0, this.props.subject.width, this.props.subject.height);
     this.loadImage(this.props.subject.location.standard);
-    return window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("resize", this.updateDimensions);
   },
 
   scrollToSubject() {
@@ -81,7 +79,7 @@ export default createReactClass({
         (this.props.subject.data.y - (this.props.subject.data.height != null)) *
         this.state.scale.vertical -
         100;
-      return $("html, body")
+      $("html, body")
         .stop()
         .animate({ scrollTop: yPos }, 500);
     }
@@ -93,15 +91,15 @@ export default createReactClass({
       scale.horizontal !== this.state.scale.horizontal &&
       scale.vertical !== this.state.scale.vertical;
     if (changed) {
-      return this.setState({ scale }, () => {
+      this.setState({ scale }, () => {
         this.updateDimensions();
-        return this.scrollToSubject();
+        this.scrollToSubject();
       });
     }
   },
 
   componentWillUnmount() {
-    return window.removeEventListener("resize", this.updateDimensions);
+    window.removeEventListener("resize", this.updateDimensions);
   },
 
   updateDimensions() {
@@ -129,16 +127,16 @@ export default createReactClass({
       $(".subject-viewer svg").height(h);
 
       // Also a fix for IE:
-      return this.setState({ scale: this.getScale() });
+      this.setState({ scale: this.getScale() });
     }
   },
 
   loadImage(url) {
-    return this.setState({ loading: true }, () => {
+    this.setState({ loading: true }, () => {
       const img = new Image();
       img.src = url;
-      return (img.onload = () => {
-        return this.setState(
+      img.onload = () => {
+        this.setState(
           {
             url,
             loading: false,
@@ -146,10 +144,10 @@ export default createReactClass({
           },
           () => {
             this.updateDimensions();
-            return this.scrollToSubject();
+            this.scrollToSubject();
           }
         );
-      });
+      };
     });
   },
 
@@ -163,7 +161,7 @@ export default createReactClass({
     if (typeof this.props.onComplete === "function") {
       this.props.onComplete(mark);
     }
-    return this.setUncommittedMark(null);
+    this.setUncommittedMark(null);
   }, // reset uncommitted mark
 
   // Handle initial mousedown:
@@ -186,23 +184,19 @@ export default createReactClass({
     if (typeof this.props.onChange === "function") {
       this.props.onChange(newMark);
     }
-    return this.setUncommittedMark(newMark);
+    this.setUncommittedMark(newMark);
   },
   // @selectMark newMark
 
   createMark(e) {
-    let key, subTool, subToolIndex, value;
+    let key, subToolIndex, value;
     if ((subToolIndex = this.props.subToolIndex) == null) {
       return null;
     }
-    if (
-      (subTool = __guard__(
-        this.props.task.tool_config != null
-          ? this.props.task.tool_config.options
-          : undefined,
-        x => x[subToolIndex]
-      )) == null
-    ) {
+    let subTool = this.props.task.tool_config &&
+      this.props.task.tool_config.options &&
+      this.props.task.tool_config.options[subToolIndex];
+    if (subTool == null) {
       return null;
     }
 
@@ -263,7 +257,7 @@ export default createReactClass({
     if (typeof this.props.onChange === "function") {
       this.props.onChange(mark);
     }
-    return this.setState({ uncommittedMark: mark });
+    this.setState({ uncommittedMark: mark });
   },
 
   // Handle mouseup at end of drag:
@@ -287,23 +281,24 @@ export default createReactClass({
       }
     }
     if (MarkComponent.initValid != null && !MarkComponent.initValid(mark)) {
-      this.destroyMark(this.props.annotation, mark);
+      this.destroyMark(mark);
+      return;
     }
 
     mark.isUncommitted = true;
     mark.belongsToUser = true;
-    return this.setUncommittedMark(mark);
+    this.setUncommittedMark(mark);
   },
 
   setUncommittedMark(mark) {
-    return this.setState({
+    this.setState({
       uncommittedMark: mark,
       selectedMark: mark
     });
   }, //, => @forceUpdate() # not sure if this is needed?
 
   setView(viewX, viewY, viewWidth, viewHeight) {
-    return this.setState({ viewX, viewY, viewWidth, viewHeight });
+    this.setState({ viewX, viewY, viewWidth, viewHeight });
   },
 
   // PB This is not returning anything but 0, 0 for me; Seems like @refs.sizeRect is empty when evaluated (though nonempty later)
@@ -342,21 +337,19 @@ export default createReactClass({
   // Set mark to currently selected:
   selectMark(mark) {
     const sel = () => {
-      return this.setState({ selectedMark: mark }, () => {
+      this.setState({ selectedMark: mark }, () => {
         if ((mark != null ? mark.details : undefined) != null) {
-          return this.forceUpdate();
+          this.forceUpdate();
         }
       }); // Re-render to reposition the details tooltip.
     };
 
     // First, if we're blurring some other uncommitted mark, commit it:
-    if (
-      this.state.uncommittedMark != null &&
-      mark !== this.state.uncommittedMark
-    ) {
-      return this.submitMark(sel);
+    if (this.state.uncommittedMark != null &&
+      mark !== this.state.uncommittedMark) {
+      this.submitMark(sel);
     } else {
-      return sel();
+      sel();
     }
   },
 
@@ -375,19 +368,19 @@ export default createReactClass({
       // Flag the subject as deleted by user:
       marks[ind].user_has_deleted = true;
 
-      return this.setState({
+      this.setState({
         marks
       });
     } else if (mark === this.state.uncommittedMark) {
-      return this.props.destroyCurrentClassification();
+      this.props.destroyCurrentClassification();
     }
   },
 
   handleChange(mark) {
-    return this.setState({ selectedMark: mark }, () => {
-      return typeof this.props.onChange === "function"
-        ? this.props.onChange(mark)
-        : undefined;
+    this.setState({ selectedMark: mark }, () => {
+      if (typeof this.props.onChange === "function") {
+        this.props.onChange(mark);
+      }
     });
   },
 
@@ -453,7 +446,7 @@ export default createReactClass({
         if (mark._key == null) {
           mark._key = Math.random();
         }
-        if (mark.x == null || mark.y == null) {
+        if (mark.x == null || mark.y == null || mark.hide) {
           continue;
         } // if mark hasn't acquired coords yet, don't draw it yet
         if (mark.user_has_deleted) {
@@ -644,9 +637,3 @@ export default createReactClass({
 });
 
 window.React = React;
-
-function __guard__(value, transform) {
-  return typeof value !== "undefined" && value !== null
-    ? transform(value)
-    : undefined;
-}

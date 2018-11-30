@@ -14,7 +14,7 @@ import DeleteButton from "../../../buttons/delete-mark.jsx";
 import MarkButtonMixin from "../../../../lib/mark-button-mixin.jsx";
 import MarkLabel from '../mark-label.jsx';
 
-const MINIMUM_SIZE = 15;
+const MINIMUM_SIZE = 30;
 const DELETE_BUTTON_ANGLE = 45;
 const DELETE_BUTTON_DISTANCE_X = 12;
 const DELETE_BUTTON_DISTANCE_Y = 0;
@@ -44,7 +44,9 @@ export default createReactClass({
 
     initStart({ x, y }, mark) {
       this.initCoords = { x, y };
-      return { x, y };
+      // hide when just created, to prevent it "flickering" into view
+      // if it is directly destroyed afterwards
+      return { x, y, hide: true, new: true };
     },
 
     initMove(cursor, mark) {
@@ -65,7 +67,7 @@ export default createReactClass({
         ({ y } = cursor);
       }
 
-      return { x, y, width, height };
+      return { x, y, width, height, hide: false, new: false };
     },
 
     initValid(mark) {
@@ -74,9 +76,12 @@ export default createReactClass({
 
     // This callback is called on mouseup to override mark properties (e.g. if too small)
     initRelease(coords, mark, e) {
+      if (mark.new && mark.width < MINIMUM_SIZE && mark.height < MINIMUM_SIZE) {
+        // Too small! Very probably an accidental release
+        return;
+      }
       mark.width = Math.max(mark.width, MINIMUM_SIZE);
       mark.height = Math.max(mark.height, MINIMUM_SIZE);
-      return mark;
     }
   },
 
@@ -112,7 +117,7 @@ export default createReactClass({
   },
 
   createRectangleObjects(x1, x2, y1, y2) {
-    let HX, HY, LX, LY, pointsHash;
+    let HX, HY, LX, LY;
     if (x1 < x2) {
       LX = x1;
       HX = x2;
@@ -134,12 +139,12 @@ export default createReactClass({
     // HL: upper right
     // HH: lower right
     // LH: lower left
-    return (pointsHash = {
+    return {
       handleLLDrag: [LX, LY],
       handleHLDrag: [HX, LY],
       handleHHDrag: [HX, HY],
       handleLHDrag: [LX, HY]
-    });
+    };
   },
 
   handleMainDrag(e, d) {
@@ -212,10 +217,9 @@ export default createReactClass({
     this.props.mark.y = Math.max(0, this.props.mark.y);
 
     this.props.mark.width = Math.max(this.props.mark.width, MINIMUM_SIZE);
-    return (this.props.mark.height = Math.max(
+    this.props.mark.height = Math.max(
       this.props.mark.height,
-      MINIMUM_SIZE
-    ));
+      MINIMUM_SIZE);
   },
 
   validVert(y, h) {
@@ -277,14 +281,20 @@ export default createReactClass({
     }
     classes.push(this.props.disabled ? "committed" : "uncommitted");
     if (this.checkLocation()) {
-      classes.push("tanscribing");
+      classes.push("transcribing");
+    }
+
+    let { width, height } = this.props.mark;
+    if (Math.abs(width) < MINIMUM_SIZE) {
+      width = Math.sign(width) * MINIMUM_SIZE;
+    }
+    if (Math.abs(height) < MINIMUM_SIZE) {
+      height = Math.sign(height) * MINIMUM_SIZE;
     }
 
     const x1 = this.props.mark.x;
-    const { width } = this.props.mark;
     const x2 = x1 + width;
     const y1 = this.props.mark.y;
-    const { height } = this.props.mark;
     const y2 = y1 + height;
 
     const scale = (this.props.xScale + this.props.yScale) / 2;
@@ -297,6 +307,7 @@ export default createReactClass({
       [x1, y1].join(",")
     ].join("\n");
 
+    const pointsHash = this.createRectangleObjects(x1, x2, y1, y2);
     return (
       <g
         data-tool={this}
@@ -337,8 +348,8 @@ filter=\"${this.props.selected ? "url(#dropShadow)" : "none"}\" \
             <DeleteButton
               onClick={this.props.onDestroy}
               scale={scale}
-              x={this.getDeleteButtonPosition(this.state.pointsHash).x}
-              y={this.getDeleteButtonPosition(this.state.pointsHash).y}
+              x={this.getDeleteButtonPosition(pointsHash).x}
+              y={this.getDeleteButtonPosition(pointsHash).y}
             />
           ) : (
               undefined
@@ -348,8 +359,8 @@ filter=\"${this.props.selected ? "url(#dropShadow)" : "none"}\" \
               {(() => {
                 const result = [];
 
-                for (let key in this.state.pointsHash) {
-                  const value = this.state.pointsHash[key];
+                for (let key in pointsHash) {
+                  const value = pointsHash[key];
                   result.push(
                     <DragHandle
                       key={key}

@@ -147,7 +147,7 @@ export default createReactClass({
     }
     classes.push(this.props.disabled ? 'committed' : 'uncommitted')
     if (this.checkLocation()) {
-      classes.push("tanscribing")
+      classes.push("transcribing")
     }
 
     let x1 = this.props.mark.x,
