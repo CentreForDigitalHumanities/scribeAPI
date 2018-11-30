@@ -167,7 +167,7 @@ export default AppContext(createReactClass({
       this.getActiveWorkflow().first_task;
 
     return (
-      <div className="classifier">
+      <div className="classifier transcribe">
         <div className="subject-area">
           {!this.getCurrentSubject() && !this.state.noMoreSubjects ? (
             <DraggableModal

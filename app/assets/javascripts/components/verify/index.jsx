@@ -91,7 +91,7 @@ export default AppContext(createReactClass({
       this.getActiveWorkflow().first_task;
 
     return (
-      <div className="classifier">
+      <div className="classifier verify">
         <div className="subject-area">
           {(() => {
             if (this.getCurrentSubject() == null) {
