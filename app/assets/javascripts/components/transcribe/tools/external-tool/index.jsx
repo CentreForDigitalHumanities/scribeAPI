@@ -1,69 +1,27 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { BehaviorSubject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import marked from '../../../../lib/marked.min.js';
+import DraggableModal from "../../../draggable-modal.jsx";
+import SmallButton from "../../../buttons/small-button.jsx";
+import LabeledRadioButton from "../../../buttons/labeled-radio-button.jsx";
+import HelpButton from "../../../buttons/help-button.jsx";
+import BadSubjectButton from "../../../buttons/bad-subject-button.jsx";
+import IllegibleSubjectButton from "../../../buttons/illegible-subject-button.jsx";
 
-import marked from '../../../lib/marked.min.js';
-import DraggableModal from "../../draggable-modal.jsx";
-import SmallButton from "../../buttons/small-button.jsx";
-import HelpButton from "../../buttons/help-button.jsx";
-import BadSubjectButton from "../../buttons/bad-subject-button.jsx";
-import IllegibleSubjectButton from "../../buttons/illegible-subject-button.jsx";
-
-class EntitySelector extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { selected: props.selected || 'unknown' };
-  }
-
-  componentWillReceiveProps(newProps) {
-    let selected = newProps.selected || this.state.selected;
-    let items = newProps.items || this.state.items;
-
-    // check that the selection is still valid
-    if (items && selected != 'unknown') {
-      for (let item of items) {
-        if (item.id == selected) {
-          return;
-        }
-      }
-
-      this.setSelected('unknown');
-    }
-  }
-
-  setSelected(item) {
-    if (item == 'unknown') {
-      item = { id: 'unknown', display: 'Unknown entity' };
-    }
-    this.props.onChange(item);
-    this.setState({ selected: item.id });
-  }
-
-  render() {
-    function renderItem(self, item) {
-      return <label className="radio" key={item.id}>
-        <input type="radio" value={item.id}
-          checked={self.state.selected === item.id}
-          onChange={() => self.setSelected(item)} />
-        {item.display}
-      </label>
-    }
-
-    return this.props.items.length && <div>
-      <p>Select if this matches any of the results in the list:</p>
-      <div className="entity-list">
-        {
-          this.props.items.map((item) => renderItem(this, item))
-        }
-        {renderItem(this, { id: 'unknown', display: 'Unknown / Other' })}
-      </div>
-    </div> || null
-  }
-}
+import EntitySearcher from './entity-searcher.jsx';
 
 export default class ExternalTool extends React.Component {
+  static defaultProps = {
+    annotation: {},
+    annotation_key: null,
+    task: null,
+    subject: null,
+    standalone: true,
+    focus: true,
+    inputType: "text"
+  }
+
   // keep track of the number of searches - do not let the results
   // of an old search overwrite newer results
   searchCounter = 0;
@@ -73,7 +31,6 @@ export default class ExternalTool extends React.Component {
     super(props);
     this.state = {
       annotation: props.annotation != null ? props.annotation : {},
-      matches: [],
       viewerSize: props.viewerSize
     };
   }
@@ -138,17 +95,6 @@ export default class ExternalTool extends React.Component {
     return true;
   }
 
-  componentWillMount() {
-    this.textValue = new BehaviorSubject('');
-    this.textValue.pipe(debounceTime(300)).subscribe(textValue => {
-      this.setState({ loading: true });
-      this.searchExternal(textValue, (items) => {
-        this.setState({ matches: items });
-        this.setState({ loading: false });
-      });
-    })
-  }
-
   componentDidMount() {
     if (this.props.focus) {
       this.focus();
@@ -159,10 +105,6 @@ export default class ExternalTool extends React.Component {
     if (this.props.focus) {
       this.focus();
     }
-  }
-
-  componentWillUnmount() {
-    this.textValue.complete()
   }
 
   // Expects size hash with:
@@ -246,8 +188,13 @@ export default class ExternalTool extends React.Component {
       return null;
     } // hide transcribe tool while loading image
 
-    let val = this.state.annotation[this.fieldKey()]
-      || { text: '', entityText: '', id: null };
+    let val = Object.assign({
+      doSearch: false,
+      text: '',
+      searchText: '',
+      entityText: '',
+      id: null
+    }, this.state.annotation[this.fieldKey()] || {});
 
     if (!this.props.standalone) {
       label = this.props.label != null ? this.props.label : "";
@@ -288,16 +235,26 @@ export default class ExternalTool extends React.Component {
           onChange={(event) => {
             let text = event.target.value;
             this.updateValue({ text });
-            this.textValue.next(text.trim());
           }}
         />
-        {this.state.loading && <p>Searching...</p>}
-        <EntitySelector items={this.state.matches}
-          getItemValue={(item) => item.display}
-          selected={val.id}
-          onChange={({ display, id }) => {
-            this.updateValue({ entityText: display, id });
-          }} />
+        <span>{this.toolConfig()['ask_text']}</span>
+        <LabeledRadioButton className="radio" label="Yes" checked={val.doSearch} onChange={() => this.updateValue({
+          doSearch: !val.doSearch,
+          searchText: val.text
+        })} />
+        <LabeledRadioButton className="radio" label="No" checked={!val.doSearch} onChange={() => this.updateValue({ doSearch: !val.doSearch })} />
+        {
+          val.doSearch &&
+          <div>
+            <span>{this.toolConfig()['search_text']}</span>
+            <EntitySearcher selected={val.id} onChange={({ display, id }) => {
+              this.updateValue({ entityText: display, id });
+            }}
+              onSearchText={(searchText) => { this.updateValue({ searchText }) }}
+              searchText={val.searchText}
+              searchExternal={this.searchExternal.bind(this)} />
+          </div>
+        }
       </div>
     );
 
@@ -367,13 +324,3 @@ export default class ExternalTool extends React.Component {
     return <div>{toolContent}</div>;
   }
 }
-
-ExternalTool.defaultProps = {
-  annotation: {},
-  annotation_key: null,
-  task: null,
-  subject: null,
-  standalone: true,
-  focus: true,
-  inputType: "text"
-};

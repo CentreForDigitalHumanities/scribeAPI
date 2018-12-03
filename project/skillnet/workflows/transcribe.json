@@ -25,7 +25,9 @@
     "sk_sender_name": {
       "tool": "ExternalTool",
       "tool_config": {
-        "id": "emlo_people"
+        "id": "emlo_people",
+        "ask_text": "Do you know this person?",
+        "search_text": "Search for this person:"
       },
       "instruction": "Enter the sender's name",
       "examples": ["Christian Wolff", "R.", "H. F. D."],
@@ -38,7 +40,9 @@
     "sk_recipient_name": {
       "tool": "ExternalTool",
       "tool_config": {
-        "id": "emlo_people"
+        "id": "emlo_people",
+        "ask_text": "Do you know this person?",
+        "search_text": "Search for this person:"
       },
       "instruction": "Enter the recipient's name",
       "examples": ["Christian Wolff", "R.", "H. F. D."],

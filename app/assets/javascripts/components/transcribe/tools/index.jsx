@@ -1,5 +1,5 @@
 import compositeTool from "./composite-tool/index.jsx";
-import ExternalTool from './external-tool.jsx';
+import ExternalTool from './external-tool/index.jsx';
 import HistoricalDateTool from './historical-date-tool.jsx';
 import singleTool from "./single-tool/index.jsx";
 
