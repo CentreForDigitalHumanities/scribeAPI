@@ -201,9 +201,19 @@ print {
   display: none;
 }
 
-.bad-subject:after  {
+.mark.classifier .bad-subject:after {
   content: "Nothing to Mark"
+}
+.transcribe.classifier .bad-subject:after {
+  content: "Bad Region"
 }
 .bad-subject-marked:before {
   content: "You’ve marked that this page contains nothing to mark. "
+}
+.help-modal {
+  width: 680px;
+  border: 3px;
+}
+.help-modal .modal-header {
+  border-radius: 3px 3px 0 0;
 }

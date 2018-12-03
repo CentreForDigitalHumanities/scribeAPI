@@ -262,7 +262,7 @@ export default AppContext(createReactClass({
     }
 
     return (
-      <div className="classifier">
+      <div className="classifier mark">
         <div className="subject-area">
           {(() => {
             if (this.state.noMoreSubjectSets) {

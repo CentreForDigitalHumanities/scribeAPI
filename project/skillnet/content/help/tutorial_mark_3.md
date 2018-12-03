@@ -5,5 +5,5 @@ If the relevant words spill over from one line to the next, you will have to dra
 If you are unhappy with the box, just remove it by clicking on the box and then clicking on the x button in the upper-right corner of the mark. Once you have drawn a box around the words you want, click "Done". Once you've clicked on "Done," your mark is saved. You can close your browser window or move on to a new task and all your work will be saved.
 
 <div class="video-wrapper">
-  <video width="445" height="138.7" loop autoplay src="/images/mark_task.mp4"></video>
+  <video width="640" height="360" loop autoplay src="/images/mark_task.mp4"></video>
 </div>
