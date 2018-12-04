@@ -10,6 +10,9 @@ class Group
   field :meta_data,       type: Hash
 
   include CachedStats
+  # Do this here, because for Projects this is disabled
+  set_callback :find, :after, :check_and_update_stats
+
   update_interval 30
 
   belongs_to :project

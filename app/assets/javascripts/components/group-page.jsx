@@ -1,4 +1,6 @@
 import React from "react";
+import pluralize from 'pluralize';
+
 import GenericButton from "./buttons/generic-button.jsx";
 import API from "../lib/api.jsx";
 import { AppContext } from "./app-context.jsx";
@@ -36,6 +38,8 @@ export default class GroupPage extends React.Component {
         </div>
       );
     }
+    let subjectsTerm = this.props.context.project.terms_map.subject;
+    subjectsTerm = pluralize(subjectsTerm[0].toUpperCase() + subjectsTerm.substring(1));
     return (
       <div className="page-content">
         <h1>{this.state.group.name}</h1>
@@ -94,7 +98,7 @@ export default class GroupPage extends React.Component {
               <div>
                 <dl className="stats-list">
                   <div>
-                    <dt>Classifications In-Progress</dt>
+                    <dt>{subjectsTerm} Remaining</dt>
                     <dd>
                       {(this.state.group.stats != null
                         ? this.state.group.stats.total_pending
@@ -106,7 +110,7 @@ export default class GroupPage extends React.Component {
                     </dd>
                   </div>
                   <div>
-                    <dt>Complete Classifications</dt>
+                    <dt>Completed {subjectsTerm}</dt>
                     <dd>
                       {(this.state.group.stats != null
                         ? this.state.group.stats.total_finished
@@ -117,7 +121,7 @@ export default class GroupPage extends React.Component {
                         : 0}
                     </dd>
                   </div>
-                  <div>
+                  <div className="completion">
                     <dt>Overall Estimated Completion</dt>
                     <dd>
                       {parseInt(
