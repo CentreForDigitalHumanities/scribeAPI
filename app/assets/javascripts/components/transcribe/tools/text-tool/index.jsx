@@ -1,10 +1,3 @@
-/*
- * decaffeinate suggestions:
- * DS101: Remove unnecessary use of Array.from
- * DS102: Remove unnecessary code created because of implicit returns
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 import React from "react";
 import ReactDOM from "react-dom";
 import marked from '../../../../lib/marked.min.js';
@@ -14,17 +7,15 @@ import HelpButton from "../../../buttons/help-button.jsx";
 import BadSubjectButton from "../../../buttons/bad-subject-button.jsx";
 import IllegibleSubjectButton from "../../../buttons/illegible-subject-button.jsx";
 
-import createReactClass from "create-react-class";
-const TextTool = createReactClass({
-  displayName: "TextTool",
-
-  getInitialState() {
-    return {
-      annotation: this.props.annotation != null ? this.props.annotation : {},
+export default class TextTool extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      annotation: this.props.annotation && this.props.annotation || {},
       viewerSize: this.props.viewerSize,
       autocompleting: false
     };
-  },
+  }
 
   // this can go into a mixin? (common across all transcribe tools)
   getPosition(data) {
@@ -60,45 +51,45 @@ const TextTool = createReactClass({
       y = this.props.subject.height / 2;
     }
     return { x, y };
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      annotation: {},
-      annotation_key: null,
-      task: null,
-      subject: null,
-      standalone: true,
-      focus: true,
-      inputType: "text"
-    };
-  },
+  static defaultProps = {
+    annotation: {},
+    annotation_key: null,
+    task: null,
+    subject: null,
+    standalone: true,
+    focus: true,
+    inputType: "text"
+  };
 
   componentWillUnmount() {
     const tool_config = this.toolConfig();
     if (tool_config.suggest === "common") {
       const el = $(ReactDOM.findDOMNode(this.refs.input0));
-      if (el.autocomplete != null) {
-        return el.autocomplete("destroy");
+      if (el.autocomplete) {
+        el.autocomplete("destroy");
       }
     }
-  },
+  }
 
   toolConfig() {
-    return this.props.tool_config != null
+    return this.props.tool_config
       ? this.props.tool_config
       : this.props.task.tool_config;
-  },
+  }
 
-  // Set focus on input:
+  /**
+   * Set focus on input
+   */
   focus() {
     const el = $(
-      this.refs.input0 != null ? ReactDOM.findDOMNode(this.refs.input0) : undefined
+      this.refs.input0 ? ReactDOM.findDOMNode(this.refs.input0) : undefined
     );
-    if (el != null && el.length) {
-      return el.focus();
+    if (el && el.length) {
+      el.focus();
     }
-  },
+  }
 
   componentWillReceiveProps(new_props) {
     // PB: Note this func is defined principally to allow a parent composite-tool
@@ -112,69 +103,72 @@ const TextTool = createReactClass({
     this.applyAutoComplete();
 
     // Required to ensure tool has cleared annotation even if tool doesn't unmount between tasks:
-    return this.setState({
-      annotation: new_props.annotation != null ? new_props.annotation : {},
+    this.setState({
+      annotation: new_props.annotation && new_props.annotation || {},
       viewerSize: new_props.viewerSize
     });
-  },
+  }
 
   shouldComponentUpdate() {
     return true;
-  },
+  }
 
   componentDidMount() {
     this.applyAutoComplete();
     if (this.props.focus) {
-      return this.focus();
+      this.focus();
     }
-  },
+  }
 
   componentDidUpdate() {
     this.applyAutoComplete();
     if (this.props.focus) {
-      return this.focus();
+      this.focus();
     }
-  },
+  }
 
   applyAutoComplete() {
     if (this.toolConfig().suggest === "common") {
       const el = $(
-        this.refs.input0 != null ? ReactDOM.findDOMNode(this.refs.input0) : undefined
+        this.refs.input0 ? ReactDOM.findDOMNode(this.refs.input0) : undefined
       );
-      return el.autocomplete({
+      el.autocomplete({
         open: () => this.setState({ autocompleting: true }),
         close: () =>
           setTimeout(() => this.setState({ autocompleting: false }), 1000),
         select: (e, ui) => this.updateValue(ui.item.value),
         source: (request, response) => {
           const field = `${this.props.task.key}:${this.fieldKey()}`;
-          return $.ajax({
+          $.ajax({
             url: `/classifications/terms/${this.props.workflow.id}/${field}`,
             dataType: "json",
             data: {
               q: request.term
             },
             success: data => {
-              return response(data);
+              response(data);
             }
           });
         },
         minLength: 3
       });
     }
-  },
+  }
 
-  // Expects size hash with:
-  //   w: [viewer width]
-  //   h: [viewer height]
-  //   scale:
-  //     horizontal: [horiz scaling of image to fit within above vals]
-  //     vertical:   [vert scaling of image..]
+  /**
+   * Expects size hash with:
+   *   w: [viewer width]
+   *   h: [viewer height]
+   *   scale:
+   *     horizontal: [horiz scaling of image to fit within above vals]
+   *     vertical:   [vert scaling of image..]
+   * @param {*} size 
+   */
   onViewerResize(size) {
-    return this.setState({
+    this.setState({
       viewerSize: size
     });
-  },
+  }
 
   // this can go into a mixin? (common across all transcribe tools)
   // NOTE: doesn't get called unless @props.standalone is true
@@ -187,48 +181,67 @@ const TextTool = createReactClass({
       this.props.transcribeMode === "single"
     ) {
       if (this.props.isLastSubject && this.props.task.next_task == null) {
-        return this.props.returnToMarking();
+        this.props.returnToMarking();
       }
     }
-  },
+  }
 
-  // Get key to use in annotations hash (i.e. typically 'value', unless included in composite tool)
+  /**
+   * Get key to use in annotations hash (i.e. typically 'value', unless included in composite tool)
+   */
   fieldKey() {
     if (this.props.standalone) {
       return "value";
     } else {
       return this.props.annotation_key;
     }
-  },
+  }
 
   getCaret() {
-    let el;
-    return (el = $(
-      this.refs.input0 != null ? ReactDOM.findDOMNode(this.refs.input0) : undefined
-    ));
-  },
+    return $(this.refs.input0
+      ? ReactDOM.findDOMNode(this.refs.input0)
+      : undefined);
+  }
 
+  /**
+   * report updated annotation to parent
+   */
   updateValue(val) {
     const newAnnotation = this.state.annotation;
     newAnnotation[this.fieldKey()] = val;
 
     // if composite-tool is used, this will be a callback to CompositeTool::handleChange()
     // otherwise, it'll be a callback to Transcribe::handleDataFromTool()
-    return this.props.onChange(newAnnotation);
-  }, // report updated annotation to parent
+    this.props.onChange(newAnnotation);
+  }
 
   handleChange(e) {
-    return this.updateValue(e.target.value);
-  },
+    const value = e.target.value;
+    const maxWords = this.props.task.tool_config.max_words;
+    if (maxWords) {
+      if (value.split(' ').length > maxWords) {
+        // too many words!
+        this.setState({
+          tempDisable: true,
+          warning: `Enter no more than ${maxWords} words`
+        });
+        setTimeout(() => {
+          this.setState({ tempDisable: false });
+        }, 2000);
+        return false;
+      } else if (this.state.warning) {
+        this.setState({ warning: null });
+      }
+    }
+    return this.updateValue(value);
+  }
 
   handleKeyDown(e) {
     this.handleChange(e); // updates any autocomplete values
 
-    if (
-      !this.state.autocompleting &&
+    if (!this.state.autocompleting &&
       [13].indexOf(e.keyCode) >= 0 &&
-      !e.shiftKey
-    ) {
+      !e.shiftKey) {
       // ENTER
       return this.commitAnnotation();
     } else if (e.keyCode === 13 && e.shiftKey) {
@@ -237,12 +250,12 @@ const TextTool = createReactClass({
       the_text = the_text.concat("/n");
       return text_area.val(the_text);
     }
-  },
+  }
 
   handleBadMark() {
     const newAnnotation = [];
     return newAnnotation["low_quality_subject"];
-  },
+  }
 
   render() {
     let atts, label;
@@ -256,7 +269,7 @@ const TextTool = createReactClass({
     }
 
     if (!this.props.standalone) {
-      label = this.props.label != null ? this.props.label : "";
+      label = this.props.label || "";
       if (Array.isArray(label)) {
         label = label[0];
       }
@@ -268,13 +281,12 @@ const TextTool = createReactClass({
 
     // Grab examples either from examples in top level of task or (for composite tool) inside this field's option hash:
     const examples =
-      this.props.task.examples != null
-        ? this.props.task.examples
-        : Array.from(
-          this.props.task.tool_config &&
-          this.props.task.tool_config.options ||
-          []
-        ).filter(t => t.value === this.props.annotation_key).map(x => x.examples);
+      this.props.task.examples ||
+      (
+        this.props.task.tool_config &&
+        this.props.task.tool_config.options ||
+        []
+      ).filter(t => t.value === this.props.annotation_key).map(x => x.examples);
 
     // create component input field(s)
     let tool_content = (
@@ -282,7 +294,7 @@ const TextTool = createReactClass({
         <label dangerouslySetInnerHTML={{ __html: marked(label) }} />
         {examples && (
           <ul className="task-examples">
-            {Array.from(examples).map((ex, i) => (
+            {examples.map((ex, i) => (
               <li key={i}>{ex}</li>
             ))}
           </ul>
@@ -292,14 +304,14 @@ const TextTool = createReactClass({
             ref,
             key: `${this.props.task.key}.${this.props.annotation_key}`,
             "data-task_key": this.props.task.key,
-            onKeyDown: this.handleKeyDown,
-            onChange: this.handleChange,
+            onKeyDown: this.handleKeyDown.bind(this),
+            onChange: this.handleChange.bind(this),
             onFocus: () => {
               if (typeof this.props.onInputFocus === "function")
                 this.props.onInputFocus(this.props.annotation_key)
             },
             value: val,
-            disabled: this.props.badSubject
+            disabled: this.props.badSubject || this.state.tempDisable
           }),
             this.props.inputType === "text" ? (
               <input {...Object.assign({ type: "text", value: val }, atts)} />
@@ -315,22 +327,23 @@ const TextTool = createReactClass({
             ) : (
                       console.warn(`Invalid inputType specified: ${this.props.inputType}`)
                     ))
+        }{
+          this.state.warning && <p>{this.state.warning}</p>
         }
       </div>
     );
 
     if (this.props.standalone) {
       // 'standalone' true if component handles own mouse events
-
       const buttons = [];
 
-      if (this.props.onShowHelp != null) {
+      if (this.props.onShowHelp) {
         buttons.push(
           <HelpButton key="help-button" onClick={this.props.onShowHelp} />
         );
       }
 
-      if (this.props.onBadSubject != null) {
+      if (this.props.onBadSubject) {
         buttons.push(
           <BadSubjectButton
             key="bad-subject-button"
@@ -341,7 +354,7 @@ const TextTool = createReactClass({
         );
       }
 
-      if (this.props.onIllegibleSubject != null) {
+      if (this.props.onIllegibleSubject) {
         buttons.push(
           <IllegibleSubjectButton
             key="illegal-subject-button"
@@ -352,7 +365,7 @@ const TextTool = createReactClass({
       }
 
       const buttonLabel =
-        this.props.task.next_task != null
+        this.props.task.next_task
           ? "Continue"
           : this.props.isLastSubject &&
             (this.props.transcribeMode === "page" ||
@@ -364,7 +377,7 @@ const TextTool = createReactClass({
         <SmallButton
           label={buttonLabel}
           key="done-button"
-          onClick={this.commitAnnotation}
+          onClick={this.commitAnnotation.bind(this)}
         />
       );
 
@@ -384,6 +397,4 @@ const TextTool = createReactClass({
 
     return <div>{tool_content}</div>;
   }
-});
-
-export default TextTool;
+}

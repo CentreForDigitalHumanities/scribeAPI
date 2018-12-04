@@ -13,7 +13,9 @@
 
     "sk_incipit": {
       "tool": "textTool",
-      "tool_config": {},
+      "tool_config": {
+        "max_words": 10
+      },
       "instruction": "Enter the first 6 to 10 words",
       "examples": ["..."],
       "help": {
