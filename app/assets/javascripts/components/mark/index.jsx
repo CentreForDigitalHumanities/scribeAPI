@@ -10,30 +10,21 @@
  */
 import React from "react";
 import createReactClass from "create-react-class";
-import PropTypes from 'prop-types';
 import { NavLink } from "react-router-dom";
-import { AppContext } from "../app.jsx";
+import { AppContext } from "../app-context.jsx";
 import SubjectSetViewer from "../subject-set-viewer.jsx";
-import coreTools from "../core-tools/index.jsx";
 import FetchSubjectSetsMixin from "../../lib/fetch-subject-sets-mixin.jsx";
 import BaseWorkflowMethods from "../../lib/workflow-methods-mixin.jsx";
-import JSONAPIClient from "json-api-client"; // use to manage data?
 import ForumSubjectWidget from "../forum-subject-widget.jsx";
 import HelpModal from "../help-modal.jsx";
 import Tutorial from "../tutorial.jsx";
 import HelpButton from "../buttons/help-button.jsx";
 import BadSubjectButton from "../buttons/bad-subject-button.jsx";
-import HideOtherMarksButton from "../buttons/hide-other-marks-button.jsx";
 import DraggableModal from "../draggable-modal.jsx";
-import Draggable from "../../lib/draggable.jsx";
 
 export default AppContext(createReactClass({
   // rename to Classifier
   displayName: "Mark",
-
-  propTypes: {
-    onCloseTutorial: PropTypes.func.isRequired
-  },
 
   getDefaultProps() {
     return { workflowName: "mark" };
@@ -53,7 +44,7 @@ export default AppContext(createReactClass({
       helping: false,
       hideOtherMarks: false,
       currentSubtool: null,
-      showingTutorial: this.showTutorialBasedOnUser(this.props.user),
+      showingTutorial: this.showTutorialBasedOnUser(this.props.context.user),
       lightboxHelp: false,
       activeSubjectHelper: null,
       subjectCurrentPage: 1
@@ -62,7 +53,7 @@ export default AppContext(createReactClass({
 
   componentWillReceiveProps(new_props) {
     return this.setState({
-      showingTutorial: this.showTutorialBasedOnUser(new_props.user)
+      showingTutorial: this.showTutorialBasedOnUser(new_props.context.user)
     });
   },
 
@@ -409,7 +400,7 @@ export default AppContext(createReactClass({
                     {onFirstAnnotation ? (
                       <BadSubjectButton
                         class="bad-subject-button"
-                        label={`Bad ${this.props.project.term("subject")}`}
+                        label={`Bad ${this.props.context.project.term("subject")}`}
                         active={this.state.badSubject}
                         onClick={this.toggleBadSubject}
                       />
@@ -419,7 +410,7 @@ export default AppContext(createReactClass({
                     {this.state.badSubject ? (
                       <p className="bad-subject-marked">
                         <span>
-                        You've marked this {this.props.project.term("subject")} as
+                        You've marked this {this.props.context.project.term("subject")} as
                       BAD. Thanks for flagging the issue!{" "}</span>
                         <strong>Press DONE to continue.</strong>
                       </p>
@@ -451,7 +442,7 @@ export default AppContext(createReactClass({
                         }/${__guard__(this.getCurrentSubject(), x5 => x5.id)}`}
                       className="transcribe-link"
                     >
-                      Transcribe this {this.props.project.term("subject")} now!
+                      Transcribe this {this.props.context.project.term("subject")} now!
                   </NavLink>
                   </p>
                 ) : (
@@ -466,7 +457,7 @@ export default AppContext(createReactClass({
                       to={`/groups/${this.getCurrentSubjectSet().group_id}`}
                       className="about-link"
                     >
-                      About this {this.props.project.term("group")}.
+                      About this {this.props.context.project.term("group")}.
                   </NavLink>
                   </p>
                 ) : (
@@ -476,7 +467,7 @@ export default AppContext(createReactClass({
                 <ForumSubjectWidget
                   subject={this.getCurrentSubject()}
                   subject_set={this.getCurrentSubjectSet()}
-                  project={this.props.project}
+                  project={this.props.context.project}
                 />
               </div>
               <div className="social-media-container">
@@ -500,30 +491,28 @@ export default AppContext(createReactClass({
             </div>
           </div>
         </div>
-        {this.props.project.tutorial != null && this.state.showingTutorial ? (
+        {this.props.context.project.tutorial != null && this.state.showingTutorial && (
           // Check for workflow-specific tutorial
-          this.props.project.tutorial.workflows != null &&
-            this.props.project.tutorial.workflows[
+          this.props.context.project.tutorial.workflows != null &&
+            this.props.context.project.tutorial.workflows[
             __guard__(this.getActiveWorkflow(), x6 => x6.name)
             ] ? (
               <Tutorial
                 tutorial={
-                  this.props.project.tutorial.workflows[
+                  this.props.context.project.tutorial.workflows[
                   this.getActiveWorkflow().name
                   ]
                 }
-                onCloseTutorial={this.props.onCloseTutorial}
+                onCloseTutorial={this.props.context.onCloseTutorial}
               />
             ) : (
               // Otherwise just show general tutorial
               <Tutorial
-                tutorial={this.props.project.tutorial}
-                onCloseTutorial={this.props.onCloseTutorial}
+                tutorial={this.props.context.project.tutorial}
+                onCloseTutorial={this.props.context.onCloseTutorial}
               />
             )
-        ) : (
-            undefined
-          )}
+        )}
         {this.state.helping ? (
           <HelpModal
             help={this.getCurrentTask().help}
