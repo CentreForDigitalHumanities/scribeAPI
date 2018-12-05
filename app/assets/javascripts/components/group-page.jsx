@@ -1,33 +1,33 @@
-import React from "react";
-import pluralize from 'pluralize';
+import React from 'react'
+import pluralize from 'pluralize'
 
-import GenericButton from "./buttons/generic-button.jsx";
-import API from "../lib/api.jsx";
-import { AppContext } from "./app-context.jsx";
+import GenericButton from './buttons/generic-button.jsx'
+import API from '../lib/api.jsx'
+import { AppContext } from './app-context.jsx'
 
 @AppContext
 export default class GroupPage extends React.Component {
   constructor() {
-    super();
-    this.state = { group: null };
+    super()
+    this.state = { group: null }
   }
 
   componentDidMount() {
-    API.type("groups")
+    API.type('groups')
       .get(this.props.match.params.group_id)
       .then(group => {
         this.setState({
           group
-        });
-      });
+        })
+      })
 
-    API.type("subject_sets")
+    API.type('subject_sets')
       .get({ group_id: this.props.match.params.group_id })
       .then(sets => {
         this.setState({
           subject_sets: sets
-        });
-      });
+        })
+      })
   }
 
   render() {
@@ -36,10 +36,10 @@ export default class GroupPage extends React.Component {
         <div className="group-page">
           <h2>Loading...</h2>
         </div>
-      );
+      )
     }
-    let subjectsTerm = this.props.context.project.terms_map.subject;
-    subjectsTerm = pluralize(subjectsTerm[0].toUpperCase() + subjectsTerm.substring(1));
+    let subjectsTerm = this.props.context.project.terms_map.subject
+    subjectsTerm = pluralize(subjectsTerm[0].toUpperCase() + subjectsTerm.substring(1))
     return (
       <div className="page-content">
         <h1>{this.state.group.name}</h1>
@@ -48,29 +48,29 @@ export default class GroupPage extends React.Component {
             <h3>{this.state.group.description}</h3>
             <dl className="metadata-list">
               {(() => {
-                const result = [];
+                const result = []
                 for (let k in this.state.group.meta_data) {
                   // Is there another way to return both dt and dd elements without wrapping?
-                  const v = this.state.group.meta_data[k];
+                  const v = this.state.group.meta_data[k]
                   if (
                     [
-                      "key",
-                      "description",
-                      "cover_image_url",
-                      "external_url",
-                      "retire_count"
+                      'key',
+                      'description',
+                      'cover_image_url',
+                      'external_url',
+                      'retire_count'
                     ].indexOf(k) < 0
                   ) {
                     result.push(
                       <div key={k}>
-                        <dt>{k.replace(/_/g, " ")}</dt>
+                        <dt>{k.replace(/_/g, ' ')}</dt>
                         <dd>{v}</dd>
                       </div>
-                    );
+                    )
                   }
                 }
 
-                return result;
+                return result
               })()}
               {this.state.group.meta_data.external_url != null ? (
                 <div>
@@ -85,8 +85,8 @@ export default class GroupPage extends React.Component {
                   </dd>
                 </div>
               ) : (
-                  undefined
-                )}
+                undefined
+              )}
             </dl>
             <img
               className="group-image"
@@ -134,13 +134,13 @@ export default class GroupPage extends React.Component {
                           : 0) * 100
                       )}
                       %
-                      </dd>
+                    </dd>
                   </div>
                 </dl>
               </div>
             ) : (
-                undefined
-              )}
+              undefined
+            )}
             <div className="subject_sets">
               {(
                 this.state.subject_sets != null ? this.state.subject_sets : []
@@ -148,10 +148,10 @@ export default class GroupPage extends React.Component {
                 <div key={i} className="subject_set">
                   <div className="mark-transcribe-buttons">
                     {(() => {
-                      const result1 = [];
+                      const result1 = []
                       for (let workflow of this.props.context.project.workflows) {
                         const workflowCounts = set.counts[workflow.id] != null &&
-                          set.counts[workflow.id];
+                          set.counts[workflow.id]
                         if ((workflowCounts != null && workflowCounts.active_subjects
                           ? workflowCounts.active_subjects
                           : 0) > 0
@@ -162,15 +162,15 @@ export default class GroupPage extends React.Component {
                               label={workflow.name}
                               to={`/${workflow.name}?subject_set_id=${
                                 set.id
-                                }`}
+                              }`}
                             />
-                          );
+                          )
                         } else {
-                          result1.push(undefined);
+                          result1.push(undefined)
                         }
                       }
 
-                      return result1;
+                      return result1
                     })()}
                   </div>
                 </div>
@@ -179,6 +179,6 @@ export default class GroupPage extends React.Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
-};
+}

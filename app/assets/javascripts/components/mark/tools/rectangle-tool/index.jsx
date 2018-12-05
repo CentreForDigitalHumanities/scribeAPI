@@ -353,11 +353,7 @@ export default class RectangleTool extends React.Component {
 </filter> \
 \
 <polyline \
-${
-      this.props.mark.color != null
-        ? `stroke="${this.props.mark.color}"`
-        : undefined
-      } \
+${this.props.mark.color != null ? `stroke="${this.props.mark.color}"` : ''} \
 points="${points}" \
 filter="${this.props.selected ? 'url(#dropShadow)' : 'none'}" \
 />\
@@ -366,41 +362,33 @@ filter="${this.props.selected ? 'url(#dropShadow)' : 'none'}" \
             />
           </Draggable>
           <MarkLabel fill={this.props.mark.color} x={x1 + width / 2} y={y1 + height / 2} label={this.props.mark.label} />
-          {this.props.selected ? (
-            <DeleteButton
-              onClick={this.props.onDestroy}
-              scale={scale}
-              x={this.getDeleteButtonPosition(pointsHash).x}
-              y={this.getDeleteButtonPosition(pointsHash).y}
-            />
-          ) : (
-            undefined
-          )}
-          {this.props.selected && !this.props.disabled ? (
-            <g>
-              {(() => {
-                const result = []
+          {this.props.selected ? <DeleteButton
+            onClick={this.props.onDestroy}
+            scale={scale}
+            x={this.getDeleteButtonPosition(pointsHash).x}
+            y={this.getDeleteButtonPosition(pointsHash).y}
+          /> : undefined}
+          {this.props.selected && !this.props.disabled ? <g>
+            {(() => {
+              const result = []
 
-                for (let key in pointsHash) {
-                  const value = pointsHash[key]
-                  result.push(
-                    <DragHandle
-                      key={key}
-                      tool={this}
-                      x={value[0]}
-                      y={value[1]}
-                      onDrag={this.dragFilter(key).bind(this)}
-                      onEnd={this.normalizeMark.bind(this)}
-                    />
-                  )
-                }
+              for (let key in pointsHash) {
+                const value = pointsHash[key]
+                result.push(
+                  <DragHandle
+                    key={key}
+                    tool={this}
+                    x={value[0]}
+                    y={value[1]}
+                    onDrag={this.dragFilter(key).bind(this)}
+                    onEnd={this.normalizeMark.bind(this)}
+                  />
+                )
+              }
 
-                return result
-              })()}
-            </g>
-          ) : (
-            undefined
-          )}
+              return result
+            })()}
+          </g> : undefined}
           {(() => {
             // REQUIRES MARK-BUTTON-MIXIN
             if ((this.props.selected || this.state.markStatus === 'transcribe-enabled') &&
