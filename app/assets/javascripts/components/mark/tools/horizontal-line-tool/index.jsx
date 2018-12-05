@@ -8,57 +8,68 @@ import MarkLabel from '../mark-label.jsx'
 const STROKE_WIDTH = 10
 const DEFAULT_WIDTH = 1000
 const DELETE_BUTTON_DISTANCE_X = 12
-const DELETE_BUTTON_DISTANCE_Y = 0
+const DELETE_BUTTON_DISTANCE_Y = -18
+/**
+ * Prevent new lines being placed which are too near other lines
+ * (in case people miss click an existing line)
+ */
+const OVERLAP_THRESHOLD = 100
 
 @MarkButtonMixin
 export default class HorizontalLineTool extends React.Component {
   static propTypes = {
     // key:  PropTypes.number.isRequired
-    mark: PropTypes.object.isRequired
+    mark: PropTypes.object.isRequired,
+    disabled: PropTypes.bool,
+    isTranscribable: PropTypes.bool,
+    interim: PropTypes.bool,
+    selected: PropTypes.bool,
+    xScale: PropTypes.number,
+    yScale: PropTypes.number,
+    onChange: PropTypes.func,
+    onDestroy: PropTypes.func,
+    onSelect: PropTypes.func,
+    sizeRect: PropTypes.object
   }
   initCoords = null;
 
-  static defaultValues = ({ y }) => ({
-    x: 0,
-    y: y,
-    width: DEFAULT_WIDTH,
-    height: 0
-  })
+  static defaultValues({ y }, sizeRect) {
+    return {
+      x: 0,
+      y: y,
+      width: sizeRect && sizeRect.attributes && sizeRect.attributes.width && sizeRect.attributes.width.value || DEFAULT_WIDTH,
+      height: 0
+    }
+  }
 
-  static initStart({ x, y }, mark) {
+  static initStart({ x, y }) {
     x = 0
     this.initCoords = { x, y }
     return { x, y }
   }
 
-  static initMove(cursor, mark) {
-    let width, height, x, y
-    if (cursor.x > this.initCoords.x) {
-      width = cursor.x - mark.x
-      x = 0
-    } else {
-      width = this.initCoords.x - cursor.x
-      x = 0
-    }
-    if (cursor.y > this.initCoords.y) {
-      height = cursor.y - mark.y
-      y = mark.y
-    } else {
-      height = this.initCoords.y - cursor.y
-      y = cursor.y
-    }
-
-    return { x, y, width, height }
+  static initMove(cursor) {
+    return { y: cursor.y }
   }
 
-  static initValid(mark) {
+  static initValid(mark, marks) {
+    const candidates = marks.filter(m => !m.user_has_deleted &&
+      m.toolName === mark.toolName &&
+      m.label === mark.label)
+
+    for (let c of candidates) {
+      if (Math.abs(mark.y - c.y) < OVERLAP_THRESHOLD) {
+        return false
+      }
+    }
+
     return true
   }
 
   /**
    * This callback is called on mouseup to override mark properties (e.g. if too small)
    */
-  static initRelease(coords, mark, e) {
+  static initRelease(coords, mark) {
     mark.width = Math.max(mark.width, DEFAULT_WIDTH)
     mark.height = STROKE_WIDTH
     return mark
@@ -141,6 +152,7 @@ export default class HorizontalLineTool extends React.Component {
     }
     return this.props.onChange()
   }
+
   render() {
     let classes = []
     if (this.props.isTranscribable) {
@@ -186,33 +198,29 @@ export default class HorizontalLineTool extends React.Component {
         >
 
           <Draggable onDrag={this.handleMainDrag.bind(this)} >
-            <g
-              className={`tool-shape ${classes.join(' ')}`}
-              key={points}
-              dangerouslySetInnerHTML={{
-                __html: `
-                <filter id="dropShadow">
+            <g className={`tool-shape ${classes.join(' ')}`}
+              key={points}>
+              <filter id="dropShadow"
+                dangerouslySetInnerHTML={{
+                  __html: `
                   <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
                   <feOffset dx="2" dy="4" />
                   <feMerge>
                     <feMergeNode />
                     <feMergeNode in="SourceGraphic" />
                   </feMerge>
-                </filter>
-
-                <rect
-                  fill="${this.props.mark.color || 'gray'}"
-                  x="${x}"
-                  y="${y}"
-                  width="${width}"
-                  height="${height}"
-                  filter="${this.props.selected ? 'url(#dropShadow)' : 'none'}"
-                />
               `
-              }}
-            />
+                }} />
+              <rect fill={this.props.mark.color || 'gray'}
+                x={x}
+                y={y}
+                width={width}
+                height={height}
+                filter={this.props.selected ? 'url(#dropShadow)' : 'none'}
+              />
+              <MarkLabel fill={this.props.mark.color} x={x1 + width / 2} y={y1 + height * (y1 < 50 ? 6 : -2)} label={this.props.mark.label} />
+            </g>
           </Draggable>
-          <MarkLabel fill={this.props.mark.color} x={x1 + width / 2} y={y1 + height * (y1 < 50 ? 6 : -2)} label={this.props.mark.label} />
 
           {this.props.selected &&
             (deleteButtonPos = this.getDeleteButtonPosition()) &&
@@ -225,7 +233,6 @@ export default class HorizontalLineTool extends React.Component {
           }
 
         </g>
-
       </g>
     )
   }

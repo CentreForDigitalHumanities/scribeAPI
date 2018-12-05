@@ -218,7 +218,7 @@ export default createReactClass({
     const mouseCoords = this.getEventOffset(e)
 
     if (MarkComponent.defaultValues != null) {
-      const defaultValues = MarkComponent.defaultValues(mouseCoords)
+      const defaultValues = MarkComponent.defaultValues(mouseCoords, this.refs.sizeRect)
       for (key in defaultValues) {
         value = defaultValues[key]
         mark[key] = value
@@ -280,7 +280,7 @@ export default createReactClass({
         mark[key] = value
       }
     }
-    if (MarkComponent.initValid != null && !MarkComponent.initValid(mark)) {
+    if (MarkComponent.initValid != null && !MarkComponent.initValid(mark, this.state.marks)) {
       this.destroyMark(mark)
       return
     }
