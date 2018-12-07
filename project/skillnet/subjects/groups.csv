@@ -1,5 +1,5 @@
 key,name,description,cover_image_url,external_url,retire_count
-GER,German,Books containing German letters,images/German_letter.jpg,https://skillnet.nl/,2
-LAT-IT,Italian & Latin,Books containing Italian and Latin letters,images/Italian_letter.jpg,https://skillnet.nl/,2
-LAT,Latin,Books containing Latin letters,images/Latin_letter.jpg,https://skillnet.nl/,2
-SPAN,Spanish,Books containing Spanish letters,images/Spanish_letter.jpg,https://skillnet.nl/,2
+GER,German,Books containing German letters,images/German_letter.jpg,https://skillnet.nl/cemrol-german/,2
+LAT-IT,Italian & Latin,Books containing Italian and Latin letters,images/Italian_letter.jpg,https://skillnet.nl/cemrol-italian/,2
+LAT,Latin,Books containing Latin letters,images/Latin_letter.jpg,https://skillnet.nl/cemrol-latin/,2
+SPAN,Spanish,Books containing Spanish letters,images/Spanish_letter.jpg,https://skillnet.nl/cemrol-spanish/,2
