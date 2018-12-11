@@ -29,7 +29,7 @@
     "json-api-client": "^0.4.4",
     "normalize.css": "^3.0.3",
     "pluralize": "^7.0.0",
-    "query-string": "^6.1.0",
+    "query-string": "^5.1.1",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
     "react-router": "^4.3.1",
