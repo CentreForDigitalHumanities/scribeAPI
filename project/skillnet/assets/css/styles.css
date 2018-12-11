@@ -1,15 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Goudy+Bookletter+1911');
 
-html {
-  background-image: url(/images/cropped-Gysbrechts.jpg);
-  background-attachment: scroll;
-  background-size: cover;
-}
-
-.readymade-site-background {
-  display: none;
-}
-
 html,
 body,
 .home-page p,
