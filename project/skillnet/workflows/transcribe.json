@@ -66,10 +66,7 @@
     },
 
     "sk_sender_place": {
-      "tool": "ExternalTool",
-      "tool_config": {
-        "id": "emlo_places"
-      },
+      "tool": "textTool",
       "instruction": "Enter the sender's place",
       "examples": ["Hal.", "Halle"],
       "help": {
