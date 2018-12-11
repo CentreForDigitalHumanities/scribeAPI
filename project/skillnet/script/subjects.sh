@@ -7,7 +7,7 @@
 
 mkdir -p ~/skillnet-output
 echo "file_path,thumbnail,set_key,langs" >> ~/skillnet-output/group.csv
-knownLanguages=("FR" "GER" "GR" "IT" "LAT" "SPAN")
+knownLanguages=("EN" "FR" "GER" "GR" "IT" "LAT" "SPAN")
 IFS=$'\n';for file in $(ls "$1"); do
   if [[ $file != Verwijder* && $file != *"Geen brieven"* ]]; then
     if [[ -f "$1/$file" ]]; then
