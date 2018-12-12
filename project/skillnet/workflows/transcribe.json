@@ -76,10 +76,7 @@
     },
 
     "sk_recipient_place": {
-      "tool": "ExternalTool",
-      "tool_config": {
-        "id": "emlo_places"
-      },
+      "tool": "textTool",
       "instruction": "Enter the recipient's place",
       "examples": ["Christian Wolff", "R.", "H. F. D."],
       "help": {
