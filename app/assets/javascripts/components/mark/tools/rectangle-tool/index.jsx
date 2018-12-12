@@ -361,7 +361,7 @@ filter="${this.props.selected ? 'url(#dropShadow)' : 'none'}" \
               }}
             />
           </Draggable>
-          <MarkLabel fill={this.props.mark.color} x={x1 + width / 2} y={y1 + height / 2} label={this.props.mark.label} />
+          <MarkLabel scale={scale} fill={this.props.mark.color} x={x1 + width / 2} y={y1 + height / 2} label={this.props.mark.label} />
           {this.props.selected ? <DeleteButton
             onClick={this.props.onDestroy}
             scale={scale}

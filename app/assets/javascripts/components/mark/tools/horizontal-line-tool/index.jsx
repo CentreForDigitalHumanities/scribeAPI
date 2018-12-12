@@ -177,7 +177,7 @@ export default class HorizontalLineTool extends React.Component {
       y = this.props.mark.y,
 
       scale = (this.props.xScale + this.props.yScale) / 2,
-
+      
       points = [
         [x1, y1].join(','),
         [x2, y1].join(','),
@@ -218,7 +218,7 @@ export default class HorizontalLineTool extends React.Component {
                 height={height}
                 filter={this.props.selected ? 'url(#dropShadow)' : 'none'}
               />
-              <MarkLabel fill={this.props.mark.color} x={x1 + width / 2} y={y1 + height * (y1 < 50 ? 6 : -2)} label={this.props.mark.label} />
+              <MarkLabel scale={scale} fill={this.props.mark.color} x={x1 + width / 2} y={y1 + height * (y1 < 50 ? 6 : -2)} label={this.props.mark.label} />
             </g>
           </Draggable>
 

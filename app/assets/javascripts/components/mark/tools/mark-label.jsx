@@ -12,7 +12,12 @@ export default class MarkLabel extends React.Component {
     x: PropTypes.number,
     y: PropTypes.number,
     label: PropTypes.string,
-    fill: PropTypes.string
+    fill: PropTypes.string,
+    scale: PropTypes.number
+  }
+
+  static defaultProps = {
+    scale: 1
   }
 
   constructor(props) {
@@ -24,7 +29,7 @@ export default class MarkLabel extends React.Component {
   render() {
     const { project } = window
     if (project.show_labels) {
-      const { x, y, label } = this.props
+      const { x, y, label, scale } = this.props
 
       return <g>
         <defs>
@@ -34,7 +39,7 @@ export default class MarkLabel extends React.Component {
             }}>
           </filter>
         </defs>
-        <text filter={`url(#solid${this.state.counter})`} x={x} y={y} fontSize="30" fill="#000" stroke="none" className="mark-label">{label}</text>
+        <text filter={`url(#solid${this.state.counter})`} x={x} y={y} fontSize={30 / scale} fill="#000" stroke="none" className="mark-label">{label}</text>
       </g>
     } else {
       return null
