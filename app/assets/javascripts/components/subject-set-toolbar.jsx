@@ -1,51 +1,85 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 import React from 'react'
-import createReactClass from 'create-react-class'
 import PropTypes from 'prop-types'
 import LightBox from './light-box.jsx'
 import SubjectZoomPan from './subject-zoom-pan.jsx'
 
-export default createReactClass({
-  displayName: 'SubjectSetToolbar',
+export default class SubjectSetToolbar extends React.Component {
+  displayName = 'SubjectSetToolbar'
 
-  propTypes: {
-    hideOtherMarks: PropTypes.bool.isRequired
-  },
+  static propTypes = {
+    hideOtherMarks: PropTypes.bool.isRequired,
+    lightboxHelp: PropTypes.func,
+    nextPage: PropTypes.func.isRequired,
+    onExpand: PropTypes.func,
+    onHide: PropTypes.func,
+    onSubject: PropTypes.func.isRequired,
+    onZoomChange: PropTypes.func,
+    prevPage: PropTypes.func.isRequired,
+    subject: PropTypes.object,
+    subjectCurrentPage: PropTypes.number,
+    subject_index: PropTypes.number.isRequired,
+    subject_set: PropTypes.object.isRequired,
+    task: PropTypes.object,
+    toggleHideOtherMarks: PropTypes.func,
+    totalSubjectPages: PropTypes.number,
+    viewBox: PropTypes.arrayOf(PropTypes.number),
+    workflow: PropTypes.object
+  }
 
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props)
+    this.state = {
       subject_set: this.props.subject_set,
       zoomPanViewBox: this.props.viewBox,
-      active_pane: '',
+      activePane: '',
       hideMarks: true
     }
-  },
+    this.hidePane = this.hidePane.bind(this)
+  }
+
+  componentWillUnmount() {
+    if (this.state.activePane) {
+      document.removeEventListener('mousedown', this.hidePane)
+    }
+  }
 
   togglePane(name) {
-    if (this.state.active_pane === name) {
-      this.setState({ active_pane: '' })
-      return this.props.onHide()
-    } else {
-      this.setState({ active_pane: name })
-      return this.props.onExpand()
+    this.setState((prevState) => {
+      if (prevState.activePane) {
+        if (prevState.activePane === name || name === '') {
+          // close it
+          document.removeEventListener('mousedown', this.hidePane)
+          this.props.onHide()
+          return { activePane: '' }
+        }
+      } else if (name !== '') {
+        // open a new pane
+        document.addEventListener('mousedown', this.hidePane)
+        this.props.onExpand()
+      }
+
+      return { activePane: name }
+    })
+  }
+
+  setToolbarRef(node) {
+    this.wrapperRef = node
+  }
+
+  hidePane(event) {
+    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+      this.togglePane('')
     }
-  },
+  }
 
   render() {
     // disable LightBox if work has begun
-    const disableLightBox =
-      this.props.task.key !== this.props.workflow.first_task ? true : false
+    const disableLightBox = this.props.task.key !== this.props.workflow.first_task
     return (
-      <div className="subject-set-toolbar">
+      <div ref={this.setToolbarRef.bind(this)} className="subject-set-toolbar">
         <div className="subject-set-toolbar-panes">
           <div
-            className={`light-box-area multi-page pane${
-              this.state.active_pane === 'multi-page' ? ' active' : ''
-            }`}
+            className={`light-box-area multi-page pane${this.state.activePane === 'multi-page' ? ' active' : ''}`}
           >
             {this.props.subject_set ? (
               <LightBox
@@ -63,9 +97,7 @@ export default createReactClass({
             ) : undefined}
           </div>
           <div
-            className={`pan-zoom-area pan-zoom pane${
-              this.state.active_pane === 'pan-zoom' ? ' active' : ''
-            }`}
+            className={`pan-zoom-area pan-zoom pane ${this.state.activePane === 'pan-zoom' ? ' active' : ''}`}
           >
             <SubjectZoomPan subject={this.props.subject} onChange={this.props.onZoomChange} viewBox={this.state.zoomPanViewBox} />
           </div>
@@ -73,16 +105,12 @@ export default createReactClass({
 
         </div>
         <div className="subject-set-toolbar-links">
-          <a className={`toggle-pan-zoom${
-            this.state.active_pane === 'pan-zoom' ? ' active' : ''
-          }`}
-          onClick={() => this.togglePane('pan-zoom')}>
+          <a className={`toggle-pan-zoom${this.state.activePane === 'pan-zoom' ? ' active' : ''}`}
+            onClick={this.togglePane.bind(this, 'pan-zoom')}>
             <div className="helper">Toggle pan and zoom tool</div>
           </a>
-          <a className={`toggle-multi-page${
-            this.props.subject_set.subjects.length <= 1 ? ' disabled' : ''
-          }${this.state.active_pane === 'multi-page' ? ' active' : ''}`}
-          onClick={() => this.togglePane('multi-page')}>
+          <a className={`toggle-multi-page${this.props.subject_set.subjects.length <= 1 ? ' disabled' : ''}${this.state.activePane === 'multi-page' ? ' active' : ''}`}
+            onClick={this.togglePane.bind(this, 'multi-page')}>
             <div className="helper">Toggle multi-page navigation</div>
           </a>
           <a className={this.props.hideOtherMarks === true
@@ -99,4 +127,4 @@ export default createReactClass({
       </div>
     )
   }
-})
+}
