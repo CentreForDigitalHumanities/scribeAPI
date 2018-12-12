@@ -38,6 +38,7 @@ class Project
   field  :status,            type: String, default: 'inactive'
   field  :analytics,         type: Hash
   field  :show_labels,       type: Boolean, default: false
+  field  :show_nothing_to_mark_button,       type: Boolean, default: false
 
   # 10.27.15 until we can sort out a better time to call this method, lets comment it out.
   include CachedStats

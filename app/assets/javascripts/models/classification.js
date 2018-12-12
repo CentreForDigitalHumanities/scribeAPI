@@ -16,7 +16,9 @@ export default class Classification {
   commit(callback) {
     // only commit the classification if it isn't already committed or
     // the classification is flagging a subject as bad.
-    if (this.committed && this.task_key !== "flag_bad_subject_task") {
+    if (this.committed &&
+      this.task_key !== "flag_bad_subject_task" &&
+      this.task_key !== "flag_nothing_to_mark") {
       return;
     }
     this.committed = true;

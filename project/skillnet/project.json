@@ -6,6 +6,7 @@
     "favicon": "/images/favicon.ico",
     "background": "/images/cropped-Gysbrechts.jpg",
     "show_labels": true,
+    "show_nothing_to_mark_button": true,
     "terms_map": {
         "group": "language",
         "subject set": "book",

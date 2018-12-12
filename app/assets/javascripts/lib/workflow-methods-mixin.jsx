@@ -101,6 +101,12 @@ export default {
         })
       }
 
+      if (this.state.nothingToMark) {
+        this.toggleNothingToMark(() => {
+          return this.advanceToNextSubject()
+        })
+      }
+
       if (this.state.illegibleSubject) {
         return this.toggleIllegibleSubject(() => {
           return this.advanceToNextSubject()
@@ -166,6 +172,8 @@ export default {
     // If user activated 'Bad Subject' button, override task:
     if (this.state.badSubject) {
       classification.task_key = 'flag_bad_subject_task'
+    } else if (this.state.nothingToMark) {
+      classification.task_key = 'flag_nothing_to_mark'
     } else if (this.state.illegibleSubject) {
       classification.task_key = 'flag_illegible_subject_task'
       // Otherwise, classification is for active task:
@@ -194,6 +202,8 @@ export default {
     // If user activated 'Bad Subject' button, override task:
     if (this.state.badSubject) {
       classification.task_key = 'flag_bad_subject_task'
+    } else if (this.state.nothingToMark) {
+      classification.task_key = 'flag_nothing_to_mark'
     } else if (this.state.illegibleSubject) {
       classification.task_key = 'flag_illegible_subject_task'
 
@@ -226,6 +236,12 @@ export default {
 
   toggleBadSubject(e, callback) {
     return this.setState({ badSubject: !this.state.badSubject }, () => {
+      return typeof callback === 'function' ? callback() : undefined
+    })
+  },
+
+  toggleNothingToMark(e, callback) {
+    return this.setState({ nothingToMark: !this.state.nothingToMark }, () => {
       return typeof callback === 'function' ? callback() : undefined
     })
   },
@@ -480,7 +496,7 @@ export default {
       generates_subject_type: null,
       instruction: `Thanks for all your work! Is there anything left to ${
         this.props.workflowName
-      }?`,
+        }?`,
       key: 'completion_assessment_task',
       next_task: null,
       tool: 'pickOne',
