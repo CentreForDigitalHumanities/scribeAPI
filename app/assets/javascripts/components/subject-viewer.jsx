@@ -494,7 +494,7 @@ export default class SubjectViewer extends React.Component {
                     isPriorMark={isPriorMark}
                     subjectCurrentPage={this.props.subjectCurrentPage}
                     selected={mark === this.state.selectedMark}
-                    getEventOffset={this.getEventOffset}
+                    getEventOffset={this.getEventOffset.bind(this)}
                     submitMark={this.submitMark}
                     sizeRect={this.refs.sizeRect}
                     displaysTranscribeButton={displaysTranscribeButton}
@@ -554,9 +554,9 @@ export default class SubjectViewer extends React.Component {
             height={this.props.subject.height}
           />
           <MouseHandler
-            onStart={this.handleInitStart}
-            onDrag={this.handleInitDrag}
-            onEnd={this.handleInitRelease}
+            onStart={this.handleInitStart.bind(this)}
+            onDrag={this.handleInitDrag.bind(this)}
+            onEnd={this.handleInitRelease.bind(this)}
             inst="marking surface"
           >
             <SVGImage
@@ -588,7 +588,7 @@ export default class SubjectViewer extends React.Component {
                       yScale={scale.vertical}
                       disabled={isPriorMark}
                       selected={mark === this.state.selectedMark}
-                      getEventOffset={this.getEventOffset}
+                      getEventOffset={this.getEventOffset.bind(this)}
                       ref={this.refs.sizeRect}
                       onSelect={this.selectMark.bind(
                         this,
