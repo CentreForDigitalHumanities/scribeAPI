@@ -44,12 +44,27 @@ h1,
 
 .main-header-item.logo {
   transform: none;
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+}
+
+.main-header-item.logo:hover {
+  background: inherit;
 }
 
 .main-header-item.logo img {
   width: auto;
   height: 68px;
   margin-top: 2px;
+}
+
+.main-header-item.logo::after {
+  content: "Home";
+  display: inline-block;
+  text-align: center;
+  overflow: hidden;
+  padding-left: 20px;
 }
 
 .main-header-item.verify {
