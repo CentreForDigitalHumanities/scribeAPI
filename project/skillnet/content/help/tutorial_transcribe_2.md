@@ -7,6 +7,6 @@
 - Transcribe **Æ**, **æ**, **Œ** and **œ** as **Ae**, **ae**, **Oe** and **oe** respectively.
 - Ignore accents such as **é**, **â** and **ù** and transcribe as **e**, **a** and **u**.
 - A dash above a vowel is not an accent, but usually indicates that the vowel should be followed by an **m** or **n**. **Nū** means **Num**, **nō** means **non**, **enī** means **enim**, **tēpore** means **tempore**, **annū** means **annum**, and **ī** means **in**.
-- The sign **CIƆ** or **cIɔ** or **Iɔ** in Roman numbers stands for **M** and the sign **IƆ** stands for **D**. So please transcribe **CIƆ IƆ** as **M D**.
+- The sign **CIƆ** or **cIɔ** in Roman numbers stands for **M** and the sign **IƆ** or **Iɔ** stands for **D**. So please transcribe **CIƆ IƆ** as **M D**.
 
 **Do not be afraid to make mistakes!**
