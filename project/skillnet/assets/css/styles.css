@@ -38,8 +38,18 @@ h1,
 h1,
 .home-page .title,
 .home-page .groups-header,
-.home-page .text-shadow {
+.home-page .text-shadow,
+.home-page .message {
   text-shadow: 0 2px 5px rgba(0, 0, 0, .75);
+}
+
+.home-page .message {
+  font-size: 20px;
+  line-height: 1.5em;
+  background: rgba(1, 1, 1, 0.5);
+  padding: 15px 30px;
+  border-radius: 3px;
+  text-align: justify;
 }
 
 .main-header-item.logo {
