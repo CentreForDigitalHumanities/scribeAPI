@@ -150,15 +150,17 @@ export default {
     }
     const ind = this.state.subject_set_index
     const sets = this.state.subjectSets
-
+    
     // page & limit not passed when called this way for some reason, so we have to manually construct query:
     // sets[ind].get('subjects', {page: page, limit: limit}).then (subjs) =>
+    // Alex Hebing: changed status to active here, because we don't want 'retired' subjects to appear,
+    // even if opening the 'Mark' page from a subject set on the 'Home' page. (I.e. we always want only 'active' subjects.)
     const params = {
       subject_set_id: sets[ind].id,
       page,
       limit,
       type: 'root',
-      status: 'any'
+      status: 'active'
     }
 
     const process_subjects = subjs => {

@@ -101,6 +101,7 @@ class Subject
   def increment_retire_count_by_one
     self.inc(retire_count: 1)
     self.check_retire_by_vote
+    self.check_retire_by_number
   end
 
   def increment_flagged_bad_count_by_one
@@ -136,9 +137,22 @@ class Subject
   # if pvr is equal or greater than retire_limit, set self.status == retired.
   def check_retire_by_vote
     assesment_classifications = classifications.where(task_key: "completion_assessment_task").count
-    if assesment_classifications > 2
+    if assesment_classifications >= 2
       percentage_for_retire = retire_count / assesment_classifications.to_f
       if percentage_for_retire >= workflow.retire_limit
+        self.retire!
+        increment_parents_subject_count_by -1 if parent_subject
+      end
+    end
+  end
+
+
+  # Alex Hebing: Added this method to ensure retiring of 
+  # subjects by number (instead of percentage, i.e. 'vote').
+  def check_retire_by_number
+    assesment_classifications = classifications.where(task_key: "completion_assessment_task").count
+    if assesment_classifications >= 2
+      if retire_count >= workflow.retire_limit
         self.retire!
         increment_parents_subject_count_by -1 if parent_subject
       end
