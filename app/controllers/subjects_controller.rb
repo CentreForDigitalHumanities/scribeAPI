@@ -36,15 +36,15 @@ class SubjectsController < ApplicationController
     # Filter by group?
     @subjects = @subjects.by_group(group_id) if group_id
 
-    # If user/guest active, filter out anything already classified:
-    @subjects = @subjects.user_has_not_classified user.id.to_s if ! user.nil?
-
 
     if ! subject_set_id
       # Randomize?
       # @subjects = @subjects.random(limit: limit) if random
       # PB: Above randomization method produces better randomness, but inconsistent totals
       @subjects = @subjects.random_order if random
+
+      # If user/guest active, filter out anything already classified:
+      @subjects = @subjects.user_has_not_classified user.id.to_s if ! user.nil?
 
       # Should we filter out subjects that the user herself created?
       if ! user.nil? && ! (workflow = Workflow.find(workflow_id)).nil? && ! workflow.subjects_classifiable_by_creator
