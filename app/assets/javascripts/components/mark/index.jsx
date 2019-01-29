@@ -117,6 +117,73 @@ export default AppContext(createReactClass({
     }
   },
 
+  isLastSubjectInSubjectSet() {
+    return this.getCurrentSubject() === this.getCurrentSubjectSet().subjects[this.getCurrentSubjectSet().subjects.length - 1];
+  },
+
+  getNavigationalButton(waitingForAnswer) {
+    if (this.hasPickOneTool()) {
+      return(undefined)
+    }
+
+    if (this.getNextTask() && !this.state.nothingToMark && !this.state.badSubject){
+      return (
+        <button
+          type="button"
+          className="continue major-button"
+          disabled={waitingForAnswer}
+          onClick={this.advanceToNextTask}
+        >
+          Next Task
+        </button>
+      )
+    } else {
+      if (this.state.taskKey === 'completion_assessment_task') {
+        if (this.isLastSubjectInSubjectSet()) {
+          return (
+            <button
+              type="button"
+              className="continue major-button"
+              disabled={waitingForAnswer}
+              onClick={this.completeSubjectAssessment}
+            >
+              Next (complete subject assessment)
+            </button>
+          )
+        }
+        else {
+          return (
+            <button
+              type="button"
+              className="continue major-button"
+              disabled={waitingForAnswer}
+              onClick={this.completeSubjectAssessment}
+            >
+              Next Page
+            </button>
+          )
+        }
+      }
+      else {
+        return (
+          <button
+            type="button"
+            className="continue major-button"
+            disabled={waitingForAnswer}
+            onClick={this.completeSubjectSet}
+          >
+                Done
+          </button>
+        )
+      }
+    }
+  },
+
+  hasPickOneTool() {
+    const task = this.getCurrentTask();
+    return task.tool == 'pickOne';
+  },
+ 
   // User somehow indicated current task is complete; commit current classification
   handleToolComplete(annotation) {
     this.handleDataFromTool(annotation)
@@ -125,6 +192,11 @@ export default AppContext(createReactClass({
 
   // Handle user selecting a pick/drawing tool:
   handleDataFromTool(d) {
+    console.log(d)    
+    console.log(this.hasPickOneTool())
+    
+    
+
     // Kind of a hack: We receive annotation data from two places:
     //  1. tool selection widget in right-col
     //  2. the actual draggable marking tools
@@ -151,6 +223,10 @@ export default AppContext(createReactClass({
       // classifications[@state.classificationIndex].annotation = d #[k] = v for k, v of d
 
       return this.setState({ classifications }, () => {
+        if (this.hasPickOneTool() && this.getNextTask()) {
+          this.advanceToNextTask();
+        }
+
         return this.forceUpdate()
       })
     }
@@ -349,48 +425,7 @@ export default AppContext(createReactClass({
                     ) : (
                       undefined
                     )}
-                    {this.getNextTask() && !this.state.nothingToMark && !this.state.badSubject ? (
-                      <button
-                        type="button"
-                        className="continue major-button"
-                        disabled={waitingForAnswer}
-                        onClick={this.advanceToNextTask}
-                      >
-                        Next
-                      </button>
-                    ) : this.state.taskKey === 'completion_assessment_task' ? (
-                      this.getCurrentSubject() ===
-                        this.getCurrentSubjectSet().subjects[
-                          this.getCurrentSubjectSet().subjects.length - 1
-                        ] ? (
-                          <button
-                            type="button"
-                            className="continue major-button"
-                            disabled={waitingForAnswer}
-                            onClick={this.completeSubjectAssessment}
-                          >
-                            Next
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            className="continue major-button"
-                            disabled={waitingForAnswer}
-                            onClick={this.completeSubjectAssessment}
-                          >
-                            Next Page
-                          </button>
-                        )
-                    ) : (
-                      <button
-                        type="button"
-                        className="continue major-button"
-                        disabled={waitingForAnswer}
-                        onClick={this.completeSubjectSet}
-                      >
-                            Done
-                      </button>
-                    )}
+                    {this.getNavigationalButton(waitingForAnswer)}
                   </nav>
                   <div className="help-bad-subject-holder">
                     {this.getCurrentTask().help != null ? (

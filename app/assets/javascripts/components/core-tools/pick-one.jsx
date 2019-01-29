@@ -10,6 +10,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from 'prop-types';
 import GenericTask from "./generic.jsx";
+import GenericButton from "./../buttons/generic-button.jsx";
 import LabeledRadioButton from "../buttons/labeled-radio-button.jsx";
 
 // Markdown = require '../../components/markdown'
@@ -98,14 +99,11 @@ export default createReactClass({
         }
 
         result.push(
-          <LabeledRadioButton
-            key={answer._key}
-            classes={classes.join(" ")}
+          <button
+            type='button'
             value={answer.value}
-            checked={checked}
-            onChange={this.handleChange.bind(this, answer.value)}
-            label={answer.label}
-          />
+            onClick={this.onClick}>{answer.label}</button>
+          
         );
       }
       return result;
@@ -119,6 +117,15 @@ export default createReactClass({
         })}
       />
     );
+  },
+
+  // Alex Hebing, 2019
+  // Change PickOne to buttons (from checkboxes), handle click
+  onClick(e) {
+    this.props.onChange({
+      value: e.target.value
+    });
+    return this.forceUpdate();
   },
 
   handleChange(index, e) {
