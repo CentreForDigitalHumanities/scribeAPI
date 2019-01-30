@@ -121,7 +121,7 @@ export default AppContext(createReactClass({
     return this.getCurrentSubject() === this.getCurrentSubjectSet().subjects[this.getCurrentSubjectSet().subjects.length - 1];
   },
 
-  getNavigationalButton(waitingForAnswer) {
+  getNavigationalButton(waitingForAnswer) {    
     if (this.hasPickOneTool()) {
       return(undefined)
     }
@@ -134,10 +134,11 @@ export default AppContext(createReactClass({
           disabled={waitingForAnswer}
           onClick={this.advanceToNextTask}
         >
-          Next Task
+          Next
         </button>
       )
-    } else {
+    } 
+    else {
       if (this.state.taskKey === 'completion_assessment_task') {
         if (this.isLastSubjectInSubjectSet()) {
           return (
@@ -147,7 +148,7 @@ export default AppContext(createReactClass({
               disabled={waitingForAnswer}
               onClick={this.completeSubjectAssessment}
             >
-              Next (complete subject assessment)
+              Next
             </button>
           )
         }
@@ -159,12 +160,13 @@ export default AppContext(createReactClass({
               disabled={waitingForAnswer}
               onClick={this.completeSubjectAssessment}
             >
-              Next Page
+              Next
             </button>
           )
         }
       }
       else {
+        if (this.getNextTask()) {
         return (
           <button
             type="button"
@@ -174,7 +176,10 @@ export default AppContext(createReactClass({
           >
                 Done
           </button>
-        )
+        )}
+        else {
+          return (undefined);
+        }
       }
     }
   },
@@ -192,11 +197,6 @@ export default AppContext(createReactClass({
 
   // Handle user selecting a pick/drawing tool:
   handleDataFromTool(d) {
-    console.log(d)    
-    console.log(this.hasPickOneTool())
-    
-    
-
     // Kind of a hack: We receive annotation data from two places:
     //  1. tool selection widget in right-col
     //  2. the actual draggable marking tools
@@ -223,9 +223,17 @@ export default AppContext(createReactClass({
       // classifications[@state.classificationIndex].annotation = d #[k] = v for k, v of d
 
       return this.setState({ classifications }, () => {
+        // Alex Hebing: tasks of type PickOne now have buttons (instead of checkboxes)
+        // Navigate tasks and pages automatically after clicks.
         if (this.hasPickOneTool() && this.getNextTask()) {
           this.advanceToNextTask();
         }
+        else if (this.state.taskKey === 'completion_assessment_task') { // equivalent of Next (Page) button
+          this.completeSubjectAssessment();
+        }
+        else if (!this.getNextTask()) { // equivalent of clicking 'Done' button
+          this.completeSubjectSet();
+        }        
 
         return this.forceUpdate()
       })
@@ -300,7 +308,7 @@ export default AppContext(createReactClass({
   },
 
   render() {
-    let left1, waitingForAnswer
+    let left1, waitingForAnswer;
     let tool
     if (
       this.getCurrentSubjectSet() == null ||
