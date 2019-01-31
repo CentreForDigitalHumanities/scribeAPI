@@ -216,13 +216,20 @@ export default AppContext(createReactClass({
         const v = d[k]
         classifications[this.state.classificationIndex].annotation[k] = v
       }
-
       // PB: Saving STI's notes here in case we decide tools should fully
       //   replace annotation hash rather than selectively update by key as above:
       // not clear whether we should replace annotations, or append to it --STI
       // classifications[@state.classificationIndex].annotation = d #[k] = v for k, v of d
 
       return this.setState({ classifications }, () => {
+        // Alex Hebing: If this is our (Skillnet) new first task, and the answer is No,
+        // there is nothing left to mark: complete subject.
+        if (this.state.taskKey === 'anything_left_to_mark' && d.value.toLowerCase() == 'no') {
+          this.completeSubjectSet();
+          this.completeSubjectAssessment();
+          return;
+        }
+        
         // Alex Hebing: tasks of type PickOne now have buttons (instead of checkboxes)
         // Navigate tasks and pages automatically after clicks.
         if (this.hasPickOneTool() && this.getNextTask()) {
