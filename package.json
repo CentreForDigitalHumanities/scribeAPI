@@ -1,6 +1,6 @@
 {
   "name": "scribeAPI",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "devDependencies": {
     "babelify": "^8.0.0",
     "jest": "16.0.0",
