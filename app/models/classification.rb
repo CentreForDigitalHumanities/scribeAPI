@@ -80,8 +80,13 @@ class Classification
 
   def increment_subject_classification_count
     # TODO: Probably wrong place to be reacting to completion_assessment_task & flag_bad_subject_task
-    # tasks; Should perhaps generalize and place elsewhere
-    if self.task_key == "completion_assessment_task" && self.annotation["value"] == "complete_subject"
+    # tasks; Should perhaps generalize and place elsewhere    
+    if (self.task_key == "completion_assessment_task" && self.annotation["value"] == "complete_subject")       
+      subject.increment_retire_count_by_one      
+    end
+
+    # Alex Hebing: Also count completion via the new first Skillnet task
+    if self.task_key === "anything_left_to_mark" && self.annotation["value"].downcase == "no" 
       subject.increment_retire_count_by_one
     end
 

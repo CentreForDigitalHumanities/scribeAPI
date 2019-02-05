@@ -117,6 +117,78 @@ export default AppContext(createReactClass({
     }
   },
 
+  isLastSubjectInSubjectSet() {
+    return this.getCurrentSubject() === this.getCurrentSubjectSet().subjects[this.getCurrentSubjectSet().subjects.length - 1];
+  },
+
+  getNavigationalButton(waitingForAnswer) {    
+    if (this.hasPickOneTool()) {
+      return(undefined)
+    }
+
+    if (this.getNextTask() && !this.state.nothingToMark && !this.state.badSubject){
+      return (
+        <button
+          type="button"
+          className="continue major-button"
+          disabled={waitingForAnswer}
+          onClick={this.advanceToNextTask}
+        >
+          Next
+        </button>
+      )
+    } 
+    else {
+      if (this.state.taskKey === 'completion_assessment_task') {
+        if (this.isLastSubjectInSubjectSet()) {
+          return (
+            <button
+              type="button"
+              className="continue major-button"
+              disabled={waitingForAnswer}
+              onClick={this.completeSubjectAssessment}
+            >
+              Next
+            </button>
+          )
+        }
+        else {
+          return (
+            <button
+              type="button"
+              className="continue major-button"
+              disabled={waitingForAnswer}
+              onClick={this.completeSubjectAssessment}
+            >
+              Next
+            </button>
+          )
+        }
+      }
+      else {
+        if (this.getNextTask()) {
+        return (
+          <button
+            type="button"
+            className="continue major-button"
+            disabled={waitingForAnswer}
+            onClick={this.completeSubjectSet}
+          >
+                Done
+          </button>
+        )}
+        else {
+          return (undefined);
+        }
+      }
+    }
+  },
+
+  hasPickOneTool() {
+    const task = this.getCurrentTask();
+    return task.tool == 'pickOne';
+  },
+ 
   // User somehow indicated current task is complete; commit current classification
   handleToolComplete(annotation) {
     this.handleDataFromTool(annotation)
@@ -144,13 +216,32 @@ export default AppContext(createReactClass({
         const v = d[k]
         classifications[this.state.classificationIndex].annotation[k] = v
       }
-
       // PB: Saving STI's notes here in case we decide tools should fully
       //   replace annotation hash rather than selectively update by key as above:
       // not clear whether we should replace annotations, or append to it --STI
       // classifications[@state.classificationIndex].annotation = d #[k] = v for k, v of d
 
       return this.setState({ classifications }, () => {
+        // Alex Hebing: If this is our (Skillnet) new first task, and the answer is No,
+        // there is nothing left to mark: complete subject.
+        if (this.state.taskKey === 'anything_left_to_mark' && d.value.toLowerCase() == 'no') {
+          this.completeSubjectSet();
+          this.completeSubjectAssessment();
+          return;
+        }
+        
+        // Alex Hebing: tasks of type PickOne now have buttons (instead of checkboxes)
+        // Navigate tasks and pages automatically after clicks.
+        if (this.hasPickOneTool() && this.getNextTask()) {
+          this.advanceToNextTask();
+        }
+        else if (this.state.taskKey === 'completion_assessment_task') { // equivalent of Next (Page) button
+          this.completeSubjectAssessment();
+        }
+        else if (!this.getNextTask()) { // equivalent of clicking 'Done' button
+          this.completeSubjectSet();
+        }        
+
         return this.forceUpdate()
       })
     }
@@ -224,7 +315,7 @@ export default AppContext(createReactClass({
   },
 
   render() {
-    let left1, waitingForAnswer
+    let left1, waitingForAnswer;
     let tool
     if (
       this.getCurrentSubjectSet() == null ||
@@ -349,48 +440,7 @@ export default AppContext(createReactClass({
                     ) : (
                       undefined
                     )}
-                    {this.getNextTask() && !this.state.nothingToMark && !this.state.badSubject ? (
-                      <button
-                        type="button"
-                        className="continue major-button"
-                        disabled={waitingForAnswer}
-                        onClick={this.advanceToNextTask}
-                      >
-                        Next
-                      </button>
-                    ) : this.state.taskKey === 'completion_assessment_task' ? (
-                      this.getCurrentSubject() ===
-                        this.getCurrentSubjectSet().subjects[
-                          this.getCurrentSubjectSet().subjects.length - 1
-                        ] ? (
-                          <button
-                            type="button"
-                            className="continue major-button"
-                            disabled={waitingForAnswer}
-                            onClick={this.completeSubjectAssessment}
-                          >
-                            Next
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            className="continue major-button"
-                            disabled={waitingForAnswer}
-                            onClick={this.completeSubjectAssessment}
-                          >
-                            Next Page
-                          </button>
-                        )
-                    ) : (
-                      <button
-                        type="button"
-                        className="continue major-button"
-                        disabled={waitingForAnswer}
-                        onClick={this.completeSubjectSet}
-                      >
-                            Done
-                      </button>
-                    )}
+                    {this.getNavigationalButton(waitingForAnswer)}
                   </nav>
                   <div className="help-bad-subject-holder">
                     {this.getCurrentTask().help != null ? (
