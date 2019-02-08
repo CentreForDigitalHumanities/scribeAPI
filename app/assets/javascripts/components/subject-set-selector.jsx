@@ -52,7 +52,7 @@ export default createReactClass({
       subjectSetTitles.push(
         <GenericButton 
             key={subjectSets[i].id}
-            label={subjectSets[i].meta_data.set_key}
+            label={this.parseTitle(subjectSets[i].meta_data.set_key)}
             className="ghost small-button selectable-subject-set"
             onClick={() => { 
                 this.onSubjectSetSelected(subjectSetId)
@@ -60,6 +60,17 @@ export default createReactClass({
         </GenericButton>);
     }
     return <div>{subjectSetTitles}</div>;
+  },
+
+  parseTitle(subjectSetKey) {
+    if (subjectSetKey.contains('_')) {
+      let splitSetKey = subjectSetKey.split('_');      
+      let author = splitSetKey[0].split('-').join(' ');
+      let title = splitSetKey[1].split('-').join(' ');
+      return author + '. ' + title + '.';
+    } else {
+      return subjectSetKey;
+    }
   },
 
   onSelectRandomSubjectSet() {
