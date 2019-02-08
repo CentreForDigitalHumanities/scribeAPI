@@ -21,6 +21,8 @@ import Tutorial from '../tutorial.jsx'
 import HelpButton from '../buttons/help-button.jsx'
 import BadSubjectButton from '../buttons/bad-subject-button.jsx'
 import DraggableModal from '../draggable-modal.jsx'
+import queryString from 'query-string'
+import SubjectSetSelector from '../subject-set-selector.jsx'
 
 export default AppContext(createReactClass({
   // rename to Classifier
@@ -49,7 +51,8 @@ export default AppContext(createReactClass({
       showingTutorial: this.showTutorialBasedOnUser(this.props.context.user),
       lightboxHelp: false,
       activeSubjectHelper: null,
-      subjectCurrentPage: 1
+      subjectCurrentPage: 1,
+      selectSubjectSet: true,
     }
   },
 
@@ -72,7 +75,7 @@ export default AppContext(createReactClass({
   componentDidMount() {
     this.getCompletionAssessmentTask()
     this.fetchSubjectSetsBasedOnProps()
-    return this.fetchGroups()
+    return this.fetchGroups()    
   },
 
   componentWillMount() {
@@ -80,7 +83,9 @@ export default AppContext(createReactClass({
     return this.beginClassification()
   },
 
-  componentDidUpdate(prev_props) {
+  
+
+  componentDidUpdate(prev_props) {    
     // If visitor nav'd from, for example, /mark/[some id] to /mark, this component won't re-mount, so detect transition here:
     if (prev_props.hash !== this.props.hash) {
       return this.fetchSubjectSetsBasedOnProps()
@@ -267,6 +272,12 @@ export default AppContext(createReactClass({
   // TODO: implement mechanism for going backwards to previous classification, potentially deleting later classifications from stack:
   // @props.classification.annotations.pop()
 
+  onSubjectSetSelected(subjectSetId) {    
+    this.setState({selectSubjectSet: false})
+    this.props.match.params.subject_set_id = subjectSetId;
+    return this.fetchSubjectSetsBasedOnProps()
+  },
+
   completeSubjectSet() {
     this.commitCurrentClassification()
     this.beginClassification()
@@ -369,7 +380,18 @@ export default AppContext(createReactClass({
                   {this.state.notice.message}
                 </DraggableModal>
               )
-            } else if (this.getCurrentSubjectSet() != null) {
+              } else if (this.state.selectSubjectSet) {
+                let query = queryString.parse(this.props.location.search)
+
+                return (
+                  <SubjectSetSelector
+                    subjectSets = {this.state.subjectSets}
+                    onSelected = {this.onSubjectSetSelected}
+                    group_id = {query.group_id}
+                  >
+                  </SubjectSetSelector>
+                )
+              } else if (this.getCurrentSubjectSet() != null) {
               let left
               return (
                 <SubjectSetViewer
@@ -556,7 +578,7 @@ export default AppContext(createReactClass({
             </div>
           </div>
         </div>
-        {this.props.context.project.tutorial != null && this.state.showingTutorial && (
+        {this.props.context.project.tutorial != null && this.state.showingTutorial && !this.state.selectSubjectSet && (
           // Check for workflow-specific tutorial
           this.props.context.project.tutorial.workflows != null &&
             this.props.context.project.tutorial.workflows[
