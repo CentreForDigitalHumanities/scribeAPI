@@ -135,7 +135,9 @@ export default {
       .get(params)
       .then(sets => {
         return this.setState({ subjectSets: sets }, () => {
-          return this.fetchSubjectsForCurrentSubjectSet(1, null, callback)
+          if (this.getActiveWorkflow().name.toLowerCase() !== 'transcribe') {
+            return this.fetchSubjectsForCurrentSubjectSet(1, null, callback)
+          }
         })
       })
   },

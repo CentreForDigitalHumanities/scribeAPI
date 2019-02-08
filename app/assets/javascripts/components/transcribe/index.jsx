@@ -26,10 +26,13 @@ import Tutorial from '../tutorial.jsx'
 import DraggableModal from '../draggable-modal.jsx'
 import GenericButton from '../buttons/generic-button.jsx'
 
+import SubjectSetSelector from '../subject-set-selector.jsx'
+import FetchSubjectSetsMixin from '../../lib/fetch-subject-sets-mixin.jsx'
+
 export default AppContext(createReactClass({
   // rename to Classifier
   displayName: 'Transcribe',
-  mixins: [FetchSubjectsMixin, BaseWorkflowMethods], // load subjects and set state variables: subjects,  classification
+  mixins: [FetchSubjectsMixin, FetchSubjectSetsMixin, BaseWorkflowMethods], // load subjects and set state variables: subjects,  classification
 
   getInitialState() {
     return {
@@ -37,6 +40,7 @@ export default AppContext(createReactClass({
       classifications: [],
       classificationIndex: 0,
       subject_index: 0,
+      selectSubjectSet: true,
       helping: false,
       last_mark_task_key: queryString.parse(this.props.location.search).mark_key,
       showingTutorial: false
@@ -48,7 +52,7 @@ export default AppContext(createReactClass({
   },
 
   componentWillMount() {
-    return this.beginClassification()
+    return this.fetchSubjectSetsBasedOnProps()
   },
 
   fetchSubjectsCallback() {
@@ -118,6 +122,13 @@ export default AppContext(createReactClass({
     return !this.state.badSubject
   },
 
+  onSubjectSetSelected(subjectSetId) {    
+    this.setState({selectSubjectSet: false, subjectSets: null})    
+    this.props.match.params.subject_set_id = subjectSetId;
+    this.fetchSubjectsBasedOnProps()
+    return this.beginClassification()
+  },
+
   // transition back to mark workflow
   returnToMarking() {
     let query = queryString.parse(this.props.location.search)
@@ -155,11 +166,17 @@ export default AppContext(createReactClass({
       isLastSubject = null
     }
 
-    const currentAnnotation = this.getCurrentClassification().annotation
-    const TranscribeComponent = this.getCurrentTool() // @state.currentTool
-    const onFirstAnnotation =
-      (currentAnnotation != null ? currentAnnotation.task : undefined) ===
-      this.getActiveWorkflow().first_task
+    let currentAnnotation = null
+    let TranscribeComponent = null
+    let onFirstAnnotation = null
+    
+    if (!this.state.selectSubjectSet) {
+      currentAnnotation = this.getCurrentClassification().annotation
+      TranscribeComponent = this.getCurrentTool() // @state.currentTool
+      onFirstAnnotation =
+        (currentAnnotation != null ? currentAnnotation.task : undefined) ===
+        this.getActiveWorkflow().first_task
+    }
 
     return (
       <div className="classifier transcribe">
@@ -203,10 +220,22 @@ Currently, there are no '}
 '}
                 </DraggableModal>
               )
-            } else if (
+            } else if (this.state.selectSubjectSet && this.state.subjectSets){
+              let query = queryString.parse(this.props.location.search)
+              return (                
+                <SubjectSetSelector
+                  subjectSets = {this.state.subjectSets}
+                  onSelected = {this.onSubjectSetSelected}
+                  group_id = {query.group_id}
+                >
+                </SubjectSetSelector>
+              )
+            }
+            else if (
               this.getCurrentSubject() != null &&
-              this.getCurrentTask() != null
-            ) {
+              this.getCurrentTask() != null &&
+              !this.state.selectSubjectSet
+            ){
               return (
                 <SubjectViewer
                   onLoad={this.handleViewerLoad}
