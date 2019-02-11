@@ -295,7 +295,7 @@ Currently, there are no '}
 
             return (
               <div className="right-column">
-                <div className="task-area transcribe">
+                <div className="task-area transcribe">                  
                   <div className="task-secondary-area">
                     {this.getCurrentTask() != null ? (
                       <p>
@@ -316,7 +316,8 @@ Currently, there are no '}
                       />
                     </div>
                   </div>
-                </div>
+                  <p className='contact-details'>Questions or comments? Contact us at skillnet (at) uu.nl</p>
+                </div>                
               </div>
             )
           }

@@ -509,7 +509,9 @@ export default AppContext(createReactClass({
               ) : (
                 undefined
               )}
+            <p className='contact-details'>Questions or comments? Contact us at skillnet (at) uu.nl</p>
             <div className="task-secondary-area">
+            
               {this.getCurrentTask() != null ? (
                 <p>
                   <a className="tutorial-link" onClick={this.toggleTutorial}>
