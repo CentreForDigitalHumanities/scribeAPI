@@ -63,7 +63,7 @@ export default createReactClass({
   },
 
   parseTitle(subjectSetKey) {
-    if (subjectSetKey.contains('_')) {
+    if (subjectSetKey.indexOf('_') != -1) {
       let splitSetKey = subjectSetKey.split('_');      
       let author = splitSetKey[0].split('-').join(' ');
       let title = splitSetKey[1].split('-').join(' ');
