@@ -118,15 +118,15 @@ export default AppContext(createReactClass({
   },
 
   isLastSubjectInSubjectSet() {
-    return this.getCurrentSubject() === this.getCurrentSubjectSet().subjects[this.getCurrentSubjectSet().subjects.length - 1];
+    return this.getCurrentSubject() === this.getCurrentSubjectSet().subjects[this.getCurrentSubjectSet().subjects.length - 1]
   },
 
-  getNavigationalButton(waitingForAnswer) {    
+  getNavigationalButton(waitingForAnswer) {
     if (this.hasPickOneTool()) {
-      return(undefined)
+      return (undefined)
     }
 
-    if (this.getNextTask() && !this.state.nothingToMark && !this.state.badSubject){
+    if (this.getNextTask() && !this.state.nothingToMark && !this.state.badSubject) {
       return (
         <button
           type="button"
@@ -137,58 +137,45 @@ export default AppContext(createReactClass({
           Next
         </button>
       )
-    } 
+    }
     else {
       if (this.state.taskKey === 'completion_assessment_task') {
-        if (this.isLastSubjectInSubjectSet()) {
-          return (
-            <button
-              type="button"
-              className="continue major-button"
-              disabled={waitingForAnswer}
-              onClick={this.completeSubjectAssessment}
-            >
-              Next
-            </button>
-          )
-        }
-        else {
-          return (
-            <button
-              type="button"
-              className="continue major-button"
-              disabled={waitingForAnswer}
-              onClick={this.completeSubjectAssessment}
-            >
-              Next
-            </button>
-          )
-        }
-      }
-      else {
-        if (this.getNextTask()) {
         return (
           <button
             type="button"
             className="continue major-button"
             disabled={waitingForAnswer}
-            onClick={this.completeSubjectSet}
+            onClick={this.completeSubjectAssessment}
           >
-                Done
+            Next
           </button>
-        )}
+        )
+      }
+      else {
+        if (this.getNextTask()) {
+          return (
+            <button
+              type="button"
+              className="continue major-button"
+              disabled={waitingForAnswer}
+              onClick={this.completeSubjectSet}
+            >
+              Done
+            </button>
+          )
+        }
         else {
-          return (undefined);
+          return undefined
         }
       }
     }
   },
 
   hasPickOneTool() {
-    const task = this.getCurrentTask();
-    return task.tool == 'pickOne';
+    const task = this.getCurrentTask()
+    return task.tool == 'pickOne'
   },
- 
+
   // User somehow indicated current task is complete; commit current classification
   handleToolComplete(annotation) {
     this.handleDataFromTool(annotation)
@@ -225,22 +212,22 @@ export default AppContext(createReactClass({
         // Alex Hebing: If this is our (Skillnet) new first task, and the answer is No,
         // there is nothing left to mark: complete subject.
         if (this.state.taskKey === 'anything_left_to_mark' && d.value.toLowerCase() == 'no') {
-          this.completeSubjectSet();
-          this.completeSubjectAssessment();
-          return;
+          this.completeSubjectSet()
+          this.completeSubjectAssessment()
+          return
         }
-        
+
         // Alex Hebing: tasks of type PickOne now have buttons (instead of checkboxes)
         // Navigate tasks and pages automatically after clicks.
         if (this.hasPickOneTool() && this.getNextTask()) {
-          this.advanceToNextTask();
+          this.advanceToNextTask()
         }
         else if (this.state.taskKey === 'completion_assessment_task') { // equivalent of Next (Page) button
-          this.completeSubjectAssessment();
+          this.completeSubjectAssessment()
         }
         else if (!this.getNextTask()) { // equivalent of clicking 'Done' button
-          this.completeSubjectSet();
-        }        
+          this.completeSubjectSet()
+        }
 
         return this.forceUpdate()
       })
@@ -315,7 +302,7 @@ export default AppContext(createReactClass({
   },
 
   render() {
-    let left1, waitingForAnswer;
+    let left1, waitingForAnswer
     let tool
     if (
       this.getCurrentSubjectSet() == null ||
