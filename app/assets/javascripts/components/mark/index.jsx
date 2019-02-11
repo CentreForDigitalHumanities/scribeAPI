@@ -521,22 +521,6 @@ export default AppContext(createReactClass({
               ) : (
                 undefined
               )}
-              {this.getCurrentTask() != null &&
-                this.getActiveWorkflow() != null &&
-                this.getWorkflowByName('transcribe') != null ? (
-                  <p>
-                    <NavLink
-                      to={`/transcribe/${
-                        this.getWorkflowByName('transcribe').id
-                      }/${__guard__(this.getCurrentSubject(), x5 => x5.id)}`}
-                      className="transcribe-link"
-                    >
-                      Transcribe this {this.props.context.project.term('subject')} now!
-                    </NavLink>
-                  </p>
-                ) : (
-                  undefined
-                )}
               {this.getActiveWorkflow() != null &&
                 (this.state.groups != null
                   ? this.state.groups.length
