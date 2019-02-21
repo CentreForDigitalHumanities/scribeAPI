@@ -2,14 +2,23 @@
  * Author: Alex Hebing @ Digital Humanities Lab (Utrecht University), 2019
  */
 import React from 'react'
+import createReactClass from 'create-react-class'
 import DraggableModal from './draggable-modal.jsx'
 import GenericButton from './buttons/generic-button'
+import queryString from 'query-string'
 
-export default class SubjectSetSelector extends React.Component {
-  static defaultProps = {
-    classes: '',
-    doneButtonLabel: 'Give me a random source'
-  }
+export default createReactClass({
+  displayName: 'SubjectSetSelector',
+
+  getDefaultProps() {
+    return {
+      classes: '',
+      doneButtonLabel: 'Give me a random source'
+    }
+  },
+
+  componentDidMount() {
+  },
 
   sortByGroupId(subjectSets) {
     subjectSets.sort(function (a, b) {
@@ -17,7 +26,7 @@ export default class SubjectSetSelector extends React.Component {
       if (a.group_id > b.group_id) { return 1; }
       return 0;
     })
-  }
+  },
 
   getSubjectSets(subjectSets) {
     let subjectSetTitles = [];
@@ -51,7 +60,7 @@ export default class SubjectSetSelector extends React.Component {
         </GenericButton>);
     }
     return <div>{subjectSetTitles}</div>;
-  }
+  },
 
   parseTitle(subjectSetKey) {
     if (subjectSetKey.indexOf('_') != -1) {
@@ -62,16 +71,21 @@ export default class SubjectSetSelector extends React.Component {
     } else {
       return subjectSetKey.split('-').join(' ');
     }
-  }
+  },
 
   onSelectRandomSubjectSet() {
+<<<<<<< HEAD
     this.onSubjectSetSelected(undefined)
   }
+=======
+      this.onSubjectSetSelected(undefined)
+  },
+>>>>>>> parent of e44b39d0... refactored subjectSetSelector
 
   onSubjectSetSelected(subjectSetId) {
     let { onSelected } = this.props
     onSelected(subjectSetId);
-  }
+  },
 
   render() {
     return (
@@ -91,4 +105,4 @@ export default class SubjectSetSelector extends React.Component {
       </DraggableModal>
     )
   }
-}
+})
