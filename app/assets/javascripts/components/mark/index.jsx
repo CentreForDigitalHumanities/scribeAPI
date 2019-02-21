@@ -509,7 +509,10 @@ export default AppContext(createReactClass({
               ) : (
                 undefined
               )}
-            <p className='contact-details'>Questions or comments? Contact us at skillnet (at) uu.nl</p>
+            {
+              this.props.context.project.contact_details === '' || this.props.context.project.contact_details == null ? undefined : (
+              <p className='contact-details'>{this.props.context.project.contact_details}</p>)
+            }
             <div className="task-secondary-area">
             
               {this.getCurrentTask() != null ? (

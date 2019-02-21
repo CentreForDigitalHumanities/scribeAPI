@@ -122,8 +122,8 @@ export default AppContext(createReactClass({
     return !this.state.badSubject
   },
 
-  onSubjectSetSelected(subjectSetId) {    
-    this.setState({selectSubjectSet: false, subjectSets: null})    
+  onSubjectSetSelected(subjectSetId) {
+    this.setState({ selectSubjectSet: false, subjectSets: null })
     this.props.match.params.subject_set_id = subjectSetId;
     this.fetchSubjectsBasedOnProps()
     return this.beginClassification()
@@ -169,7 +169,7 @@ export default AppContext(createReactClass({
     let currentAnnotation = null
     let TranscribeComponent = null
     let onFirstAnnotation = null
-    
+
     if (!this.state.selectSubjectSet) {
       currentAnnotation = this.getCurrentClassification().annotation
       TranscribeComponent = this.getCurrentTool() // @state.currentTool
@@ -193,8 +193,8 @@ We are currently looking for a subject for you to '}
 '}
             </DraggableModal>
           ) : (
-            undefined
-          )}
+              undefined
+            )}
           {(() => {
             if (this.state.noMoreSubjects) {
               $('html, body')
@@ -220,13 +220,13 @@ Currently, there are no '}
 '}
                 </DraggableModal>
               )
-            } else if (this.state.selectSubjectSet && this.state.subjectSets){
+            } else if (this.state.selectSubjectSet && this.state.subjectSets) {
               let query = queryString.parse(this.props.location.search)
-              return (                
+              return (
                 <SubjectSetSelector
-                  subjectSets = {this.state.subjectSets}
-                  onSelected = {this.onSubjectSetSelected}
-                  group_id = {query.group_id}
+                  subjectSets={this.state.subjectSets}
+                  onSelected={this.onSubjectSetSelected}
+                  group_id={query.group_id}
                 >
                 </SubjectSetSelector>
               )
@@ -235,7 +235,7 @@ Currently, there are no '}
               this.getCurrentSubject() != null &&
               this.getCurrentTask() != null &&
               !this.state.selectSubjectSet
-            ){
+            ) {
               return (
                 <SubjectViewer
                   onLoad={this.handleViewerLoad}
@@ -249,7 +249,7 @@ Currently, there are no '}
                   <TranscribeComponent
                     annotation_key={`${this.state.taskKey}.${
                       this.getCurrentSubject().id
-                    }`}
+                      }`}
                     key={this.getCurrentTask().key}
                     task={this.getCurrentTask()}
                     annotation={currentAnnotation}
@@ -295,7 +295,7 @@ Currently, there are no '}
 
             return (
               <div className="right-column">
-                <div className="task-area transcribe">                  
+                <div className="task-area transcribe">
                   <div className="task-secondary-area">
                     {this.getCurrentTask() != null ? (
                       <p>
@@ -307,8 +307,8 @@ Currently, there are no '}
                         </a>
                       </p>
                     ) : (
-                      undefined
-                    )}
+                        undefined
+                      )}
                     <div className="forum-holder">
                       <ForumSubjectWidget
                         subject={this.getCurrentSubject()}
@@ -316,8 +316,11 @@ Currently, there are no '}
                       />
                     </div>
                   </div>
-                  <p className='contact-details'>Questions or comments? Contact us at skillnet (at) uu.nl</p>
-                </div>                
+                  {
+                    this.props.context.project.contact_details === '' || this.props.context.project.contact_details == null ? undefined : (
+                      <p className='contact-details'>{this.props.context.project.contact_details}</p>)
+                  }
+                </div>
               </div>
             )
           }
@@ -326,12 +329,12 @@ Currently, there are no '}
           // Check for workflow-specific tutorial
           this.props.context.project.tutorial.workflows != null &&
             this.props.context.project.tutorial.workflows[
-              __guard__(this.getActiveWorkflow(), x2 => x2.name)
+            __guard__(this.getActiveWorkflow(), x2 => x2.name)
             ] ? (
               <Tutorial
                 tutorial={
                   this.props.context.project.tutorial.workflows[
-                    this.getActiveWorkflow().name
+                  this.getActiveWorkflow().name
                   ]
                 }
                 onCloseTutorial={this.hideTutorial}
@@ -344,16 +347,16 @@ Currently, there are no '}
               />
             )
         ) : (
-          undefined
-        )}
+            undefined
+          )}
         {this.state.helping ? (
           <HelpModal
             help={this.getCurrentTask().help}
             onDone={() => this.setState({ helping: false })}
           />
         ) : (
-          undefined
-        )}
+            undefined
+          )}
       </div>
     )
   }
