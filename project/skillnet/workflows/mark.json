@@ -7,6 +7,7 @@
   "generates_subjects_for": "transcribe",
   "first_task": "anything_left_to_mark",
   "retire_limit": 2,
+  "show_transcribe_now_button": false,
   "tasks": {
     "anything_left_to_mark": {
       "tool": "pickOne",
