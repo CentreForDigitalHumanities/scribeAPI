@@ -171,6 +171,8 @@ class Subject
 
   def retire!    
     return if status == "bad"
+    # Alex Hebing: commented out because retiring wasn't working properly.
+    # This needs to be refactored together with the changes above ('check_retire_by_number') 
     # return if classifying_user_ids.length < workflow.retire_limit 
     status! 'retired'
     subject_set.subject_completed_on_workflow(workflow) if ! workflow.nil?
