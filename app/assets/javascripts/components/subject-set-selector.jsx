@@ -2,23 +2,16 @@
  * Author: Alex Hebing @ Digital Humanities Lab (Utrecht University), 2019
  */
 import React from 'react'
-import createReactClass from 'create-react-class'
 import DraggableModal from './draggable-modal.jsx'
 import GenericButton from './buttons/generic-button'
-import queryString from 'query-string'
 
-export default createReactClass({
-  displayName: 'SubjectSetSelector',
-
+export default class SubjectSetSelector extends React.Component {
   getDefaultProps() {
     return {
       classes: '',
       doneButtonLabel: 'Give me a random source'
     }
-  },
-
-  componentDidMount() {
-  },
+  }
 
   sortByGroupId(subjectSets) {
     subjectSets.sort(function(a, b) {
@@ -26,7 +19,7 @@ export default createReactClass({
       if(a.group_id > b.group_id) { return 1; }
       return 0;      
     })
-  },
+  }
 
   getSubjectSets(subjectSets) {
     let subjectSetTitles = [];
@@ -60,7 +53,7 @@ export default createReactClass({
         </GenericButton>);
     }
     return <div>{subjectSetTitles}</div>;
-  },
+  }
 
   parseTitle(subjectSetKey) {
     if (subjectSetKey.indexOf('_') != -1) {
@@ -71,16 +64,16 @@ export default createReactClass({
     } else {
       return subjectSetKey;
     }
-  },
+  }
 
   onSelectRandomSubjectSet() {
       this.onSubjectSetSelected(undefined)
-  },
+  }
 
   onSubjectSetSelected(subjectSetId){
     let { onSelected } = this.props
     onSelected(subjectSetId);
-  },
+  }
 
   render() {
     return (
@@ -100,4 +93,4 @@ export default createReactClass({
         </DraggableModal>
     )
   }
-})
+}
