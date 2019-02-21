@@ -60,7 +60,7 @@ export default class SubjectSetSelector extends React.Component {
       let title = splitSetKey[1].split('-').join(' ');
       return author + '. ' + title + '.';
     } else {
-      return subjectSetKey;
+      return subjectSetKey.split('-').join(' ');
     }
   }
 
