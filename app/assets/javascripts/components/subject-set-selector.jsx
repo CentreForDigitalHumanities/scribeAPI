@@ -74,8 +74,13 @@ export default createReactClass({
   },
 
   onSelectRandomSubjectSet() {
+<<<<<<< HEAD
     this.onSubjectSetSelected(undefined)
+  }
+=======
+      this.onSubjectSetSelected(undefined)
   },
+>>>>>>> parent of e44b39d0... refactored subjectSetSelector
 
   onSubjectSetSelected(subjectSetId) {
     let { onSelected } = this.props
