@@ -79,11 +79,11 @@ export default class SubjectSetSelector extends React.Component {
         ref="tutorialModal"
         header={'Please select a source'}
         doneButtonLabel="Give me a random source"
-        onDone={this.onSelectRandomSubjectSet}
+        onDone={this.onSelectRandomSubjectSet.bind(this)}
         width={800}
         classes="help-modal"
         closeButton={true}
-        onClose={this.onSelectRandomSubjectSet}>
+        onClose={this.onSelectRandomSubjectSet.bind(this)}>
         <div>
           <p>Please select the source you would like to work on.</p>
           {this.getSubjectSets(this.props.subjectSets)}
