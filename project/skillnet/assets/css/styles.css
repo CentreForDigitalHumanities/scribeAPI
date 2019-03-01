@@ -64,9 +64,7 @@ h1,
 }
 
 .main-header-item.logo img {
-  width: auto;
-  height: 68px;
-  margin-top: 2px;
+  display: none;
 }
 
 .main-header-item.logo::after {
