@@ -38,6 +38,8 @@ class Project
   field  :status,            type: String, default: 'inactive'
   field  :analytics,         type: Hash
   field  :show_labels,       type: Boolean, default: false
+  # Show the total number of subjects in the group page
+  field  :show_total_group_subjects_count,   type: Boolean, default: true
   field  :show_nothing_to_mark_button,       type: Boolean, default: false
 
   # 10.27.15 until we can sort out a better time to call this method, lets comment it out.

@@ -30,6 +30,28 @@ export default class GroupPage extends React.Component {
       })
   }
 
+  renderStats = (pending, finished, pendingText, finishedText, completionText) =>
+    <dl className="stats-list">
+      {pendingText && <div>
+        <dt>{pendingText}</dt>
+        <dd>
+          {pending || 0}
+        </dd>
+      </div>}
+      {finishedText && <div>
+        <dt>{finishedText}</dt>
+        <dd>
+          {finished || 0}
+        </dd>
+      </div>}
+      {completionText && <div className="completion">
+        <dt>{completionText}</dt>
+        <dd>
+          {pending || finished ? parseInt((pending / (pending + finished)) * 100) : 0} %
+        </dd>
+      </div>}
+    </dl>
+
   render() {
     if (this.state.group == null) {
       return (
@@ -38,7 +60,8 @@ export default class GroupPage extends React.Component {
         </div>
       )
     }
-    let subjectsTerm = this.props.context.project.terms_map.subject
+    const termsMap = this.props.context.project.terms_map
+    let subjectsTerm = termsMap.subject
     subjectsTerm = pluralize(subjectsTerm[0].toUpperCase() + subjectsTerm.substring(1))
     return (
       <div className="page-content">
@@ -72,7 +95,7 @@ export default class GroupPage extends React.Component {
 
                 return result
               })()}
-              {this.state.group.meta_data.external_url != null ? (
+              {this.state.group.meta_data.external_url != null &&
                 <div>
                   <dt>External Resource</dt>
                   <dd>
@@ -83,10 +106,7 @@ export default class GroupPage extends React.Component {
                       {this.state.group.meta_data.external_url}
                     </a>
                   </dd>
-                </div>
-              ) : (
-                undefined
-              )}
+                </div>}
             </dl>
             <img
               className="group-image"
@@ -94,53 +114,32 @@ export default class GroupPage extends React.Component {
             />
           </div>
           <div className="group-stats">
-            {this.state.group.stats != null ? (
+            {this.props.context.project.show_total_group_subjects_count &&
+              this.state.group.stats &&
               <div>
-                <dl className="stats-list">
-                  <div>
-                    <dt>{subjectsTerm} Remaining</dt>
-                    <dd>
-                      {(this.state.group.stats != null
-                        ? this.state.group.stats.total_pending
-                        : undefined) != null
-                        ? this.state.group.stats != null
-                          ? this.state.group.stats.total_pending
-                          : undefined
-                        : 0}
-                    </dd>
+                {this.renderStats(
+                  this.state.group.stats && this.state.group.stats.total_pending || 0,
+                  this.state.group.stats && this.state.group.stats.total_finished || 0,
+                  `${subjectsTerm} Remaining`,
+                  `Completed ${subjectsTerm}`,
+                  'Overall Estimated Completion')}
+              </div>}
+            {this.state.group.stats && this.state.group.stats.workflow_counts &&
+              this.props.context.project.workflows.map((workflow) => {
+                const pendingText = termsMap[`${workflow.name}_pending`],
+                  finishedText = termsMap[`${workflow.name}_finished`]
+                const counts = this.state.group.stats.workflow_counts[workflow.id]
+                if (counts) {
+                  return <div key={workflow.id}>
+                    {this.renderStats(
+                      counts.active_subjects + counts.inactive_subjects,
+                      counts.complete_subjects,
+                      pendingText,
+                      finishedText)}
                   </div>
-                  <div>
-                    <dt>Completed {subjectsTerm}</dt>
-                    <dd>
-                      {(this.state.group.stats != null
-                        ? this.state.group.stats.total_finished
-                        : undefined) != null
-                        ? this.state.group.stats != null
-                          ? this.state.group.stats.total_finished
-                          : undefined
-                        : 0}
-                    </dd>
-                  </div>
-                  <div className="completion">
-                    <dt>Overall Estimated Completion</dt>
-                    <dd>
-                      {parseInt(
-                        ((this.state.group.stats != null
-                          ? this.state.group.stats.completeness
-                          : undefined) != null
-                          ? this.state.group.stats != null
-                            ? this.state.group.stats.completeness
-                            : undefined
-                          : 0) * 100
-                      )}
-                      %
-                    </dd>
-                  </div>
-                </dl>
-              </div>
-            ) : (
-              undefined
-            )}
+                }
+              })
+            }
             <div className="subject_sets">
               {(
                 this.state.subject_sets != null ? this.state.subject_sets : []
@@ -150,19 +149,15 @@ export default class GroupPage extends React.Component {
                     {(() => {
                       const result1 = []
                       for (let workflow of this.props.context.project.workflows) {
-                        const workflowCounts = set.counts[workflow.id] != null &&
-                          set.counts[workflow.id]
-                        if ((workflowCounts != null && workflowCounts.active_subjects
-                          ? workflowCounts.active_subjects
-                          : 0) > 0
-                        ) {
+                        const workflowCounts = set.counts[workflow.id]
+                        if ((workflowCounts && workflowCounts.active_subjects ||
+                          0) > 0) {
                           result1.push(
                             <GenericButton
                               key={workflow.id}
                               label={workflow.name}
                               to={`/${workflow.name}?subject_set_id=${
-                                set.id
-                              }`}
+                                set.id}`}
                             />
                           )
                         } else {

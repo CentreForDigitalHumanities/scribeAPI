@@ -36,8 +36,20 @@ class Group
     pending = statuses['active'] + statuses['inactive']
 
     # Sum total_subjects and active_subjects counts for all workflows:
-    workflow_counts = Subject.group_by_field_for_group(self, :workflow_id).inject({}) { |h, (id, c)| h[id.to_s] = {"total_subjects" => c} if id; h }
-    workflow_counts = Subject.group_by_field_for_group(self, :workflow_id, {status: 'active'}).inject(workflow_counts) { |h, (id, c)| h[id.to_s] = h[id.to_s].merge({"active_subjects" => c}) if id; h }
+    workflow_counts = Subject.group_by_field_for_group(self, :workflow_id).inject({}) { |h, (id, c)| h[id.to_s] = {
+      'active_subjects' => 0,
+      'inactive_subjects' => 0,
+      'total_subjects' => c
+    } if id; h }
+    { 'active' => 'active_subjects',
+      'inactive' => 'inactive_subjects' }.each do | status, key |
+      workflow_counts = Subject.group_by_field_for_group(self, :workflow_id, {status: status}).inject(workflow_counts) { |h, (id, c)| h[id.to_s] = h[id.to_s].merge({key => c}) if id; h }
+    end
+    workflow_counts.each do | _, stats |
+      stats['finished_subjects'] = stats['total_subjects'] -
+        stats['active_subjects'] -
+        stats['inactive_subjects']
+    end
 
     ret = {
       total_finished: finished,
