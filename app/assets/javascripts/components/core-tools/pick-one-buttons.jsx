@@ -59,7 +59,7 @@ const NOOP = Function.prototype;
 //     </div>
 
 export default createReactClass({
-  displayName: "SingleChoiceTask",
+  displayName: "SingleChoiceTaskButtons",
 
   statics: {
     // Summary: Summary # don't use Summary (yet?)
@@ -99,14 +99,10 @@ export default createReactClass({
         }
 
         result.push(
-          <LabeledRadioButton
-            key={answer._key}
-            classes={classes.join(" ")}	
+          <button
+            type='button'
             value={answer.value}
-            checked={checked}
-            onChange={this.handleChange.bind(this, answer.value)}	
-             label={answer.label}	
-          />
+            onClick={this.onClick}>{answer.label}</button>
           
         );
       }
@@ -121,6 +117,15 @@ export default createReactClass({
         })}
       />
     );
+  },
+
+  // Alex Hebing, 2019
+  // Change PickOne to buttons (from checkboxes), handle click
+  onClick(e) {
+    this.props.onChange({
+      value: e.target.value
+    });
+    return this.forceUpdate();
   },
 
   handleChange(index, e) {

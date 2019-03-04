@@ -126,8 +126,20 @@ export default AppContext(createReactClass({
     return this.getCurrentSubject() === this.getCurrentSubjectSet().subjects[this.getCurrentSubjectSet().subjects.length - 1];
   },
 
+  navigateTaskOrNextPage(goToPage = false) {
+    // Alex Hebing: if this our new task, and the answer is no, navigate to next page
+    if (this.state.taskKey === 'anything_left_to_mark' && 
+        this.state.classifications[0].annotation.value.toLowerCase() == 'no') {
+      this.completeSubjectSet();
+      this.completeSubjectAssessment();
+      return;
+    } else {
+      this.advanceToNextTask();
+    }
+  },
+
   getNavigationalButton(waitingForAnswer) {    
-    if (this.hasPickOneTool()) {
+    if (this.hasPickOneButtonsTool() && !this.state.badSubject) {
       return(undefined)
     }
 
@@ -137,7 +149,7 @@ export default AppContext(createReactClass({
           type="button"
           className="continue major-button"
           disabled={waitingForAnswer}
-          onClick={this.advanceToNextTask}
+          onClick={this.navigateTaskOrNextPage}
         >
           Next
         </button>
@@ -171,7 +183,7 @@ export default AppContext(createReactClass({
         }
       }
       else {
-        if (this.getNextTask()) {
+        if (this.state.badSubject || this.getNextTask()) {
         return (
           <button
             type="button"
@@ -189,9 +201,9 @@ export default AppContext(createReactClass({
     }
   },
 
-  hasPickOneTool() {
+  hasPickOneButtonsTool() {
     const task = this.getCurrentTask();
-    return task.tool == 'pickOne';
+    return task.tool == 'pickOneButtons';
   },
  
   // User somehow indicated current task is complete; commit current classification
@@ -226,23 +238,14 @@ export default AppContext(createReactClass({
       // not clear whether we should replace annotations, or append to it --STI
       // classifications[@state.classificationIndex].annotation = d #[k] = v for k, v of d
 
-      return this.setState({ classifications }, () => {
-        // Alex Hebing: If this is our (Skillnet) new first task, and the answer is No,
-        // there is nothing left to mark: complete subject.
-        if (this.state.taskKey === 'anything_left_to_mark' && d.value.toLowerCase() == 'no') {
-          this.completeSubjectSet();
-          this.completeSubjectAssessment();
-          return;
-        }
-        
-        // Alex Hebing: tasks of type PickOne now have buttons (instead of checkboxes)
-        // Navigate tasks and pages automatically after clicks.
-        if (this.hasPickOneTool() && this.getNextTask()) {
+      return this.setState({ classifications }, () => {        
+        // Alex Hebing: Navigate for tasks of type PickOneButtons
+        if (this.hasPickOneButtonsTool() && this.getNextTask()) {
           this.advanceToNextTask();
         }
         else if (this.state.taskKey === 'completion_assessment_task') { // equivalent of Next (Page) button
           this.completeSubjectAssessment();
-        }
+        }        
         else if (!this.getNextTask()) { // equivalent of clicking 'Done' button
           this.completeSubjectSet();
         }        
