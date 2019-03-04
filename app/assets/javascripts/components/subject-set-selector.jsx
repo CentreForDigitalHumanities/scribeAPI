@@ -13,30 +13,30 @@ export default class SubjectSetSelector extends React.Component {
 
   sortByGroupId(subjectSets) {
     subjectSets.sort(function (a, b) {
-      if (a.group_id < b.group_id) { return -1; }
-      if (a.group_id > b.group_id) { return 1; }
-      return 0;
+      if (a.group_id < b.group_id) { return -1 }
+      if (a.group_id > b.group_id) { return 1 }
+      return 0
     })
   }
 
   getSubjectSets(subjectSets) {
-    let subjectSetTitles = [];
-    let currentLanguage;
+    let subjectSetTitles = []
+    let currentLanguage
 
     if (subjectSets.length > 1) {
-      this.sortByGroupId(subjectSets);
+      this.sortByGroupId(subjectSets)
     }
 
     for (var i = 0; i < subjectSets.length; i++) {
-      let subjectSetId = subjectSets[i].id;
-      let subjectSetLan = subjectSets[i].meta_data.langs;
+      let subjectSetId = subjectSets[i].id
+      let subjectSetLan = subjectSets[i].meta_data.langs
 
       // if Mark is navigated to via menu (not a specific language)...
       if (!this.props.group_id) {
         // ... add language headers 
         if (i === 0 || currentLanguage !== subjectSetLan) {
           subjectSetTitles.push(<h6 key={i}>{subjectSetLan}</h6>)
-          currentLanguage = subjectSetLan;
+          currentLanguage = subjectSetLan
         }
       }
 
@@ -48,19 +48,19 @@ export default class SubjectSetSelector extends React.Component {
           onClick={() => {
             this.onSubjectSetSelected(subjectSetId)
           }}>
-        </GenericButton>);
+        </GenericButton>)
     }
-    return <div>{subjectSetTitles}</div>;
+    return <div>{subjectSetTitles}</div>
   }
 
   parseTitle(subjectSetKey) {
     if (subjectSetKey.indexOf('_') != -1) {
-      let splitSetKey = subjectSetKey.split('_');
-      let author = splitSetKey[0].split('-').join(' ');
-      let title = splitSetKey[1].split('-').join(' ');
-      return author + '. ' + title + '.';
+      let splitSetKey = subjectSetKey.split('_')
+      let author = splitSetKey[0].split('-').join(' ')
+      let title = splitSetKey[1].split('-').join(' ')
+      return author + '. ' + title + '.'
     } else {
-      return subjectSetKey.split('-').join(' ');
+      return subjectSetKey.split('-').join(' ')
     }
   }
 
@@ -70,14 +70,14 @@ export default class SubjectSetSelector extends React.Component {
 
   onSubjectSetSelected(subjectSetId) {
     let { onSelected } = this.props
-    onSelected(subjectSetId);
+    onSelected(subjectSetId)
   }
 
   render() {
     return (
       <DraggableModal
         ref="tutorialModal"
-        header={'Please select a source'}
+        header='Please select a source'
         doneButtonLabel="Give me a random source"
         onDone={this.onSelectRandomSubjectSet.bind(this)}
         width={800}

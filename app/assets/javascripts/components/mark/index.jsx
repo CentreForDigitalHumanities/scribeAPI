@@ -123,18 +123,17 @@ export default AppContext(createReactClass({
   },
 
   isLastSubjectInSubjectSet() {
-    return this.getCurrentSubject() === this.getCurrentSubjectSet().subjects[this.getCurrentSubjectSet().subjects.length - 1];
+    return this.getCurrentSubject() === this.getCurrentSubjectSet().subjects[this.getCurrentSubjectSet().subjects.length - 1]
   },
 
-  navigateTaskOrNextPage(goToPage = false) {
+  navigateTaskOrNextPage() {
     // Alex Hebing: if this our new task, and the answer is no, navigate to next page
     if (this.state.taskKey === 'anything_left_to_mark' && 
         this.state.classifications[0].annotation.value.toLowerCase() == 'no') {
-      this.completeSubjectSet();
-      this.completeSubjectAssessment();
-      return;
+      this.completeSubjectSet()
+      this.completeSubjectAssessment()
     } else {
-      this.advanceToNextTask();
+      this.advanceToNextTask()
     }
   },
 
@@ -184,26 +183,26 @@ export default AppContext(createReactClass({
       }
       else {
         if (this.state.badSubject || this.getNextTask()) {
-        return (
-          <button
-            type="button"
-            className="continue major-button"
-            disabled={waitingForAnswer}
-            onClick={this.completeSubjectSet}
-          >
+          return (
+            <button
+              type="button"
+              className="continue major-button"
+              disabled={waitingForAnswer}
+              onClick={this.completeSubjectSet}
+            >
                 Done
-          </button>
-        )}
+            </button>
+          )}
         else {
-          return (undefined);
+          return (undefined)
         }
       }
     }
   },
 
   hasPickOneButtonsTool() {
-    const task = this.getCurrentTask();
-    return task.tool == 'pickOneButtons';
+    const task = this.getCurrentTask()
+    return task.tool == 'pickOneButtons'
   },
  
   // User somehow indicated current task is complete; commit current classification
@@ -241,13 +240,13 @@ export default AppContext(createReactClass({
       return this.setState({ classifications }, () => {        
         // Alex Hebing: Navigate for tasks of type PickOneButtons
         if (this.hasPickOneButtonsTool() && this.getNextTask()) {
-          this.advanceToNextTask();
+          this.advanceToNextTask()
         }
         else if (this.state.taskKey === 'completion_assessment_task') { // equivalent of Next (Page) button
-          this.completeSubjectAssessment();
+          this.completeSubjectAssessment()
         }        
         else if (!this.getNextTask()) { // equivalent of clicking 'Done' button
-          this.completeSubjectSet();
+          this.completeSubjectSet()
         }        
 
         return this.forceUpdate()
@@ -277,7 +276,7 @@ export default AppContext(createReactClass({
 
   onSubjectSetSelected(subjectSetId) {    
     this.setState({selectSubjectSet: false})
-    this.props.match.params.subject_set_id = subjectSetId;
+    this.props.match.params.subject_set_id = subjectSetId
     return this.fetchSubjectSetsBasedOnProps()
   },
 
@@ -329,7 +328,7 @@ export default AppContext(createReactClass({
   },
 
   render() {
-    let left1, waitingForAnswer;
+    let left1, waitingForAnswer
     let tool
     if (
       this.getCurrentSubjectSet() == null ||
@@ -383,18 +382,18 @@ export default AppContext(createReactClass({
                   {this.state.notice.message}
                 </DraggableModal>
               )
-              } else if (this.state.selectSubjectSet) {
-                let query = queryString.parse(this.props.location.search)
+            } else if (this.state.selectSubjectSet) {
+              let query = queryString.parse(this.props.location.search)
 
-                return (
-                  <SubjectSetSelector
-                    subjectSets = {this.state.subjectSets}
-                    onSelected = {this.onSubjectSetSelected}
-                    group_id = {query.group_id}
-                  >
-                  </SubjectSetSelector>
-                )
-              } else if (this.getCurrentSubjectSet() != null) {
+              return (
+                <SubjectSetSelector
+                  subjectSets = {this.state.subjectSets}
+                  onSelected = {this.onSubjectSetSelected}
+                  group_id = {query.group_id}
+                >
+                </SubjectSetSelector>
+              )
+            } else if (this.getCurrentSubjectSet() != null) {
               let left
               return (
                 <SubjectSetViewer
@@ -515,7 +514,7 @@ export default AppContext(createReactClass({
               )}
             {
               this.props.context.project.contact_details === '' || this.props.context.project.contact_details == null ? undefined : (
-              <p className='contact-details'>{this.props.context.project.contact_details}</p>)
+                <p className='contact-details'>{this.props.context.project.contact_details}</p>)
             }
             <div className="task-secondary-area">
             
@@ -533,19 +532,19 @@ export default AppContext(createReactClass({
                 this.getCurrentTask() != null &&
                 this.getActiveWorkflow() != null &&	
                 this.getWorkflowByName('transcribe') != null ? (	
-                <p>	
-                  <NavLink	
-                    to={`/transcribe/${	
-                      this.getWorkflowByName('transcribe').id	
-                    }/${__guard__(this.getCurrentSubject(), x5 => x5.id)}`}	
-                    className="transcribe-link"	
-                  >	
+                    <p>	
+                      <NavLink	
+                        to={`/transcribe/${	
+                          this.getWorkflowByName('transcribe').id	
+                        }/${__guard__(this.getCurrentSubject(), x5 => x5.id)}`}	
+                        className="transcribe-link"	
+                      >	
                     Transcribe this {this.props.context.project.term('subject')} now!	
-                  </NavLink>	
-                </p>	
-              ) : (	
-                undefined	
-              )}
+                      </NavLink>	
+                    </p>	
+                  ) : (	
+                    undefined	
+                  )}
               {this.getActiveWorkflow() != null &&
                 (this.state.groups != null
                   ? this.state.groups.length
