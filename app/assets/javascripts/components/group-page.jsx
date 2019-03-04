@@ -133,7 +133,7 @@ export default class GroupPage extends React.Component {
                   return <div key={workflow.id}>
                     {this.renderStats(
                       counts.active_subjects + counts.inactive_subjects,
-                      counts.complete_subjects,
+                      counts.finished_subjects,
                       pendingText,
                       finishedText)}
                   </div>
