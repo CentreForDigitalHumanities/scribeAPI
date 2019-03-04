@@ -432,6 +432,7 @@ export default AppContext(createReactClass({
             }
           })()}
         </div>
+        { !this.state.selectSubjectSet &&
         <div className="right-column">
           <div className={`task-area ${this.getActiveWorkflow().name}`}>
             {this.getCurrentTask() != null &&
@@ -587,7 +588,7 @@ export default AppContext(createReactClass({
               </div>
             </div>
           </div>
-        </div>
+        </div>}
         {this.props.context.project.tutorial != null && this.state.showingTutorial && !this.state.selectSubjectSet && (
           // Check for workflow-specific tutorial
           this.props.context.project.tutorial.workflows != null &&
