@@ -63,6 +63,17 @@ export default class GroupPage extends React.Component {
     const termsMap = this.props.context.project.terms_map
     let subjectsTerm = termsMap.subject
     subjectsTerm = pluralize(subjectsTerm[0].toUpperCase() + subjectsTerm.substring(1))
+
+    // the number of pending and finished items by workflow
+    const workflowCounts = (this.state.group.stats &&
+      this.state.group.stats.workflow_counts &&
+      this.props.context.project.workflows.map((workflow) => {
+        return {
+          workflow,
+          counts: this.state.group.stats.workflow_counts[workflow.id]
+        }
+      }).filter(item => item.counts)) || []
+
     return (
       <div className="page-content">
         <h1>{this.state.group.name}</h1>
@@ -124,52 +135,27 @@ export default class GroupPage extends React.Component {
                   `Completed ${subjectsTerm}`,
                   'Overall Estimated Completion')}
               </div>}
-            {this.state.group.stats && this.state.group.stats.workflow_counts &&
-              this.props.context.project.workflows.map((workflow) => {
-                const pendingText = termsMap[`${workflow.name}_pending`],
-                  finishedText = termsMap[`${workflow.name}_finished`]
-                const counts = this.state.group.stats.workflow_counts[workflow.id]
-                if (counts) {
-                  return <div key={workflow.id}>
-                    {this.renderStats(
-                      counts.active_subjects + counts.inactive_subjects,
-                      counts.finished_subjects,
-                      pendingText,
-                      finishedText)}
-                  </div>
-                }
-              })
-            }
-            <div className="subject_sets">
-              {(
-                this.state.subject_sets != null ? this.state.subject_sets : []
-              ).map((set, i) => (
-                <div key={i} className="subject_set">
-                  <div className="mark-transcribe-buttons">
-                    {(() => {
-                      const result1 = []
-                      for (let workflow of this.props.context.project.workflows) {
-                        const workflowCounts = set.counts[workflow.id]
-                        if ((workflowCounts && workflowCounts.active_subjects ||
-                          0) > 0) {
-                          result1.push(
-                            <GenericButton
-                              key={workflow.id}
-                              label={workflow.name}
-                              to={`/${workflow.name}?subject_set_id=${
-                                set.id}`}
-                            />
-                          )
-                        } else {
-                          result1.push(undefined)
-                        }
-                      }
-
-                      return result1
-                    })()}
-                  </div>
-                </div>
-              ))}
+            {workflowCounts.map(({ workflow, counts }) => {
+              const pendingText = termsMap[`${workflow.name}_pending`],
+                finishedText = termsMap[`${workflow.name}_finished`]
+              return <div key={workflow.id}>
+                {this.renderStats(
+                  counts.active_subjects + counts.inactive_subjects,
+                  counts.finished_subjects,
+                  pendingText,
+                  finishedText)}
+              </div>
+            })}
+            <div className="mark-transcribe-buttons">
+              {workflowCounts
+                .filter(item => item.counts.active_subjects || item.counts.inactive_subjects)
+                .map(({ workflow }) =>
+                  <GenericButton
+                    key={workflow.id}
+                    label={workflow.name}
+                    to={`/${workflow.name}?group_id=${this.state.group.id}`}
+                  />
+                )}
             </div>
           </div>
         </div>
