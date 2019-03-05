@@ -127,9 +127,9 @@ export default AppContext(createReactClass({
   },
 
   navigateTaskOrNextPage() {
-    // Alex Hebing: if this our new task, and the answer is no, navigate to next page
-    if (this.state.taskKey === 'anything_left_to_mark' && 
-        this.state.classifications[0].annotation.value.toLowerCase() == 'no') {
+    // Alex Hebing: if this our new task, and the answer is no, complete subject and navigate to next page
+    if (this.state.taskKey === 'anything_left_to_mark' &&         
+        this.state.classifications[this.state.classificationIndex].annotation.value.toLowerCase() == 'no') {
       this.completeSubjectSet()
       this.completeSubjectAssessment()
     } else {
@@ -354,10 +354,11 @@ export default AppContext(createReactClass({
       this.getCurrentSubjectSet().id
     }&selected_subject_id=${__guard__(this.getCurrentSubject(), x2 => x2.id)}`
 
-    if ((currentTask != null ? currentTask.tool : undefined) === 'pick_one') {
+    if ((currentTask != null ? currentTask.tool : undefined) === 'pickOne') {
       const currentAnswer = Array.from(currentTask.tool_config.options).filter(
-        a => a.value === currentAnnotation.value
+        a => a.value === this.getCurrentClassification().annotation.value
       )[0]
+
       waitingForAnswer = !currentAnswer
     }
 
