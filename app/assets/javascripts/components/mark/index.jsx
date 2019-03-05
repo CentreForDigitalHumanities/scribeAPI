@@ -75,7 +75,7 @@ export default AppContext(createReactClass({
   componentDidMount() {
     this.getCompletionAssessmentTask()
     this.fetchSubjectSetsBasedOnProps()
-    return this.fetchGroups()    
+    return this.fetchGroups()
   },
 
   componentWillMount() {
@@ -83,9 +83,9 @@ export default AppContext(createReactClass({
     return this.beginClassification()
   },
 
-  
 
-  componentDidUpdate(prev_props) {    
+
+  componentDidUpdate(prev_props) {
     // If visitor nav'd from, for example, /mark/[some id] to /mark, this component won't re-mount, so detect transition here:
     if (prev_props.hash !== this.props.hash) {
       return this.fetchSubjectSetsBasedOnProps()
@@ -128,8 +128,8 @@ export default AppContext(createReactClass({
 
   navigateTaskOrNextPage() {
     // Alex Hebing: if this our new task, and the answer is no, complete subject and navigate to next page
-    if (this.state.taskKey === 'anything_left_to_mark' &&         
-        this.state.classifications[this.state.classificationIndex].annotation.value.toLowerCase() == 'no') {
+    if (this.state.taskKey === 'anything_left_to_mark' &&
+      this.state.classifications[this.state.classificationIndex].annotation.value.toLowerCase() == 'no') {
       this.completeSubjectSet()
       this.completeSubjectAssessment()
     } else {
@@ -137,12 +137,12 @@ export default AppContext(createReactClass({
     }
   },
 
-  getNavigationalButton(waitingForAnswer) {    
+  getNavigationalButton(waitingForAnswer) {
     if (this.hasPickOneButtonsTool() && !this.state.badSubject) {
-      return(undefined)
+      return (undefined)
     }
 
-    if (this.getNextTask() && !this.state.nothingToMark && !this.state.badSubject){
+    if (this.getNextTask() && !this.state.nothingToMark && !this.state.badSubject) {
       return (
         <button
           type="button"
@@ -153,36 +153,21 @@ export default AppContext(createReactClass({
           Next
         </button>
       )
-    } 
-    else {
+    } else {
       if (this.state.taskKey === 'completion_assessment_task') {
-        if (this.isLastSubjectInSubjectSet()) {
-          return (
-            <button
-              type="button"
-              className="continue major-button"
-              disabled={waitingForAnswer}
-              onClick={this.completeSubjectAssessment}
-            >
-              Next
-            </button>
-          )
-        }
-        else {
-          return (
-            <button
-              type="button"
-              className="continue major-button"
-              disabled={waitingForAnswer}
-              onClick={this.completeSubjectAssessment}
-            >
-              Next
-            </button>
-          )
-        }
+        return (
+          <button
+            type="button"
+            className="continue major-button"
+            disabled={waitingForAnswer}
+            onClick={this.completeSubjectAssessment}
+          >
+            Next
+          </button>
+        )
       }
       else {
-        if (this.state.badSubject || this.getNextTask()) {
+        if (this.getNextTask()) {
           return (
             <button
               type="button"
@@ -190,11 +175,25 @@ export default AppContext(createReactClass({
               disabled={waitingForAnswer}
               onClick={this.completeSubjectSet}
             >
+              Done
+            </button>
+          )
+        } else {
+          if (this.state.badSubject || this.getNextTask()) {
+            return (
+              <button
+                type="button"
+                className="continue major-button"
+                disabled={waitingForAnswer}
+                onClick={this.completeSubjectSet}
+              >
                 Done
             </button>
-          )}
-        else {
-          return (undefined)
+            )
+          }
+          else {
+            return (undefined)
+          }
         }
       }
     }
@@ -204,7 +203,7 @@ export default AppContext(createReactClass({
     const task = this.getCurrentTask()
     return task.tool == 'pickOneButtons'
   },
- 
+
   // User somehow indicated current task is complete; commit current classification
   handleToolComplete(annotation) {
     this.handleDataFromTool(annotation)
@@ -237,17 +236,17 @@ export default AppContext(createReactClass({
       // not clear whether we should replace annotations, or append to it --STI
       // classifications[@state.classificationIndex].annotation = d #[k] = v for k, v of d
 
-      return this.setState({ classifications }, () => {        
+      return this.setState({ classifications }, () => {
         // Alex Hebing: Navigate for tasks of type PickOneButtons
         if (this.hasPickOneButtonsTool() && this.getNextTask()) {
           this.advanceToNextTask()
         }
         else if (this.state.taskKey === 'completion_assessment_task') { // equivalent of Next (Page) button
           this.completeSubjectAssessment()
-        }        
+        }
         else if (!this.getNextTask()) { // equivalent of clicking 'Done' button
           this.completeSubjectSet()
-        }        
+        }
 
         return this.forceUpdate()
       })
@@ -274,8 +273,8 @@ export default AppContext(createReactClass({
   // TODO: implement mechanism for going backwards to previous classification, potentially deleting later classifications from stack:
   // @props.classification.annotations.pop()
 
-  onSubjectSetSelected(subjectSetId) {    
-    this.setState({selectSubjectSet: false})
+  onSubjectSetSelected(subjectSetId) {
+    this.setState({ selectSubjectSet: false })
     this.props.match.params.subject_set_id = subjectSetId
     return this.fetchSubjectSetsBasedOnProps()
   },
@@ -352,7 +351,7 @@ export default AppContext(createReactClass({
     // direct link to this page
     const pageURL = `${location.origin}/#/mark?subject_set_id=${
       this.getCurrentSubjectSet().id
-    }&selected_subject_id=${__guard__(this.getCurrentSubject(), x2 => x2.id)}`
+      }&selected_subject_id=${__guard__(this.getCurrentSubject(), x2 => x2.id)}`
 
     if ((currentTask != null ? currentTask.tool : undefined) === 'pickOne') {
       const currentAnswer = Array.from(currentTask.tool_config.options).filter(
@@ -388,9 +387,9 @@ export default AppContext(createReactClass({
 
               return (
                 <SubjectSetSelector
-                  subjectSets = {this.state.subjectSets}
-                  onSelected = {this.onSubjectSetSelected}
-                  group_id = {query.group_id}
+                  subjectSets={this.state.subjectSets}
+                  onSelected={this.onSubjectSetSelected}
+                  group_id={query.group_id}
                 >
                 </SubjectSetSelector>
               )
@@ -432,173 +431,173 @@ export default AppContext(createReactClass({
             }
           })()}
         </div>
-        { !this.state.selectSubjectSet &&
-        <div className="right-column">
-          <div className={`task-area ${this.getActiveWorkflow().name}`}>
-            {this.getCurrentTask() != null &&
-              this.getCurrentSubject() != null ? (
-                <div className="task-container">
-                  <TaskComponent
-                    key={this.getCurrentTask().key}
-                    task={currentTask}
-                    annotation={
-                      (left1 = __guard__(
-                        this.getCurrentClassification(),
-                        x4 => x4.annotation
-                      )) != null
-                        ? left1
-                        : {}
-                    }
-                    onChange={this.handleDataFromTool}
-                    onSubjectHelp={this.showSubjectHelp}
-                    subject={this.getCurrentSubject()}
-                  />
-                  <nav className="task-nav">
-                    {false ? (
-                      <button
-                        type="button"
-                        className="back minor-button"
-                        disabled={onFirstAnnotation}
-                        onClick={this.destroyCurrentAnnotation}
-                      >
-                        Back
+        {!this.state.selectSubjectSet &&
+          <div className="right-column">
+            <div className={`task-area ${this.getActiveWorkflow().name}`}>
+              {this.getCurrentTask() != null &&
+                this.getCurrentSubject() != null ? (
+                  <div className="task-container">
+                    <TaskComponent
+                      key={this.getCurrentTask().key}
+                      task={currentTask}
+                      annotation={
+                        (left1 = __guard__(
+                          this.getCurrentClassification(),
+                          x4 => x4.annotation
+                        )) != null
+                          ? left1
+                          : {}
+                      }
+                      onChange={this.handleDataFromTool}
+                      onSubjectHelp={this.showSubjectHelp}
+                      subject={this.getCurrentSubject()}
+                    />
+                    <nav className="task-nav">
+                      {false ? (
+                        <button
+                          type="button"
+                          className="back minor-button"
+                          disabled={onFirstAnnotation}
+                          onClick={this.destroyCurrentAnnotation}
+                        >
+                          Back
                       </button>
-                    ) : (
-                      undefined
-                    )}
-                    {this.getNavigationalButton(waitingForAnswer)}
-                  </nav>
-                  <div className="help-bad-subject-holder">
-                    {this.getCurrentTask().help != null ? (
-                      <HelpButton
-                        onClick={this.toggleHelp}
-                        label=""
-                        className="task-help-button"
-                      />
-                    ) : (
-                      undefined
-                    )}
-                    {onFirstAnnotation && !this.state.nothingToMark &&
-                      <BadSubjectButton
-                        class="bad-subject-button"
-                        label={`Bad ${this.props.context.project.term('subject')}`}
-                        active={this.state.badSubject}
-                        onClick={this.toggleBadSubject}
-                      />
-                    }
-                    {this.state.badSubject &&
-                      <p className="bad-subject-marked">
-                        <span>
-                          You've marked this {this.props.context.project.term('subject')} as
+                      ) : (
+                          undefined
+                        )}
+                      {this.getNavigationalButton(waitingForAnswer)}
+                    </nav>
+                    <div className="help-bad-subject-holder">
+                      {this.getCurrentTask().help != null ? (
+                        <HelpButton
+                          onClick={this.toggleHelp}
+                          label=""
+                          className="task-help-button"
+                        />
+                      ) : (
+                          undefined
+                        )}
+                      {onFirstAnnotation && !this.state.nothingToMark &&
+                        <BadSubjectButton
+                          class="bad-subject-button"
+                          label={`Bad ${this.props.context.project.term('subject')}`}
+                          active={this.state.badSubject}
+                          onClick={this.toggleBadSubject}
+                        />
+                      }
+                      {this.state.badSubject &&
+                        <p className="bad-subject-marked">
+                          <span>
+                            You've marked this {this.props.context.project.term('subject')} as
                       BAD. Thanks for flagging the issue!{' '}</span>
-                        <strong>Press DONE to continue.</strong>
-                      </p>}
-                    {onFirstAnnotation && this.props.context.project.show_nothing_to_mark_button && !this.state.badSubject &&
-                      <BadSubjectButton
-                        class="bad-subject-button"
-                        label="Nothing to mark"
-                        active={this.state.nothingToMark}
-                        onClick={this.toggleNothingToMark}
-                      />
-                    }
-                    {this.state.nothingToMark &&
-                      <p className="bad-subject-marked">
-                        <span>
-                          You've marked this {this.props.context.project.term('subject')} as
+                          <strong>Press DONE to continue.</strong>
+                        </p>}
+                      {onFirstAnnotation && this.props.context.project.show_nothing_to_mark_button && !this.state.badSubject &&
+                        <BadSubjectButton
+                          class="bad-subject-button"
+                          label="Nothing to mark"
+                          active={this.state.nothingToMark}
+                          onClick={this.toggleNothingToMark}
+                        />
+                      }
+                      {this.state.nothingToMark &&
+                        <p className="bad-subject-marked">
+                          <span>
+                            You've marked this {this.props.context.project.term('subject')} as
                       having nothing to mark. Thanks for flagging the issue!{' '}</span>
-                        <strong>Press DONE to continue.</strong>
-                      </p>}
+                          <strong>Press DONE to continue.</strong>
+                        </p>}
+                    </div>
                   </div>
-                </div>
-              ) : (
-                undefined
-              )}
-            {
-              this.props.context.project.contact_details === '' || this.props.context.project.contact_details == null ? undefined : (
-                <p className='contact-details'>{this.props.context.project.contact_details}</p>)
-            }
-            <div className="task-secondary-area">
-            
-              {this.getCurrentTask() != null ? (
-                <p>
-                  <a className="tutorial-link" onClick={this.toggleTutorial}>
-                    View A Tutorial
-                  </a>
-                </p>
-              ) : (
-                undefined
-              )}
-              {
-                this.getActiveWorkflow().show_transcribe_now_button &&
-                this.getCurrentTask() != null &&
-                this.getActiveWorkflow() != null &&	
-                this.getWorkflowByName('transcribe') != null ? (	
-                    <p>	
-                      <NavLink	
-                        to={`/transcribe/${	
-                          this.getWorkflowByName('transcribe').id	
-                        }/${__guard__(this.getCurrentSubject(), x5 => x5.id)}`}	
-                        className="transcribe-link"	
-                      >	
-                    Transcribe this {this.props.context.project.term('subject')} now!	
-                      </NavLink>	
-                    </p>	
-                  ) : (	
-                    undefined	
-                  )}
-              {this.getActiveWorkflow() != null &&
-                (this.state.groups != null
-                  ? this.state.groups.length
-                  : undefined) > 1 ? (
-                  <p>
-                    <NavLink
-                      to={`/groups/${this.getCurrentSubjectSet().group_id}`}
-                      className="about-link"
-                    >
-                      About this {this.props.context.project.term('group')}.
-                    </NavLink>
-                  </p>
                 ) : (
                   undefined
                 )}
-              <div className="forum-holder">
-                <ForumSubjectWidget
-                  subject={this.getCurrentSubject()}
-                  subject_set={this.getCurrentSubjectSet()}
-                  project={this.props.context.project}
-                />
-              </div>
-              <div className="social-media-container">
-                <a
-                  href={`https://www.facebook.com/sharer.php?u=${encodeURIComponent(
-                    pageURL
-                  )}`}
-                  target="_blank"
-                >
-                  <i className="fa fa-facebook-square" />
-                </a>
-                <a
-                  href={`https://twitter.com/home?status=${encodeURIComponent(
-                    pageURL
-                  )}%0A`}
-                  target="_blank"
-                >
-                  <i className="fa fa-twitter-square" />
-                </a>
+              {
+                this.props.context.project.contact_details === '' || this.props.context.project.contact_details == null ? undefined : (
+                  <p className='contact-details'>{this.props.context.project.contact_details}</p>)
+              }
+              <div className="task-secondary-area">
+
+                {this.getCurrentTask() != null ? (
+                  <p>
+                    <a className="tutorial-link" onClick={this.toggleTutorial}>
+                      View A Tutorial
+                  </a>
+                  </p>
+                ) : (
+                    undefined
+                  )}
+                {
+                  this.getActiveWorkflow().show_transcribe_now_button &&
+                    this.getCurrentTask() != null &&
+                    this.getActiveWorkflow() != null &&
+                    this.getWorkflowByName('transcribe') != null ? (
+                      <p>
+                        <NavLink
+                          to={`/transcribe/${
+                            this.getWorkflowByName('transcribe').id
+                            }/${__guard__(this.getCurrentSubject(), x5 => x5.id)}`}
+                          className="transcribe-link"
+                        >
+                          Transcribe this {this.props.context.project.term('subject')} now!
+                      </NavLink>
+                      </p>
+                    ) : (
+                      undefined
+                    )}
+                {this.getActiveWorkflow() != null &&
+                  (this.state.groups != null
+                    ? this.state.groups.length
+                    : undefined) > 1 ? (
+                    <p>
+                      <NavLink
+                        to={`/groups/${this.getCurrentSubjectSet().group_id}`}
+                        className="about-link"
+                      >
+                        About this {this.props.context.project.term('group')}.
+                    </NavLink>
+                    </p>
+                  ) : (
+                    undefined
+                  )}
+                <div className="forum-holder">
+                  <ForumSubjectWidget
+                    subject={this.getCurrentSubject()}
+                    subject_set={this.getCurrentSubjectSet()}
+                    project={this.props.context.project}
+                  />
+                </div>
+                <div className="social-media-container">
+                  <a
+                    href={`https://www.facebook.com/sharer.php?u=${encodeURIComponent(
+                      pageURL
+                    )}`}
+                    target="_blank"
+                  >
+                    <i className="fa fa-facebook-square" />
+                  </a>
+                  <a
+                    href={`https://twitter.com/home?status=${encodeURIComponent(
+                      pageURL
+                    )}%0A`}
+                    target="_blank"
+                  >
+                    <i className="fa fa-twitter-square" />
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
-        </div>}
+          </div>}
         {this.props.context.project.tutorial != null && this.state.showingTutorial && !this.state.selectSubjectSet && (
           // Check for workflow-specific tutorial
           this.props.context.project.tutorial.workflows != null &&
             this.props.context.project.tutorial.workflows[
-              __guard__(this.getActiveWorkflow(), x6 => x6.name)
+            __guard__(this.getActiveWorkflow(), x6 => x6.name)
             ] ? (
               <Tutorial
                 tutorial={
                   this.props.context.project.tutorial.workflows[
-                    this.getActiveWorkflow().name
+                  this.getActiveWorkflow().name
                   ]
                 }
                 onCloseTutorial={this.props.context.onCloseTutorial}
@@ -617,8 +616,8 @@ export default AppContext(createReactClass({
             onDone={() => this.setState({ helping: false })}
           />
         ) : (
-          undefined
-        )}
+            undefined
+          )}
         {this.state.lightboxHelp ? (
           <HelpModal
             help={{
@@ -629,8 +628,8 @@ export default AppContext(createReactClass({
             onDone={() => this.setState({ lightboxHelp: false })}
           />
         ) : (
-          undefined
-        )}
+            undefined
+          )}
         {this.getCurrentTask() != null
           ? (() => {
             const result = []
