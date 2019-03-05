@@ -26,10 +26,13 @@ import Tutorial from '../tutorial.jsx'
 import DraggableModal from '../draggable-modal.jsx'
 import GenericButton from '../buttons/generic-button.jsx'
 
+import SubjectSetSelector from '../subject-set-selector.jsx'
+import FetchSubjectSetsMixin from '../../lib/fetch-subject-sets-mixin.jsx'
+
 export default AppContext(createReactClass({
   // rename to Classifier
   displayName: 'Transcribe',
-  mixins: [FetchSubjectsMixin, BaseWorkflowMethods], // load subjects and set state variables: subjects,  classification
+  mixins: [FetchSubjectsMixin, FetchSubjectSetsMixin, BaseWorkflowMethods], // load subjects and set state variables: subjects,  classification
 
   getInitialState() {
     return {
@@ -37,6 +40,7 @@ export default AppContext(createReactClass({
       classifications: [],
       classificationIndex: 0,
       subject_index: 0,
+      selectSubjectSet: true,
       helping: false,
       last_mark_task_key: queryString.parse(this.props.location.search).mark_key,
       showingTutorial: false
@@ -48,7 +52,7 @@ export default AppContext(createReactClass({
   },
 
   componentWillMount() {
-    return this.beginClassification()
+    return this.fetchSubjectSetsBasedOnProps()
   },
 
   fetchSubjectsCallback() {
@@ -118,6 +122,13 @@ export default AppContext(createReactClass({
     return !this.state.badSubject
   },
 
+  onSubjectSetSelected(subjectSetId) {
+    this.setState({ selectSubjectSet: false, subjectSets: null })
+    this.props.match.params.subject_set_id = subjectSetId;
+    this.fetchSubjectsBasedOnProps()
+    return this.beginClassification()
+  },
+
   // transition back to mark workflow
   returnToMarking() {
     let query = queryString.parse(this.props.location.search)
@@ -155,11 +166,17 @@ export default AppContext(createReactClass({
       isLastSubject = null
     }
 
-    const currentAnnotation = this.getCurrentClassification().annotation
-    const TranscribeComponent = this.getCurrentTool() // @state.currentTool
-    const onFirstAnnotation =
-      (currentAnnotation != null ? currentAnnotation.task : undefined) ===
-      this.getActiveWorkflow().first_task
+    let currentAnnotation = null
+    let TranscribeComponent = null
+    let onFirstAnnotation = null
+
+    if (!this.state.selectSubjectSet) {
+      currentAnnotation = this.getCurrentClassification().annotation
+      TranscribeComponent = this.getCurrentTool() // @state.currentTool
+      onFirstAnnotation =
+        (currentAnnotation != null ? currentAnnotation.task : undefined) ===
+        this.getActiveWorkflow().first_task
+    }
 
     return (
       <div className="classifier transcribe">
@@ -176,8 +193,8 @@ We are currently looking for a subject for you to '}
 '}
             </DraggableModal>
           ) : (
-            undefined
-          )}
+              undefined
+            )}
           {(() => {
             if (this.state.noMoreSubjects) {
               $('html, body')
@@ -203,9 +220,21 @@ Currently, there are no '}
 '}
                 </DraggableModal>
               )
-            } else if (
+            } else if (this.state.selectSubjectSet && this.state.subjectSets) {
+              let query = queryString.parse(this.props.location.search)
+              return (
+                <SubjectSetSelector
+                  subjectSets={this.state.subjectSets}
+                  onSelected={this.onSubjectSetSelected}
+                  group_id={query.group_id}
+                >
+                </SubjectSetSelector>
+              )
+            }
+            else if (
               this.getCurrentSubject() != null &&
-              this.getCurrentTask() != null
+              this.getCurrentTask() != null &&
+              !this.state.selectSubjectSet
             ) {
               return (
                 <SubjectViewer
@@ -220,7 +249,7 @@ Currently, there are no '}
                   <TranscribeComponent
                     annotation_key={`${this.state.taskKey}.${
                       this.getCurrentSubject().id
-                    }`}
+                      }`}
                     key={this.getCurrentTask().key}
                     task={this.getCurrentTask()}
                     annotation={currentAnnotation}
@@ -278,8 +307,8 @@ Currently, there are no '}
                         </a>
                       </p>
                     ) : (
-                      undefined
-                    )}
+                        undefined
+                      )}
                     <div className="forum-holder">
                       <ForumSubjectWidget
                         subject={this.getCurrentSubject()}
@@ -287,6 +316,10 @@ Currently, there are no '}
                       />
                     </div>
                   </div>
+                  {
+                    this.props.context.project.contact_details === '' || this.props.context.project.contact_details == null ? undefined : (
+                      <p className='contact-details'>{this.props.context.project.contact_details}</p>)
+                  }
                 </div>
               </div>
             )
@@ -296,12 +329,12 @@ Currently, there are no '}
           // Check for workflow-specific tutorial
           this.props.context.project.tutorial.workflows != null &&
             this.props.context.project.tutorial.workflows[
-              __guard__(this.getActiveWorkflow(), x2 => x2.name)
+            __guard__(this.getActiveWorkflow(), x2 => x2.name)
             ] ? (
               <Tutorial
                 tutorial={
                   this.props.context.project.tutorial.workflows[
-                    this.getActiveWorkflow().name
+                  this.getActiveWorkflow().name
                   ]
                 }
                 onCloseTutorial={this.hideTutorial}
@@ -314,16 +347,16 @@ Currently, there are no '}
               />
             )
         ) : (
-          undefined
-        )}
+            undefined
+          )}
         {this.state.helping ? (
           <HelpModal
             help={this.getCurrentTask().help}
             onDone={() => this.setState({ helping: false })}
           />
         ) : (
-          undefined
-        )}
+            undefined
+          )}
       </div>
     )
   }

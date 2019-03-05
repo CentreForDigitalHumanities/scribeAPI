@@ -150,7 +150,7 @@ class Subject
   # Alex Hebing: Added this method to ensure retiring of 
   # subjects by number (instead of percentage, i.e. 'vote').
   def check_retire_by_number
-    # Alex: Also count the number of times our (Skillnet) new task was executed
+    # Alex Hebing: Also count the number of times the new task was executed
     assesment_classifications = classifications.where(task_key: "completion_assessment_task").count
     assesment_classifications = assesment_classifications + classifications.where(task_key: "anything_left_to_mark").count
 
@@ -169,9 +169,9 @@ class Subject
     # subject_set.inc_complete_secondary_subject 1 if type != 'root'
   end
 
-  def retire!
-    return if status == "bad"
-    return if classifying_user_ids.length < workflow.retire_limit
+  def retire!    
+    return if status == "bad"    
+    return if classifying_user_ids.length < workflow.retire_limit 
     status! 'retired'
     subject_set.subject_completed_on_workflow(workflow) if ! workflow.nil?
     
