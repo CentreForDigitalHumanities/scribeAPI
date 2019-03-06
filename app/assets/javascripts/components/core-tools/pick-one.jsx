@@ -99,10 +99,14 @@ export default createReactClass({
         }
 
         result.push(
-          <button
-            type='button'
+          <LabeledRadioButton
+            key={answer._key}
+            classes={classes.join(" ")}	
             value={answer.value}
-            onClick={this.onClick}>{answer.label}</button>
+            checked={checked}
+            onChange={this.handleChange.bind(this, answer.value)}	
+             label={answer.label}	
+          />
           
         );
       }
@@ -117,15 +121,6 @@ export default createReactClass({
         })}
       />
     );
-  },
-
-  // Alex Hebing, 2019
-  // Change PickOne to buttons (from checkboxes), handle click
-  onClick(e) {
-    this.props.onChange({
-      value: e.target.value
-    });
-    return this.forceUpdate();
   },
 
   handleChange(index, e) {

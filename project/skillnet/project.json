@@ -7,6 +7,7 @@
     "background": "/images/cropped-Gysbrechts.jpg",
     "show_labels": true,
     "show_nothing_to_mark_button": false,
+    "contact_details": "Questions or comments? Contact us at skillnet(at)uu.nl",
     "terms_map": {
         "group": "language",
         "subject set": "book",

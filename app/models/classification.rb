@@ -85,7 +85,7 @@ class Classification
       subject.increment_retire_count_by_one      
     end
 
-    # Alex Hebing: Also count completion via the new first Skillnet task
+    # Alex Hebing: Also count completion via the new first task
     if self.task_key === "anything_left_to_mark" && self.annotation["value"].downcase == "no" 
       subject.increment_retire_count_by_one
     end

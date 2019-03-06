@@ -9,6 +9,25 @@ import queryString from 'query-string'
 
 export default {
   componentDidMount() {
+    // Alex Hebing: if we are transcribing, we only want to fetch subjects after 
+    // user has selected a subject set (i.e. source)
+    if (this.getActiveWorkflow().name !== 'transcribe') {
+      fetchSubjectsBasedOnProps();
+    } 
+  },
+
+  // Retrieve the subject set id from 1) query params, 2) props or 3) return null
+  getSubjectId(query) {
+    if (query.subject_set_id != null) {
+      return query.subject_set_id
+    } else if (this.props.match.params.subject_set_id) {
+      return this.props.match.params.subject_set_id
+    } else {
+      return null;
+    }
+  },
+
+  fetchSubjectsBasedOnProps() {
     // Fetching a single subject?
     if (this.props.match.params.subject_id != null) {
       return this.fetchSubject(this.props.match.params.subject_id)
@@ -20,10 +39,7 @@ export default {
       const params = {
         parent_subject_id: this.props.match.params.parent_subject_id,
         group_id: query.group_id != null ? query.group_id : null,
-        subject_set_id:
-          query.subject_set_id != null
-            ? query.subject_set_id
-            : null
+        subject_set_id: this.getSubjectId(query)
       }
       return this.fetchSubjects(params)
     }
