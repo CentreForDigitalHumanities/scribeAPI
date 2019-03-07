@@ -491,15 +491,15 @@ export default {
     return subjects[this.state.subject_index]
   }, // otherwise, return subject
 
-  getCompletionAssessmentTask() {
+  getCompletionAssessmentTask() {    
     return {
       generates_subject_type: null,
       instruction: `Thanks for all your work! Is there anything left to ${
         this.props.workflowName
-        }?`,
+      }?`,
       key: 'completion_assessment_task',
       next_task: null,
-      tool: 'pickOne',
+      tool: 'pickOneButtons',
       help: {
         title: 'Completion Assessment',
         body: '<p>Have all requested fields on this page been marked with a rectangle?</p><p>You do not have to mark every field on the page, however, it helps us to know if you think there is more to mark. Thank you!</p>'
