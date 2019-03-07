@@ -7,7 +7,7 @@ import { AppContext } from './app-context.jsx'
 export default class GroupBrowser extends React.Component {
   constructor() {
     super()
-    this.state = { counts: {}, groups: [] }
+    this.state = { groups: [] }
   }
 
   componentDidMount() {
@@ -20,18 +20,6 @@ export default class GroupBrowser extends React.Component {
           group.showButtons = false
         }
         this.setState({ groups })
-
-        for (let group of this.state.groups) {
-          API.type('subject_sets')
-            .get({ group_id: group.id })
-            .then(sets => {
-              const counts = {
-                [group.id]: sets[0].counts,
-                ... this.state.counts
-              }
-              this.setState({ counts })
-            })
-        }
       })
   }
 
@@ -67,16 +55,13 @@ export default class GroupBrowser extends React.Component {
         <div className={`button-container ${buttonContainerClasses.join(' ')}`}>
           {(() => {
             const result = []
-            const groupCounts = this.state.counts[group.id] != null &&
-              this.state.counts[group.id]
+            const groupCounts = group.stats.workflow_counts
             if (groupCounts) {
               for (let workflow of this.props.project.workflows) {
-                const workflowCounts = groupCounts[workflow.id] != null &&
-                  groupCounts[workflow.id]
-                if ((workflowCounts != null && workflowCounts.active_subjects
-                  ? workflowCounts.active_subjects
-                  : 0) > 0
-                ) {
+                const workflowCounts = groupCounts[workflow.id]
+                if ((workflowCounts && (
+                  workflowCounts.active_subjects ||
+                  workflowCounts.inactive_subjects))) {
                   result.push(
                     <NavLink to={`/${workflow.name}?group_id=${group.id}`}
                       className="button small-button"
