@@ -19,6 +19,7 @@ module CachedStats
   end
 
   module ClassMethods
+    # the interval in seconds
     def update_interval(interval)
       self.interval = interval
     end
