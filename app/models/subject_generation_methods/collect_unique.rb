@@ -60,6 +60,11 @@ module SubjectGenerationMethods
         end
       end
 
+      # If subject has enough has classifications, it is complete
+      if num_parent_classifications >= classification.workflow.generates_subjects_max
+        classification.subject.status! 'complete'
+      end
+
       # PB: At writing, only verify uses collect-unique. It's important that
       # subjects generated from transcribe not be classifyable (i.e. voted upon)
       # by any user submitting a transcription. We should probably support a 
