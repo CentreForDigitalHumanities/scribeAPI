@@ -17,6 +17,7 @@ import { AppContext } from './app-context.jsx'
 import { Route, Redirect, Switch } from 'react-router'
 import { HashRouter } from 'react-router-dom'
 import HomePage from './home-page.jsx'
+import LoginPage from './login-page.jsx'
 
 import Mark from './mark/index.jsx'
 import Transcribe from './transcribe/index.jsx'
@@ -56,6 +57,7 @@ export default class AppRouter {
         <Switch>
           <Redirect from="/home" to="/" />
           <Route exact name="home" path="/" component={HomePage} />
+          <Route exact name="login" path="/login" component={LoginPage} />
           {(() => {
             const result = []
             for (w of Array.from(project.workflows)) {

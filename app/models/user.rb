@@ -121,6 +121,13 @@ class User
     role == 'admin'
   end
 
+  def self.find_by_password(email, password)
+    if user = self.find_by({email: email})
+      user.valid_password?(password) ? user : nil
+    else
+      nil
+    end
+  end
 
   def self.find_for_oauth(access_token, signed_in_resource=nil)
 

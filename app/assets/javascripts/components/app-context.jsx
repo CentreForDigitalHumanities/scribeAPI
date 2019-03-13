@@ -1,5 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Subject } from 'rxjs'
+
+const userFetchSubject = new Subject()
 
 export const contextTypes = {
   project: PropTypes.object,
@@ -19,3 +22,8 @@ export function AppContext(ComponentToWrap) {
   }
   return AppContextComponent
 }
+
+export function requestUserFetch() {
+  userFetchSubject.next()
+}
+export const userFetchObservable = userFetchSubject.asObservable()

@@ -6,7 +6,7 @@ import MainHeader from '../partials/main-header.jsx'
 import Footer from '../partials/footer.jsx'
 
 import BrowserWarning from './browser-warning.jsx'
-import { contextTypes } from './app-context.jsx'
+import { contextTypes, userFetchObservable } from './app-context.jsx'
 
 @withRouter
 export class App extends React.Component {
@@ -38,6 +38,12 @@ export class App extends React.Component {
 
   componentDidMount() {
     this.fetchUser()
+    this.userFetchSubscription = userFetchObservable.subscribe(() =>
+      this.fetchUser())
+  }
+
+  componentWillUnmount() {
+    this.userFetchSubscription.unsubscribe()
   }
 
   componentWillReceiveProps(nextProps) {
