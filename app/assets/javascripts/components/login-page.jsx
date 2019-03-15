@@ -10,6 +10,13 @@ export default class LoginPage extends React.Component {
       message: null,
       redirect: false
     }
+    if (document.referrer) {
+      const url = new URL(document.referrer)
+      if (url.host === window.location.host) {
+        this.state.target = url.pathname.endsWith('admin/signin') ? '/admin' : url.pathname
+      }
+    }
+
     this.signIn = this.signIn.bind(this)
   }
 
@@ -35,6 +42,10 @@ export default class LoginPage extends React.Component {
 
   render() {
     if (this.state.redirect) {
+      if (this.state.target) {
+        window.location = this.state.target
+        return
+      }
       return <Redirect to="/home" />
     }
     return <div className="page-content login-page">
