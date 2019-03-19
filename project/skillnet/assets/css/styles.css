@@ -183,6 +183,10 @@ print {
   box-shadow: 0 2px 5px rgba(0, 0, 0, .75);
 }
 
+.group#greek_latin {
+  display: none
+}
+
 .group .button-container {
   height: 310px;
   width: 372px;
