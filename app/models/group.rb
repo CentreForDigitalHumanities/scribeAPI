@@ -54,7 +54,7 @@ class Group
     ret = {
       total_finished: finished,
       total_pending: pending,
-      completeness: finished.to_f / (pending + finished),
+      completeness: (pending > 0 || finished > 0) ? finished.to_f / (pending + finished) : 0,
       workflow_counts: workflow_counts
     }
 
