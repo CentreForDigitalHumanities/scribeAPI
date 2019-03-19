@@ -1,6 +1,5 @@
 /*
  * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
@@ -12,8 +11,8 @@ export default {
     // Alex Hebing: if we are transcribing, we only want to fetch subjects after 
     // user has selected a subject set (i.e. source)
     if (this.getActiveWorkflow().name !== 'transcribe') {
-      fetchSubjectsBasedOnProps();
-    } 
+      this.fetchSubjectsBasedOnProps()
+    }
   },
 
   // Retrieve the subject set id from 1) query params, 2) props or 3) return null
@@ -23,7 +22,7 @@ export default {
     } else if (this.props.match.params.subject_set_id) {
       return this.props.match.params.subject_set_id
     } else {
-      return null;
+      return null
     }
   },
 
@@ -46,11 +45,13 @@ export default {
   },
 
   orderSubjectsByY(subjects) {
-    return subjects.sort(function(a, b) {
-      if (a.region.y >= b.region.y) {
-        return 1
+    return subjects.sort((a, b) => {
+      // If a is positioned vertically adjacent to b, then order by x:
+      if (Math.abs(a.region.y - b.region.y) <= a.region.height / 2) {
+        return a.region.x >= b.region.x ? 1 : -1
+        // Otherwise just order by y:
       } else {
-        return -1
+        return a.region.y >= b.region.y ? 1 : -1
       }
     })
   },
@@ -64,14 +65,14 @@ export default {
     })
 
     return request.then(subject => {
-      return this.setState(
+      this.setState(
         {
           subject_index: 0,
           subjects: [subject]
         },
         () => {
           if (this.fetchSubjectsCallback != null) {
-            return this.fetchSubjectsCallback()
+            this.fetchSubjectsCallback()
           }
         }
       )

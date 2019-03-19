@@ -26,6 +26,10 @@ import Verify from './verify/index.jsx'
 // TODO Group routes currently not implemented
 import GroupPage from './group-page.jsx'
 import GroupBrowser from './group-browser.jsx'
+import FinalSubjectSetBrowser from './final-subject-set-browser'
+import FinalSubjectSetPage from './final-subject-set-page'
+import FinalSubjectSetDownload from './final-subject-set-download'
+import GenericPage from './generic-page'
 
 import Project from '../models/project.js'
 import API from '../lib/api.jsx'
@@ -174,6 +178,23 @@ export default class AppRouter {
               )
             })
           }
+          <Route
+            path={`/${project.data_url_base}/browse`}
+            component={FinalSubjectSetBrowser}
+            name='final_subject_sets'
+          />
+          {project.downloadable_data &&
+            <Route
+              path={`/${project.data_url_base}/browse/:final_subject_set_id`}
+              component={FinalSubjectSetPage}
+              name='final_subject_set_page'
+            />
+          }
+          <Route
+            path={`/${project.data_url_base}/download`}
+            component={FinalSubjectSetDownload}
+            name='final_subject_sets_download'
+          />
           <Route path="/groups/:group_id" component={GroupPage} name="group_show" />
           <Route path="/groups" component={GroupBrowser} name="groups" />
         </Switch>

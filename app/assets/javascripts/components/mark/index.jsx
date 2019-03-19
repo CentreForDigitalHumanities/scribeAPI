@@ -23,6 +23,7 @@ import BadSubjectButton from '../buttons/bad-subject-button.jsx'
 import DraggableModal from '../draggable-modal.jsx'
 import queryString from 'query-string'
 import SubjectSetSelector from '../subject-set-selector.jsx'
+import NoMoreSubjectsModal from '../no-more-subjects-modal'
 
 export default AppContext(createReactClass({
   // rename to Classifier
@@ -254,7 +255,7 @@ export default AppContext(createReactClass({
   },
 
   handleMarkDelete(m) {
-    return this.flagSubjectAsUserDeleted(m.subject_id)
+    this.flagSubjectAsUserDeleted(m.subject_id)
   },
 
   destroyCurrentClassification() {
@@ -329,10 +330,7 @@ export default AppContext(createReactClass({
   render() {
     let left1, waitingForAnswer
     let tool
-    if (
-      this.getCurrentSubjectSet() == null ||
-      this.getActiveWorkflow() == null
-    ) {
+    if (this.getCurrentSubjectSet() == null || this.getActiveWorkflow() == null) {
       return null
     }
 
@@ -366,12 +364,8 @@ export default AppContext(createReactClass({
         <div className="subject-area">
           {(() => {
             if (this.state.noMoreSubjectSets) {
-              const style = { marginTop: '50px' }
               return (
-                <p style={style}>
-                  There is nothing left to do. Thanks for your work and please
-                  check back soon!
-                </p>
+                <NoMoreSubjectsModal header="Nothing more to mark" workflowName={this.props.workflowName} project={this.props.project} />
               )
             } else if (this.state.notice) {
               return (
@@ -488,7 +482,7 @@ export default AppContext(createReactClass({
                       {this.state.badSubject &&
                         <p className="bad-subject-marked">
                           <span>
-                            You've marked this {this.props.context.project.term('subject')} as
+                            You&#39;ve marked this {this.props.context.project.term('subject')} as
                       BAD. Thanks for flagging the issue!{' '}</span>
                           <strong>Press DONE to continue.</strong>
                         </p>}
@@ -503,7 +497,7 @@ export default AppContext(createReactClass({
                       {this.state.nothingToMark &&
                         <p className="bad-subject-marked">
                           <span>
-                            You've marked this {this.props.context.project.term('subject')} as
+                            You&#39;ve marked this {this.props.context.project.term('subject')} as
                       having nothing to mark. Thanks for flagging the issue!{' '}</span>
                           <strong>Press DONE to continue.</strong>
                         </p>}

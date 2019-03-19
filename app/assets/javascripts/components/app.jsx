@@ -85,10 +85,7 @@ export class App extends React.Component {
   }
 
   setTutorialComplete() {
-    const previously_saved =
-      (this.state.user != null
-        ? this.state.user.tutorial_complete
-        : undefined) != null
+    const previously_saved = this.state.user && this.state.user.tutorial_complete
 
     // Immediately amend user object with tutorial_complete flag so that we can hide the Tutorial:
     this.setState((prevState) => ({

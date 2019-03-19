@@ -1,33 +1,33 @@
 /*
  * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * DS103: Rewrite code to no longer use __guard__
+  * DS103: Rewrite code to no longer use __guard__
  * DS205: Consider reworking code to avoid use of IIFEs
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 
-import React from "react";
-import SubjectViewer from "../subject-viewer.jsx";
-import { AppContext } from "../app-context.jsx";
-import FetchSubjectsMixin from "../../lib/fetch-subjects-mixin.jsx";
-import ForumSubjectWidget from "../forum-subject-widget.jsx";
+import React from 'react'
+import SubjectViewer from '../subject-viewer.jsx'
+import { AppContext } from '../app-context.jsx'
+import FetchSubjectsMixin from '../../lib/fetch-subjects-mixin.jsx'
+import ForumSubjectWidget from '../forum-subject-widget.jsx'
 
-import BaseWorkflowMethods from "../../lib/workflow-methods-mixin.jsx";
+import BaseWorkflowMethods from '../../lib/workflow-methods-mixin.jsx'
 
-import DraggableModal from "../draggable-modal.jsx";
-import GenericButton from "../buttons/generic-button.jsx";
-import Tutorial from "../tutorial.jsx";
-import HelpModal from "../help-modal.jsx";
 
-import createReactClass from "create-react-class";
+import Tutorial from '../tutorial.jsx'
+import HelpModal from '../help-modal.jsx'
+import NoMoreSubjectsModal from '../no-more-subjects-modal'
+import LoadingIndicator from '../loading-indicator'
+
+import createReactClass from 'create-react-class'
 export default AppContext(createReactClass({
   // rename to Classifier
-  displayName: "Verify",
+  displayName: 'Verify',
   mixins: [FetchSubjectsMixin, BaseWorkflowMethods], // load subjects and set state variables: subjects,  classification
 
   getDefaultProps() {
-    return { workflowName: "verify" };
+    return { workflowName: 'verify' }
   },
 
   getInitialState() {
@@ -38,82 +38,69 @@ export default AppContext(createReactClass({
       subject_index: 0,
       showingTutorial: false,
       helping: false
-    };
+    }
   },
 
   componentWillMount() {
-    return this.beginClassification();
+    this.beginClassification()
   },
 
   fetchSubjectsCallback() {
     if (this.getCurrentSubject() != null) {
-      return this.setState({ taskKey: this.getCurrentSubject().type });
+      this.setState({ taskKey: this.getCurrentSubject().type })
     }
   },
 
   // Handle user selecting a pick/drawing tool:
   handleDataFromTool(d) {
-    const { classifications } = this.state;
+    const { classifications } = this.state
     const currentClassification =
-      classifications[this.state.classificationIndex];
+      classifications[this.state.classificationIndex]
 
     for (let k in d) {
-      const v = d[k];
-      currentClassification.annotation[k] = v;
+      const v = d[k]
+      currentClassification.annotation[k] = v
     }
 
-    this.forceUpdate();
-    return this.setState({ classifications }, () => this.forceUpdate());
+    this.forceUpdate()
+    this.setState({ classifications }, () => this.forceUpdate())
   },
 
   handleTaskComplete(d) {
-    this.handleDataFromTool(d);
-    return this.commitClassificationAndContinue(d);
+    this.handleDataFromTool(d)
+    this.commitClassificationAndContinue(d)
   },
 
   toggleTutorial() {
-    return this.setState({ showingTutorial: !this.state.showingTutorial });
+    this.setState({ showingTutorial: !this.state.showingTutorial })
   },
 
   hideTutorial() {
-    return this.setState({ showingTutorial: false });
+    this.setState({ showingTutorial: false })
   },
 
   toggleHelp() {
-    return this.setState({ helping: !this.state.helping });
+    this.setState({ helping: !this.state.helping })
   },
 
   render() {
-    const currentAnnotation = this.getCurrentClassification().annotation;
+    const currentAnnotation = this.getCurrentClassification().annotation
 
     const onFirstAnnotation =
       (currentAnnotation != null ? currentAnnotation.task : undefined) ===
-      this.getActiveWorkflow().first_task;
+      this.getActiveWorkflow().first_task
 
     return (
       <div className="classifier verify">
         <div className="subject-area">
           {(() => {
-            if (this.getCurrentSubject() == null) {
-              return (
-                <DraggableModal
-                  header={
-                    this.state.userClassifiedAll
-                      ? "You verified them all!"
-                      : "Nothing to verify"
-                  }
-                  buttons={<GenericButton label="Continue" href="/#/mark" />}
-                >
-                  {`\
-Currently, there are no `}
-                  {this.props.project.term("subject")}s for you to{" "}
-                  {this.props.workflowName}. Try <a href="/#/mark">marking</a>
-                  {` instead!\
-`}
-                </DraggableModal>
-              );
+            if (this.state.noMoreSubjects) {
+              return (<NoMoreSubjectsModal header={this.state.userClassifiedAll ? "You verified them all!" : "Nothing to verify"} workflowName={this.props.workflowName} project={this.props.project} />)
+            }
+            else if (!this.state.subjects) {
+              return (<LoadingIndicator />)
             } else if (this.getCurrentSubject() != null) {
-              let VerifyComponent;
+              let VerifyComponent
               return (
                 <SubjectViewer
                   onLoad={this.handleViewerLoad}
@@ -145,7 +132,7 @@ Currently, there are no `}
                       undefined
                     )}
                 </SubjectViewer>
-              );
+              )
             }
           })()}
         </div>
@@ -186,14 +173,14 @@ Currently, there are no `}
           <HelpModal help={this.getCurrentTask().help} onDone={() => this.setState({ helping: false })} />
         ) : undefined}
       </div>
-    );
+    )
   }
-}));
+}))
 
-window.React = React;
+window.React = React
 
 function __guard__(value, transform) {
-  return typeof value !== "undefined" && value !== null
+  return typeof value !== 'undefined' && value !== null
     ? transform(value)
-    : undefined;
+    : undefined
 }

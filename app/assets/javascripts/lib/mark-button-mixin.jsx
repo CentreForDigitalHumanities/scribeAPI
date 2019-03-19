@@ -115,18 +115,20 @@ export default function MarkButtonMixin(ComponentToWrap) {
           // @setState locked: true
           console.log('All done. Nothing left to do here.')
           break
+        default:
+          // @setState locked: true
+          console.log('WARNING: Unknown state in respondToMarkState()')
+          break
       }
     }
 
-    // @setState locked: true
-    // console.log 'WARNING: Unknown state in respondToMarkState()'
 
-    getMarkStyle(mark, selected, is_prior_mark) {
-      const atts = {
+
+    getMarkStyle(mark, selected) {
+      return {
         strokeWidth: selected ? 3 : 2,
         strokeColor: mark.color ? mark.color : '#43bbfd'
       }
-      return atts
     }
   }
 }
