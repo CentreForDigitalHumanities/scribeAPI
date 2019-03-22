@@ -49,6 +49,7 @@ export default class GroupBrowser extends React.Component {
         onMouseOver={this.showButtonsForGroup.bind(this, group)}
         onMouseOut={this.hideButtonsForGroup.bind(this, group)}
         className="group"
+        id={group.name.replace(/[^A-Za-z_]+/gi, '_').toLowerCase()}
         style={{ backgroundImage: `url(${group.cover_image_url})` }}
         key={group.id}
       >
