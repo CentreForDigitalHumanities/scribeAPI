@@ -488,13 +488,16 @@ namespace :project do
       exit
     end
 
+    haz_amazon = true
     missing_env_keys = ['S3_EXPORT_BUCKET','S3_EXPORT_PATH','AWS_REGION','AWS_ACCESS_KEY_ID','AWS_SECRET_ACCESS_KEY'].select { |k| ENV[k].nil? }
     if ! missing_env_keys.empty?
-      puts "Can not export data without setting #{missing_env_keys.join ", "}"
-      exit
+      puts "Can not export data to Amazon without setting #{missing_env_keys.join ", "}, exporting locally"
+      haz_amazon = false
     end
 
-    s3client = Aws::S3::Client.new
+    if haz_amazon
+      s3client = Aws::S3::Client.new
+    end
 
     local_export_base = "#{Rails.root}/tmp/export/#{project.key}"
 
@@ -532,30 +535,38 @@ namespace :project do
 
     # Zip it up
     Rails.logger.info "Rake Complete, Begin GZIP, Go to S3"
-    sh %{cd #{local_export_base}; tar cfvz #{filename} --exclude '*.gz' .;}
+    sh %{cd #{local_export_base}; tar --exclude='*.gz' -cvzf #{filename} *;}
     Rails.logger.info "Tar-ing Complete"
 
-    # Upload it to S3
-    s3client = Aws::S3::Client.new
-    local_path = "#{local_export_base}/#{filename}"
-    remote_path = "#{ENV['S3_EXPORT_PATH']}/#{filename}"
+    if haz_amazon
+      # Upload it to S3
+      s3client = Aws::S3::Client.new
+      local_path = "#{local_export_base}/#{filename}"
+      remote_path = "#{ENV['S3_EXPORT_PATH']}/#{filename}"
 
-    Rails.logger.info "Uploading #{local_path} to #{ENV['S3_EXPORT_BUCKET']}#{remote_path}"
-    s3client.put_object({
-      acl:        'public-read',
-      bucket:     ENV['S3_EXPORT_BUCKET'],
-      key:        remote_path,
-      body:       File.read(local_path)
-    })
+      Rails.logger.info "Uploading #{local_path} to #{ENV['S3_EXPORT_BUCKET']}#{remote_path}"
+      s3client.put_object({
+        acl:        'public-read',
+        bucket:     ENV['S3_EXPORT_BUCKET'],
+        key:        remote_path,
+        body:       File.read(local_path)
+      })
+
+      # Create the final-data-export record so it appears on /#/data/exports
+      export_url = "http://#{ENV['S3_EXPORT_BUCKET']}/#{remote_path}"
+    else
+      public_export_base = "#{Rails.root}/public/export/"
+      FileUtils.mkdir_p(public_export_base) unless File.exists?(public_export_base)
+      export_url = "/export/#{filename}"
+      sh %{cd #{local_export_base}; mv #{filename} #{public_export_base};}
+    end
 
     # Remove local temp files
     sh %{rm -rf #{local_export_base};}
 
-    # Create the final-data-export record so it appears on /#/data/exports
-    s3_url = "http://#{ENV['S3_EXPORT_BUCKET']}/#{remote_path}"
-    FinalDataExport.create path: s3_url, num_final_subject_sets: count, project: project
+    FinalDataExport.create path: export_url, num_final_subject_sets: count, project: project
 
-    puts "Finished building exports. Download at: #{s3_url}"
+    puts "Finished building exports. Download at: #{export_url}"
 
   end
 

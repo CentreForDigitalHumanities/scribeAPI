@@ -45,6 +45,7 @@ db/*.sqlite3
 /doc/features.html
 /doc/specs.html
 /public/cache
+/public/export/
 /public/stylesheets/compiled
 /public/system/*
 /spec/tmp/*

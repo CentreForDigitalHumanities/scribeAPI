@@ -115,7 +115,7 @@ class FinalSubjectAssertion
   def self.annotations_with_confidence(subject)
     num_votes = [subject.parent_workflow.nil? ? 3 : subject.parent_workflow.generates_subjects_after, subject.parent_classifications.count].max
     grouped = subject.parent_classifications.inject({}) { |h, c| h[c.annotation] ||= 0; h[c.annotation] += 1; h }
-    classifications_by_annotation = subject.parent_classifications.inject({}) { |h, c| h[c.annotation] ||= []; h[c.annotation] << {created: c.created_at, user_id: c.user_id, duration: c.finished_at.to_time - c.started_at.to_time, user_id: c.user_id.to_s }; h }
+    classifications_by_annotation = subject.parent_classifications.inject({}) { |h, c| h[c.annotation] ||= []; h[c.annotation] << {created: c.created_at, user_id: c.user_id.to_s, duration: c.finished_at.to_time - c.started_at.to_time }; h }
     grouped = grouped.inject([]) { |a,(annotation,count)| a << {data: annotation, votes: count, confidence: count.to_f / num_votes, instances: classifications_by_annotation[annotation] }; a }
     grouped = grouped.sort_by { |a| - a[:confidence] }
     grouped
