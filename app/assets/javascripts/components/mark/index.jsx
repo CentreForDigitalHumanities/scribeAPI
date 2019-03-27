@@ -300,16 +300,16 @@ export default AppContext(createReactClass({
   },
 
   nextPage(callback_fn) {
-    const new_page = this.state.subjectCurrentPage + 1
-    return this.setState({ subjectCurrentPage: new_page }, () =>
-      this.fetchSubjectsForCurrentSubjectSet(new_page, null, callback_fn)
-    )
+    return this.jumpPage(this.state.subjectCurrentPage + 1, callback_fn)
   },
 
   prevPage(callback_fn) {
-    const new_page = this.state.subjectCurrentPage - 1
-    this.setState({ subjectCurrentPage: new_page })
-    return this.fetchSubjectsForCurrentSubjectSet(new_page, null, callback_fn)
+    return this.jumpPage(this.state.subjectCurrentPage - 1, callback_fn)
+  },
+
+  jumpPage(newPage, callback_fn) {
+    this.setState({ subjectCurrentPage: newPage })
+    return this.fetchSubjectsForCurrentSubjectSet(newPage, null, callback_fn)
   },
 
   showSubjectHelp(subject_type) {
@@ -410,6 +410,7 @@ export default AppContext(createReactClass({
                   subToolIndex={this.state.currentSubToolIndex}
                   nextPage={this.nextPage}
                   prevPage={this.prevPage}
+                  jumpPage={this.jumpPage}
                   subjectCurrentPage={this.state.subjectCurrentPage}
                   totalSubjectPages={this.state.subjects_total_pages}
                   destroyCurrentClassification={
