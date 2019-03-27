@@ -2,6 +2,7 @@ class Export::Spec::Document
   include Mongoid::Document
 
   field :name,                    type: String
+  field :post_steps,              type: Array, default: []
 
   embeds_many :spec_fields, class_name: 'Export::Spec::DocumentField'
   embedded_in :project

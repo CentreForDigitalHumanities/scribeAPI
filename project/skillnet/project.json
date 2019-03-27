@@ -79,5 +79,12 @@
         "id_field": "uuid",
         "display_field": "loc"
       }
+    ],
+    "export_specs": [
+      {
+        "name": "Letter",
+        "spec_fields": [],
+        "post_steps": ["extract_letters.rb"]
+      }
     ]
 }
