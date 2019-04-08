@@ -103,6 +103,9 @@ h1,
 .page-content>div.updated-at {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+.page-content>div.updated-at,
+.page-content.login-page>div{
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
 }

@@ -9,12 +9,27 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.from_omniauth(env["omniauth.auth"])
+    if env["omniauth.auth"]
+      user = User.from_omniauth(env["omniauth.auth"])
+    else
+      user = User.find_by_password(params[:email], params[:password])
+    end
 
-    session[:user_id] = user.id
-    respond_to do |format|
-      format.json{render json: current_user}
-      format.html{redirect_to root_url, :notice => "Signed in!"}
+    if user
+     sign_in(user, :bypass => true)
+      session[:user_id] = user.id
+      respond_to do |format|
+        format.json{render json: current_user}
+        format.html{redirect_to root_url, :notice => "Signed in!"}
+      end
+    else
+      respond_to do |format|
+        # I'm a teapot: to indicate that login failed without going
+        # full out on implementing 401 properly with some
+        # authentication scheme.
+        format.json{render json: {}, status: 418}
+        format.html{redirect_to root_url, :notice => "Invalid login credentials!"}
+      end
     end
   end
 

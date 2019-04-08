@@ -1,92 +1,66 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 import React from 'react'
-import createReactClass from 'create-react-class'
 
-const Login = createReactClass({
-  displayName: 'Login',
+export default class Login extends React.Component {
+  constructor() {
+    super()
+    this.state = { error: null }
+    this.signOut = this.signOut.bind(this)
+  }
 
-  getInitialState() {
-    return { error: null }
-  },
-
-  getDefaultProps() {
-    return {
-      user: null,
-      loginProviders: []
-    }
-  },
+  static defaultProps = {
+    user: null,
+    onLogout: () => { },
+    loginProviders: []
+  }
 
   render() {
     return (
       <div className="login">
-        {(this.props.user != null ? this.props.user.name : undefined) != null &&
-        !this.props.user.guest
-          ? this.renderLoggedIn()
-          : undefined}
-        {this.props.user && this.props.user.guest
+        {this.props.user && (this.props.user.guest
           ? this.renderLoggedInAsGuest()
-          : undefined}
-        {!this.props.user
-          ? this.renderLoginOptions('Log In:', 'login-container')
-          : undefined}
+          : this.props.user.name && this.renderLoggedIn())
+          || this.renderLoginOptions('Log In:')}
       </div>
     )
-  },
+  }
 
   signOut(e) {
     e.preventDefault()
-
-    const request = $.ajax({
-      url: '/users/sign_out',
+    return fetch('/users/sign_out', {
       method: 'delete',
       dataType: 'json'
-    })
-
-    request.done(() => {
+    }).then(() => {
       return this.props.onLogout()
-    })
-
-    return request.error((request, error) => {
+    }).catch(() => {
       return this.setState({
         error: 'Could not log out'
       })
     })
-  },
+  }
 
   renderLoggedInAsGuest() {
     return (
       <span>
-        {this.renderLoginOptions(
-          'Log in to save your work:',
-          'login-container'
-        )}
+        {this.renderLoginOptions('Log in to save your work:')}
       </span>
     )
-  },
+  }
 
   renderLoggedIn() {
     return (
       <span className="login-container">
-        {this.props.user.avatar ? (
-          <img src={`${this.props.user.avatar}`} />
-        ) : (
-          undefined
-        )}
+        {this.props.user.avatar &&
+          <img src={`${this.props.user.avatar}`} />}
         <span className="label">Hello {this.props.user.name} </span>
         <a className="logout" onClick={this.signOut}>
           Logout
         </a>
       </span>
     )
-  },
+  }
 
-  renderLoginOptions(label, classNames) {
-    const links = this.props.loginProviders.map(function(link) {
+  renderLoginOptions(label) {
+    const links = this.props.loginProviders.map((link) => {
       const icon_id = link.id === 'zooniverse' ? 'dot-circle-o' : link.id
       return (
         <a
@@ -100,12 +74,10 @@ const Login = createReactClass({
     })
 
     return (
-      <span className={classNames}>
+      <span className="login-container">
         <span className="label">{label || 'Log In:'}</span>
         <div className="options">{links}</div>
       </span>
     )
   }
-})
-
-export default Login
+}

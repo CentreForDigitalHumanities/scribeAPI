@@ -41,6 +41,8 @@ class Project
   # Show the total number of subjects in the group page
   field  :show_total_group_subjects_count,   type: Boolean, default: true
   field  :show_nothing_to_mark_button,       type: Boolean, default: false
+  # Allow users to login using a local account (instead of through e.g. Facebook)
+  field  :local_login, type: String, default: nil
   field  :contact_details,   type: String
 
   # 10.27.15 until we can sort out a better time to call this method, lets comment it out.

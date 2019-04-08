@@ -121,6 +121,13 @@ class User
     role == 'admin'
   end
 
+  def self.find_by_password(email, password)
+    if user = self.find_by({email: email})
+      user.valid_password?(password) ? user : nil
+    else
+      nil
+    end
+  end
 
   def self.find_for_oauth(access_token, signed_in_resource=nil)
 
@@ -190,7 +197,6 @@ class User
 
   def self.auth_providers
     providers = API::Application.config.auth_providers
-
     providers.map do |p|
       case p
       when 'facebook'
@@ -200,6 +206,11 @@ class User
       when 'zooniverse'
         { id: p, path: '/users/auth/zooniverse', name: 'Zooniverse' }
       end
+    end
+    if Project.current.local_login
+      providers + [{ id: 'user', path: '/#/login', name: Project.current.local_login}]
+    else
+      providers
     end
   end
 

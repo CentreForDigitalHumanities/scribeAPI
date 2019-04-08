@@ -8,6 +8,7 @@
     "show_labels": true,
     "show_total_group_subjects_count": false,
     "show_nothing_to_mark_button": false,
+    "local_login": "CEMROL Account",
     "contact_details": "Questions or comments? Contact us at skillnet(at)uu.nl",
     "terms_map": {
         "group": "language",
