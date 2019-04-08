@@ -120,7 +120,13 @@ class Classification
   end
 
   def to_s
-    ann = annotation.values.select { |v| v.match /[a-zA-Z]/ }.map { |v| "\"#{v}\"" }.join ', '
+    ann = annotation.values.select { |v|
+      begin
+        text = v.text
+      rescue NameError => exception
+        text = v['text'] || v || ''
+      end
+      text.match /[a-zA-Z]/ }.map { |v| "\"#{v}\"" }.join ', '
     ann = ann.truncate 40
     # {! annotation["toolName"].nil? ? " (#{annotation["toolName"]})" : ''}
     workflow_name = workflow.nil? ? '[Orphaned] ' : workflow.name.capitalize
