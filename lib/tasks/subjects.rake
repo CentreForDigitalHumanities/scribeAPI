@@ -151,7 +151,7 @@ namespace :subjects do
   
   task :image_dimensions, [:project_key, :group_key] => :environment do |task, args|
     project_key = args[:project_key]
-    subjects_dir = Rails.root.join('project', project_key, 'subjects')
+    subjects_dir = Rails.root.join 'project', project_key, 'subjects'
     group_file = Rails.root.join subjects_dir, "group_#{args[:group_key]}.csv"
 
     subjects = []
@@ -163,7 +163,6 @@ namespace :subjects do
     else
       # Loop over contents of group file, which has one subject per row
       CSV.foreach(group_file, :headers=>true, :header_converters=> lambda {|f| f.strip}, :converters=> lambda {|f| f ? f.strip : nil}) do |row|
-        puts(row)
         data = row.to_hash
         headers = row.headers
         subjects << data
