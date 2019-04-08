@@ -480,7 +480,8 @@ namespace :project do
 
   desc "Using data in final_subject* collections, generate a series of JSON exports and attempt to create a downloadable ZIP"
   task :export_final_data, [:project_key] => :environment do |task, args|
-    project = project_by_key args[:project_key]
+    project_key = args[:project_key]
+    project = project_by_key project_key
 
     # Make sure user has run build_final_data first:
     if project.final_subject_sets.empty?
@@ -518,6 +519,13 @@ namespace :project do
           f << content
         end
         built += 1
+
+        project.export_document_specs.each do |spec|
+          spec.post_steps.each do |step|
+            script_dir = Rails.root.join('project', project_key, 'script', step)
+            system "ruby #{script_dir} #{path}"
+          end
+        end
 
         # puts "Wrote #{i+1} of #{count}: #{content.size}b to #{path}"
         ellapsed = Time.now - start

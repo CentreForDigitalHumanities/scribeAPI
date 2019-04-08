@@ -9,6 +9,7 @@ class Export::Spec::Document
 
   def self.from_hash(h, project)
     inst = self.new project: project, name: h['name']
+    inst.post_steps = h['post_steps']
     inst.spec_fields = h['spec_fields'].map do |h|
       Export::Spec::DocumentField.from_hash h, inst
     end

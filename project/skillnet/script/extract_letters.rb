@@ -1,5 +1,11 @@
 #!/usr/bin/env ruby
+require 'csv'
 require 'json'
+
+# This script will be called for each .json after running the following on the server:
+# rake project:build_and_export_final_data
+
+# It will get the path to the .json as an argument.
 
 # allow for some margin if markings slightly overlap, are outside bounds
 # e.g. mark just slightly before letter start
@@ -19,10 +25,13 @@ def get_assert_value(assert)
     'sk_recipient_place',
     'sk_sender_place'
     assert['data']['value']
-  when 'sk_date',
-    'sk_sender_name',
+  when 'sk_sender_name',
     'sk_recipient_name'
-    assert['data']['value']['text']
+    # two cells are returned: the text and the EMLO id (if specified)
+    assert['data']['value']
+  when 'sk_date'
+    # two cells are returned: the text and the standardized value
+    assert['data']['value']
   else
     assert['data']
   end
@@ -56,8 +65,8 @@ def letter_in_range(page_letters, letters, y, page)
   page_letters << new_letter
   return new_letter
 end
-
-File.open ARGV[0] do |file|
+filename = ARGV[0]
+File.open filename do |file|
   data = JSON.load(file)
   subjects = data['subjects']
   letters = []
@@ -114,9 +123,50 @@ File.open ARGV[0] do |file|
     for letter in page_letters do
       if !letter[:subject_id]
         letter[:subject_id] = []
+        letter[:image_url] = []
       end
       letter[:subject_id] << subject['id']
+      letter[:image_url] << subject['location']['standard']
     end
   end
-  puts(letters.select {|letter| !letter[:empty]})
+  headers = [:start_page,
+    :end_page,
+    :start_y,
+    :end_y,
+    "date (text)",
+    "date (standardized)", 
+    "sender_name",
+    "sender_name (id)",
+    "sender_place",
+    "recipient_name",
+    "recipient_name (id)",
+    "recipient_place",
+    "incipit",
+    "image_url"]
+  CSV.open filename.gsub(/.json$/i, ".#{data['meta_data']['set_key']}.csv"), 'wb' do |csv|    
+    csv << headers
+    for letter in letters do
+      if !letter[:empty]
+        csv << headers.map{ |column| 
+          case column
+          when 'date (text)'
+            if letter['date'] then letter['date']['text'] else '' end
+          when 'date (standardized)'
+            greg = letter['date']['gregorianDate'] if letter['date']
+            if greg then "#{greg['year']}-#{greg['month']}-#{greg['day']}" else '' end
+          when "sender_name",
+            "recipient_name"
+            if letter[column] then letter[column]['text'] || '' else '' end
+          when "sender_name (id)",
+            "recipient_name (id)"
+            column_name = column.gsub(/ \(id\)$/, '')
+            if letter[column_name] then letter[column_name]['id'] || '' else '' end
+          when 'image_url'
+            letter[:image_url] * " "
+          else
+            letter[column] || ''
+          end }
+      end
+    end
+  end
 end
