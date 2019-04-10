@@ -33,7 +33,7 @@ gem 'puma', '~> 2.14.0'
 gem 'logstasher', '~> 0.6'
 
 gem 'aws-sdk', '~> 2'
-
+gem 'write_xlsx'
 # gem 'mongoid_fulltext'
 
 group :development do
