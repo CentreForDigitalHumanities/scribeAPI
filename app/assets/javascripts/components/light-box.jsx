@@ -269,30 +269,30 @@ export default class LightBox extends React.Component {
 
   // allows user to navigate back though a subject_set
   // # controls navigation of current page of subjects as well as the method that pull a new page of subjects
-  moveBack(indexOfFirst, cb = null) {
+  moveBack(indexOfFirst, callback = null) {
     // if the current page of subjects is the first page of subjects, and the first <li> is the first subject in the page of subjects.
     if (
       this.props.subjectCurrentPage === 1 &&
       this.props.subject_set.subjects[indexOfFirst] ===
       this.props.subject_set.subjects[0]
     ) {
-      if (cb) cb()
+      if (callback) callback()
     } else if (
       this.props.subjectCurrentPage > 1 &&
       this.props.subject_set.subjects[indexOfFirst] ===
       this.props.subject_set.subjects[0]
     ) {
       this.props.prevPage(() =>
-        this.setState({ first: this.props.subject_set.subjects[0] }, cb)
+        this.setState({ first: this.props.subject_set.subjects[0] }, callback)
       )
     } else {
       this.setState({
         first: this.props.subject_set.subjects[indexOfFirst - 3]
-      }, cb)
+      }, callback)
     }
   }
 
-  moveForward(indexOfFirst, third, second, cb = null) {
+  moveForward(indexOfFirst, third, second, callback = null) {
     // if the current page of subjects is the last page of the subject_set and the 2nd or 3rd <li> is the last <li> contain the last subjects in the subject_set
     if (
       this.props.subjectCurrentPage === this.props.totalSubjectPages &&
@@ -301,7 +301,7 @@ export default class LightBox extends React.Component {
         second ===
         this.props.subject_set.subjects[this.props.subject_set.subjects.length - 1])
     ) {
-      if (cb) { cb() }
+      if (callback) { callback() }
       return
     }
     // # if the current page of subjects is NOT the last page of the subject_set and the 2nd or 3rd <li> is the last <li> contain the last subjects in the subject_set
@@ -313,7 +313,7 @@ export default class LightBox extends React.Component {
         this.props.subject_set.subjects[this.props.subject_set.subjects.length - 1])
     ) {
       this.props.nextPage(() =>
-        this.setState({ first: this.props.subject_set.subjects[0] }, cb)
+        this.setState({ first: this.props.subject_set.subjects[0] }, callback)
       )
       // NOTE: for some reason, LightBox does not receive correct value for @props.subject_index, which has led to this awkard callback function above --STI
       // @setState first: @props.subject_set.subjects[0], => @forceUpdate()
@@ -322,7 +322,7 @@ export default class LightBox extends React.Component {
     } else {
       this.setState({
         first: this.props.subject_set.subjects[indexOfFirst + 3]
-      }, cb)
+      }, callback)
     }
   }
 }
