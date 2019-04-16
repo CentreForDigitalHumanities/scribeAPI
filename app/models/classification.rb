@@ -104,7 +104,7 @@ class Classification
       else
         subject.increment_flagged_bad_count_by_one
         # Push user_id onto Subject.deleting_user_ids if appropriate
-        Subject.where({id: subject.id}).find_and_modify({"$addToSet" => {deleting_user_ids: user_id.to_s}})
+        Subject.where({id: subject.id}).find_one_and_update({"$addToSet" => {deleting_user_ids: user_id.to_s}})
       end
     end
 

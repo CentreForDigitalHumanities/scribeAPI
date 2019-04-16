@@ -46,7 +46,7 @@ We are launching Scribe with three very different projects by [Zooniverse](https
 ### Code changes
 
 * In `config/mongoid.yml` changed `sessions` to `clients`.
-* In `app/models/classification.rb` changed `find_and_modify` mthod to `find_one_and_update`.
+* In `app/models/classification.rb` changed `find_and_modify` method to `find_one_and_update`.
 
 ### Environment variables -- Development
 
