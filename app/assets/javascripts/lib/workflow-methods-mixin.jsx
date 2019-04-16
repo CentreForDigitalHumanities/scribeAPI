@@ -380,21 +380,15 @@ export default {
 
   // Get instance of current tool:
   getCurrentTool() {
-    let tool
-    const toolKey = __guard__(this.getCurrentTask(), x => x.tool)
-    return (tool = this.toolByKey(toolKey))
+    const currentTask = this.getCurrentTask()
+    return currentTask && this.toolByKey(currentTask.tool)
   },
 
   toolByKey(toolKey) {
-    let left, left1
-    return (left =
-      (left1 =
-        coreTools[toolKey] != null ? coreTools[toolKey] : markTools[toolKey]) !=
-        null
-        ? left1
-        : transcribeTools[toolKey]) != null
-      ? left
-      : verifyTools[toolKey]
+    return coreTools[toolKey] ||
+      markTools[toolKey] ||
+      transcribeTools[toolKey] ||
+      verifyTools[toolKey]
   },
 
   // Load next logical task
