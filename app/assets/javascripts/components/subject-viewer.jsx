@@ -66,6 +66,18 @@ export default class SubjectViewer extends React.Component {
     this.setView(0, 0, this.props.subject.width, this.props.subject.height)
     this.loadImage(this.props.subject.location.standard)
     window.addEventListener('resize', this.updateDimensions)
+
+    $(document).keydown((e) => {
+      // Handle <delete> keypress
+      if (e.keyCode == 46) {
+        const mark = this.state.selectedMark
+        if (mark)
+          this.destroyMark(mark)
+      }
+      // Handle <enter> keypress
+      else if (e.keyCode == 13 && this.state.uncommittedMark)
+        this.submitMark(this.state.uncommittedMark)
+    })
   }
 
   scrollToSubject() {
@@ -156,14 +168,14 @@ export default class SubjectViewer extends React.Component {
   // VARIOUS EVENT HANDLERS
 
   // Commit mark
-  submitMark(mark) {
+  submitMark(mark, onComplete) {
     if (mark == null) {
       return
     }
     if (typeof this.props.onComplete === 'function') {
       this.props.onComplete(mark)
     }
-    this.setUncommittedMark(null)
+    this.setUncommittedMark(null, onComplete)
   } // reset uncommitted mark
 
   // Handle initial mousedown:
@@ -292,10 +304,12 @@ export default class SubjectViewer extends React.Component {
     this.setUncommittedMark(mark)
   }
 
-  setUncommittedMark(mark) {
+  setUncommittedMark(mark, onComplete) {
     this.setState({
       uncommittedMark: mark,
       selectedMark: mark
+    }, () => {
+      if (onComplete) onComplete()
     })
   } //, => @forceUpdate() # not sure if this is needed?
 
@@ -347,9 +361,8 @@ export default class SubjectViewer extends React.Component {
     }
 
     // First, if we're blurring some other uncommitted mark, commit it:
-    if (this.state.uncommittedMark != null &&
-      mark !== this.state.uncommittedMark) {
-      this.submitMark(sel)
+    if (this.state.uncommittedMark != null && mark !== this.state.uncommittedMark) {
+      this.submitMark(this.state.uncommittedMark, sel)
     } else {
       sel()
     }
@@ -444,7 +457,6 @@ export default class SubjectViewer extends React.Component {
     const marksToRender = (() => {
       const result = []
       for (let mark of Array.from(marks)) {
-        var ToolComponent
         if (mark._key == null) {
           mark._key = Math.random()
         }
@@ -455,16 +467,12 @@ export default class SubjectViewer extends React.Component {
           continue
         }
 
-        if (this.props.hideOtherMarks) {
-          if (!mark.belongsToUser) {
-            continue
-          }
+        if (this.props.hideOtherMarks && !mark.belongsToUser) {
+          continue
         }
 
         const displaysTranscribeButton =
-          (this.props.task != null
-            ? this.props.task.tool_config.displays_transcribe_button
-            : undefined) !== false
+          this.props.task && this.props.task.tool_config.displays_transcribe_button
         const isPriorMark = !mark.userCreated
         if (mark._key == null) { mark._key = Math.random() }
         const ToolComponent = markingTools[mark.toolName]

@@ -92,6 +92,7 @@ export default class SubjectSetToolbar extends React.Component {
                 subjectCurrentPage={this.props.subjectCurrentPage}
                 nextPage={this.props.nextPage}
                 prevPage={this.props.prevPage}
+                jumpPage={this.props.jumpPage}
                 totalSubjectPages={this.props.totalSubjectPages}
               />
             ) : undefined}

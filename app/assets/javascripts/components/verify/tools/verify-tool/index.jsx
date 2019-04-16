@@ -1,127 +1,125 @@
 /*
  * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
  * DS205: Consider reworking code to avoid use of IIFEs
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-import React from "react";
-import DraggableModal from "../../../draggable-modal.jsx";
-import GenericButton from "../../../buttons/generic-button.jsx";
-import DoneButton from "../../../buttons/done-button.jsx";
-import HelpButton from "../../../buttons/help-button.jsx";
-import BadSubjectButton from "../../../buttons/bad-subject-button.jsx";
-import SmallButton from "../../../buttons/small-button.jsx";
+import React from 'react'
+import DraggableModal from '../../../draggable-modal.jsx'
+import GenericButton from '../../../buttons/generic-button.jsx'
+import HelpButton from '../../../buttons/help-button.jsx'
+import BadSubjectButton from '../../../buttons/bad-subject-button.jsx'
+import SmallButton from '../../../buttons/small-button.jsx'
 
-import createReactClass from "create-react-class";
-const VerifyTool = createReactClass({
-  displayName: "VerifyTool",
+export default class VerifyTool extends React.Component {
+  constructor(props) {
+    super(props)
 
-  getInitialState() {
-    return {
+    this.state = {
       annotation: {
-        value: ""
+        value: ''
       }
-    };
-  },
+    }
 
-  getDefaultProps() {
-    return {
-      annotation: {},
-      task: null,
-      subject: null,
-      standalone: true,
-      annotation_key: "value",
-      focus: true,
-      doneButtonLabel: "Okay",
-      transcribeButtonLabel: "None of these? Enter your own"
-    };
-  },
+    this.commitAnnotation = this.commitAnnotation.bind(this)
+    this.chooseOption = this.chooseOption.bind(this)
+  }
+
+  static defaultProps = {
+    annotation: {},
+    task: null,
+    subject: null,
+    standalone: true,
+    annotation_key: 'value',
+    focus: true,
+    doneButtonLabel: 'Okay',
+    transcribeButtonLabel: 'None of these? Enter your own'
+  }
 
   componentWillReceiveProps() {
-    return this.setState({
+    this.setState({
       annotation: this.props.annotation
-    });
-  },
+    })
+  }
 
   commitAnnotation() {
-    return this.props.onComplete(this.state.annotation);
-  },
+    this.props.onComplete(this.state.annotation)
+  }
 
   handleChange(e) {
-    this.state.annotation[this.props.annotation_key] = e.target.value;
-    return this.forceUpdate();
-  },
+    this.state.annotation[this.props.annotation_key] = e.target.value
+    this.forceUpdate()
+  }
 
   handleKeyPress(e) {
     if ([13].indexOf(e.keyCode) >= 0) {
       // ENTER:
-      this.commitAnnotation();
-      return e.preventDefault();
+      this.commitAnnotation()
+      return e.preventDefault()
     }
-  },
+  }
 
   chooseOption(e) {
-    let el = $(e.target);
-    if (el.tagName !== "A") {
-      el = $(el.parents("a")[0]);
+    let el = $(e.target)
+    if (el.tagName !== 'A') {
+      el = $(el.parents('a')[0])
     }
-    const value = this.props.subject.data["values"][el.data("value_index")];
+    const value = this.props.subject.data['values'][el.data('value_index')]
 
-    return this.setState({ annotation: value }, () => {
-      return this.commitAnnotation();
-    });
-  },
+    this.setState({ annotation: value }, () => {
+      this.commitAnnotation()
+    })
+  }
 
   // this can go into a mixin? (common across all transcribe tools)
   getPosition(data) {
-    let x, y;
-    const yPad = 20;
+    let x, y
+    const yPad = 20
     switch (data.toolName) {
       case 'horizontalLineTool':
-        x = data.x;
+      case 'rectangleTool':
+        x = data.x
         y = parseFloat(data.y) + parseFloat(data.height) + yPad
-      case "rectangleTool":
-        x = data.x;
-        y = parseFloat(data.y) + parseFloat(data.height) + yPad;
-        break;
-      case "textRowTool":
-        x = data.x;
-        y = data.yLower + yPad;
-        break;
+        break
+      case 'textRowTool':
+        x = data.x
+        y = data.yLower + yPad
+        break
       default:
         // default for pointTool
-        x = data.x;
-        y = data.y + yPad;
+        x = data.x
+        y = data.y + yPad
     }
-    return { x, y };
-  },
+    return { x, y }
+  }
+
+  editAnnotation(ann) {
+    let url = `/#/transcribe/${this.props.subject.parent_subject_id}?scrollX=${window.scrollX}&scrollY=${window.scrollY}&from=verify`
+    url += '&' + (ann.map((val, key) => `annotation[${key}]=${val}`).join('&'))
+    window.location.href = url
+  }
 
   render() {
     // return null unless @props.viewerSize? && @props.subject?
     // return null if ! @props.scale? || ! @props.scale.horizontal?
-    let label, data;
+    let label, data
     if (this.props.loading) {
-      return null;
+      return null
     } // hide verify tool while loading image
 
-    const val =
-      this.state.annotation[this.props.annotation_key] != null
-        ? this.state.annotation[this.props.annotation_key]
-        : "";
 
-    label = this.props.task.instruction;
+    label = this.props.task.instruction
     if (!this.props.standalone) {
-      label = this.props.label != null ? this.props.label : "";
+      label = this.props.label != null ? this.props.label : ''
     }
 
-    const buttons = [];
-    console.info(`Verifying subject id ${this.props.subject.id}`);
+    const buttons = []
+    console.info(`Verifying subject id ${this.props.subject.id}`)
 
     if (this.props.onShowHelp != null) {
       buttons.push(
         <HelpButton onClick={this.props.onShowHelp} key="help-button" />
-      );
+      )
     }
 
     if ((this.props.task != null
@@ -130,11 +128,11 @@ const VerifyTool = createReactClass({
       this.props.subject != null) {
       const transcribe_url = `/#/transcribe/${
         this.props.subject.parent_subject_id
-        }?scrollX=${window.scrollX}&scrollY=${window.scrollY}&page=${
+      }?scrollX=${window.scrollX}&scrollY=${window.scrollY}&page=${
         this.props.subject._meta != null
           ? this.props.subject._meta.current_page
           : undefined
-        }`;
+      }`
       buttons.push(
         <GenericButton
           key="transcribe-button"
@@ -142,7 +140,7 @@ const VerifyTool = createReactClass({
           href={transcribe_url}
           className="ghost small-button help-button"
         />
-      );
+      )
     }
     // buttons.push <DoneButton label={@props.doneButtonLabel} onClick={@commitAnnotation} />
 
@@ -150,18 +148,18 @@ const VerifyTool = createReactClass({
       buttons.push(
         <BadSubjectButton
           key="bad-subject-button"
-          label={`Bad ${this.props.project.term("mark")}`}
+          label={`Bad ${this.props.project.term('mark')}`}
           className="floated-left"
           active={this.props.badSubject}
           onClick={this.props.onBadSubject}
         />
-      );
+      )
       if (this.props.badSubject) {
-        buttons.push(<SmallButton label="Next" key="done-button" onClick={this.commitAnnotation} />);
+        buttons.push(<SmallButton label="Next" key="done-button" onClick={this.commitAnnotation} />)
       }
     }
 
-    const { x, y } = this.getPosition(this.props.subject.region);
+    const { x, y } = this.getPosition(this.props.subject.region)
     return (
       <DraggableModal
         header={label}
@@ -178,52 +176,49 @@ const VerifyTool = createReactClass({
           ) : undefined}
           <ul>
             {(() => {
-              const result = [];
-              for (let i = 0; i < this.props.subject.data["values"].length; i++) {
-                data = this.props.subject.data["values"][i];
+              const result = []
+              for (let i = 0; i < this.props.subject.data['values'].length; i++) {
+                data = this.props.subject.data['values'][i]
                 result.push(
                   <li key={i}>
                     <a href="javascript:void(0);" onClick={this.chooseOption} data-value_index={i} >
                       <ul className="choice clickable">
                         {(() => {
-                          const result1 = [];
+                          const result1 = []
                           for (let k in data) {
                             // Label should be the key in the data hash unless it's a single-value hash with key 'value':
-                            const v = data[k];
-                            label = k !== "value" ||
+                            const v = data[k]
+                            label = k !== 'value' ||
                               (() => {
-                                const result2 = [];
+                                const result2 = []
                                 for (let _k in data) {
-                                  const _v = data[_k];
-                                  result2.push(_k);
+                                  result2.push(_k)
                                 }
-                                return result2;
+                                return result2
                               })().length > 1
                               ? k
-                              : "";
+                              : ''
                             // TODO: hack to approximate a friendly label in emigrant; should pull from original label:
                             label = label.replace(/em_/, '')
                             label = label.replace(/_/g, ' ')
                             result1.push(
                               <li key={k}><span className="label">{label}</span> {v}</li>
-                            );
+                            )
                           }
 
-                          return result1;
+                          return result1
                         })()}
                       </ul>
                     </a>
                   </li>
-                );
+                )
               }
 
-              return result;
+              return result
             })()}
           </ul>
         </div>
       </DraggableModal>
-    );
+    )
   }
-});
-
-export default VerifyTool;
+}

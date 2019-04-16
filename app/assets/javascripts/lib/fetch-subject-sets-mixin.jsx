@@ -1,7 +1,6 @@
 /*
  * decaffeinate suggestions:
  * DS101: Remove unnecessary use of Array.from
- * DS102: Remove unnecessary code created because of implicit returns
  * DS104: Avoid inline assignments
  * DS205: Consider reworking code to avoid use of IIFEs
  * DS207: Consider shorter variations of null checks
@@ -22,21 +21,11 @@ export default {
       let query = queryString.parse(this.props.location.search)
       // If a specific subject id indicated..
       if (query.selected_subject_id != null) {
-        // Get the index of the specified subject in the (presumably first & only) subject set:
-        let left
-        state.subject_index =
-          (left = (() => {
-            const result = []
-            for (let ind = 0; ind < subject_sets[0].subjects.length; ind++) {
-              const subj = subject_sets[0].subjects[ind]
-              if (subj.id === query.selected_subject_id) {
-                result.push(ind)
-              }
-            }
-            return result
-          })()[0]) != null
-            ? left
-            : 0
+        // Get the index of the specified subject in the (presumably first & only) subject set
+        let index
+        state.subject_index = (index = subject_sets[0].subjects.findIndex((subj) => subj.id === query.selected_subject_id)) && index > 0
+          ? index
+          : 0
       }
 
       // If taskKey specified, now's the time to set that too:
@@ -45,7 +34,7 @@ export default {
       }
 
       if (state) {
-        return this.setState(state)
+        this.setState(state)
       }
     }
 
@@ -102,8 +91,8 @@ export default {
     const request = API.type('subject_sets').get(subject_set_id, {})
 
     return request.then(set => {
-      return this.setState({ subjectSets: [set] }, () => {
-        return this.fetchSubjectsForCurrentSubjectSet(1, null, callback)
+      this.setState({ subjectSets: [set] }, () => {
+        this.fetchSubjectsForCurrentSubjectSet(1, null, callback)
       })
     })
   },
@@ -134,11 +123,14 @@ export default {
     return API.type('subject_sets')
       .get(params)
       .then(sets => {
-        return this.setState({ subjectSets: sets }, () => {
-          if (this.getActiveWorkflow().name.toLowerCase() !== 'transcribe') {
-            return this.fetchSubjectsForCurrentSubjectSet(1, null, callback)
-          }
-        })
+        if (sets.length === 0)
+          this.setState({ noMoreSubjectSets: true })
+        else
+          this.setState({ subjectSets: sets }, () => {
+            if (this.getActiveWorkflow().name.toLowerCase() !== 'transcribe') {
+              return this.fetchSubjectsForCurrentSubjectSet(1, null, callback)
+            }
+          })
       })
   },
 
@@ -152,7 +144,7 @@ export default {
     }
     const ind = this.state.subject_set_index
     const sets = this.state.subjectSets
-    
+
     // page & limit not passed when called this way for some reason, so we have to manually construct query:
     // sets[ind].get('subjects', {page: page, limit: limit}).then (subjs) =>
     // Alex Hebing: changed status to active here, because we don't want 'retired' subjects to appear,
@@ -168,14 +160,14 @@ export default {
     const process_subjects = subjs => {
       sets[ind].subjects = subjs
 
-      return this.setState(
+      this.setState(
         {
           subjectSets: sets,
           subjects_current_page: subjs[0].getMeta('current_page'),
           subjects_total_pages: subjs[0].getMeta('total_pages')
         },
         () => {
-          return typeof callback === 'function' ? callback(sets) : undefined
+          typeof callback === 'function' ? callback(sets) : undefined
         }
       )
     }
@@ -196,7 +188,7 @@ export default {
       .get(params)
       .then(subjects => {
         this._subject_queries[params] = subjects
-        return process_subjects(subjects)
+        process_subjects(subjects)
       })
   },
 
@@ -208,7 +200,7 @@ export default {
         for (let group of Array.from(groups)) {
           group.showButtons = false
         } // hide buttons by default
-        return this.setState({ groups })
+        this.setState({ groups })
       })
   }
 }

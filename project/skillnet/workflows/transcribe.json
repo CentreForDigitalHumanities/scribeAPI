@@ -21,7 +21,8 @@
       "help": {
         "file": "t_incipit"
       },
-      "generates_subject_type": "sk_transcribed_incipit"
+      "generates_subject_type": "sk_transcribed_incipit",
+      "export_name": "Incipit"
     },
 
     "sk_sender_name": {
@@ -36,7 +37,8 @@
       "help": {
         "file": "t_sender_name"
       },
-      "generates_subject_type": "sk_transcribed_sender_name"
+      "generates_subject_type": "sk_transcribed_sender_name",
+      "export_name": "Sender"
     },
 
     "sk_recipient_name": {
@@ -51,7 +53,8 @@
       "help": {
         "file": "t_recipient_name"
       },
-      "generates_subject_type": "sk_transcribed_recipient_name"
+      "generates_subject_type": "sk_transcribed_recipient_name",
+      "export_name": "Recipient"
     },
 
     "sk_date": {
@@ -62,7 +65,8 @@
       "help": {
         "file": "t_date"
       },
-      "generates_subject_type": "sk_transcribed_date"
+      "generates_subject_type": "sk_transcribed_date",
+      "export_name": "Date"
     },
 
     "sk_sender_place": {
@@ -72,7 +76,8 @@
       "help": {
         "file": "t_sender_place"
       },
-      "generates_subject_type": "sk_transcribed_sender_place"
+      "generates_subject_type": "sk_transcribed_sender_place",
+      "export_name": "Place of Sender"
     },
 
     "sk_recipient_place": {
@@ -82,7 +87,8 @@
       "help": {
         "file": "t_recipient_place"
       },
-      "generates_subject_type": "sk_transcribed_recipient_place"
+      "generates_subject_type": "sk_transcribed_recipient_place",
+      "export_name": "Place of Recipient"
     }
   }
 }

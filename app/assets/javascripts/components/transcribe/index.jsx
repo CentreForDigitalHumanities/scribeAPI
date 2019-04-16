@@ -85,7 +85,7 @@ export default AppContext(createReactClass({
 
   handleTaskComplete(d) {
     this.handleDataFromTool(d)
-    return this.commitClassificationAndContinue(d)
+    this.commitClassificationAndContinue(d)
   },
 
   handleViewerLoad(props) {
@@ -148,10 +148,9 @@ export default AppContext(createReactClass({
 
   render() {
     let isLastSubject, transcribeMode
-    if (
-      this.props.match.params.workflow_id != null &&
-      this.props.match.params.parent_subject_id != null
-    ) {
+    if (this.props.match.params.from == 'verify') {
+      transcribeMode = 'verify'
+    } else if (this.props.match.params.workflow_id != null && this.props.match.params.parent_subject_id != null) {
       transcribeMode = 'page'
     } else if (this.props.match.params.subject_id) {
       transcribeMode = 'single'
@@ -167,6 +166,9 @@ export default AppContext(createReactClass({
     }
 
     let currentAnnotation = null
+    if (this.props.match.params.annotation) {
+      currentAnnotation = this.props.match.params.annotation
+    }
     let TranscribeComponent = null
     let onFirstAnnotation = null
 
@@ -174,7 +176,7 @@ export default AppContext(createReactClass({
       currentAnnotation = this.getCurrentClassification().annotation
       TranscribeComponent = this.getCurrentTool() // @state.currentTool
       onFirstAnnotation =
-        (currentAnnotation != null ? currentAnnotation.task : undefined) ===
+        (currentAnnotation && currentAnnotation.task) ===
         this.getActiveWorkflow().first_task
     }
 

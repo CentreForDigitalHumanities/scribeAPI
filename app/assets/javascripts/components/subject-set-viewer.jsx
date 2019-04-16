@@ -96,6 +96,7 @@ export default createReactClass({
           )}
           nextPage={this.props.nextPage}
           prevPage={this.props.prevPage}
+          jumpPage={this.props.jumpPage}
           totalSubjectPages={this.props.totalSubjectPages}
           onZoomChange={this.handleZoomPanViewBoxChange}
           viewBox={this.state.zoomPanViewBox}

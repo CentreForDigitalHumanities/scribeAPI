@@ -60,7 +60,7 @@ export default {
 
     classifications.push(classification)
 
-    return this.setState(
+    this.setState(
       {
         classifications,
         classificationIndex: classifications.length - 1
@@ -69,7 +69,7 @@ export default {
         this.forceUpdate()
         window.classifications = this.state.classifications // make accessible to console
         if (callback != null) {
-          return callback()
+          callback()
         }
       }
     )
@@ -185,7 +185,7 @@ export default {
     }
 
     this.commitClassification(classification)
-    return this.beginClassification()
+    this.beginClassification()
   },
 
   // used for committing marking tools (by passing annotation)
@@ -224,30 +224,26 @@ export default {
       classificationIndex: classifications.length - 1
     }, () => {
       this.forceUpdate()
-      window.classifications = this.state.classifications // make accessible to console
-      if (typeof callback !== 'undefined' && callback !== null) {
-        return callback()
-      }
-    }
-    )
+      window.classifications = this.state.classifications // make accessible to console      
+    })
 
     return this.commitClassification(classification)
   },
 
   toggleBadSubject(e, callback) {
-    return this.setState({ badSubject: !this.state.badSubject }, () => {
+    this.setState({ badSubject: !this.state.badSubject }, () => {
       return typeof callback === 'function' ? callback() : undefined
     })
   },
 
   toggleNothingToMark(e, callback) {
-    return this.setState({ nothingToMark: !this.state.nothingToMark }, () => {
+    this.setState({ nothingToMark: !this.state.nothingToMark }, () => {
       return typeof callback === 'function' ? callback() : undefined
     })
   },
 
   toggleIllegibleSubject(e, callback) {
-    return this.setState(
+    this.setState(
       { illegibleSubject: !this.state.illegibleSubject },
       () => {
         return typeof callback === 'function' ? callback() : undefined
@@ -261,13 +257,13 @@ export default {
     classification.workflow_id = this.getActiveWorkflow().id
     classification.task_key = 'flag_bad_subject_task'
 
-    return classification.commit(classification => {
+    classification.commit(classification => {
       this.updateChildSubject(
         this.getCurrentSubject().id,
         classification.subject_id,
         { user_has_deleted: true }
       )
-      return this.beginClassification()
+      this.beginClassification()
     })
   },
 
@@ -306,7 +302,7 @@ export default {
       s.child_subjects.push($.extend({ userCreated: true }, child_subject))
 
       // We've updated an internal object in @state.subjectSets, but framework doesn't notice, so tell it to update:
-      return this.forceUpdate()
+      this.forceUpdate()
     }
   },
 
@@ -491,12 +487,10 @@ export default {
     return subjects[this.state.subject_index]
   }, // otherwise, return subject
 
-  getCompletionAssessmentTask() {    
+  getCompletionAssessmentTask() {
     return {
       generates_subject_type: null,
-      instruction: `Thanks for all your work! Is there anything left to ${
-        this.props.workflowName
-      }?`,
+      instruction: `Thanks for all your work! Is there anything left to ${this.props.workflowName}?`,
       key: 'completion_assessment_task',
       next_task: null,
       tool: 'pickOneButtons',
@@ -542,8 +536,7 @@ export default {
       }, () => {
         const key = this.getCurrentSubject().type
         return this.advanceToTask(key)
-      }
-      )
+      })
 
       // Haz more pages of subjects?
     } else if (this.state.subjects_next_page != null) {
@@ -598,7 +591,7 @@ export default {
 
     // console.log "Mark#index Advancing to subject_set_index #{new_subject_set_index} (of #{@state.subjectSets.length}), subject_index #{new_subject_index} (of #{@state.subjectSets[new_subject_set_index].subjects.length})"
 
-    return this.setState(
+    this.setState(
       {
         subject_set_index: new_subject_set_index,
         subject_index: new_subject_index,
@@ -606,14 +599,14 @@ export default {
         currentSubToolIndex: 0
       },
       () => {
-        return this.fetchSubjectsForCurrentSubjectSet(1, 100)
+        this.fetchSubjectsForCurrentSubjectSet(1, 100)
       }
     )
   },
 
   commitClassificationAndContinue(d) {
     this.commitCurrentClassification()
-    return this.beginClassification({}, () => {
+    this.beginClassification({}, () => {
       if (__guard__(this.getCurrentTask(), x => x.next_task) != null) {
         return this.advanceToTask(this.getCurrentTask().next_task)
       } else {
