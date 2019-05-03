@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 export default class Login extends React.Component {
   constructor() {
@@ -11,6 +12,12 @@ export default class Login extends React.Component {
     user: null,
     onLogout: () => { },
     loginProviders: []
+  }
+
+  static propTypes = {
+    user: PropTypes.object,
+    onLogout: PropTypes.func,
+    loginProviders: PropTypes.arrayOf(PropTypes.object)
   }
 
   render() {
@@ -59,23 +66,40 @@ export default class Login extends React.Component {
     )
   }
 
-  renderLoginOptions(label) {
-    const links = this.props.loginProviders.map((link) => {
-      const icon_id = link.id === 'zooniverse' ? 'dot-circle-o' : link.id
+  renderLoginOptions(label = 'Log In:') {
+    const getLinkId = (link) => link.id === 'zooniverse' ? 'dot-circle-o' : link.id
+    const getLink = (provider, content, className) => {
       return (
         <a
-          key={`login-link-${link.id}`}
-          href={link.path}
-          title={`Log in using ${link.name}`}
+          key={`login-link-${provider.id}`}
+          href={provider.path}
+          title={`Log in using ${provider.name}`}
+          className={className}
         >
-          <i className={`fa fa-${icon_id} fa-2`} />
+          {content}
         </a>
       )
-    })
+    }
+
+    if (this.props.loginProviders.length == 1) {
+      // make the whole button clickable
+      return getLink(
+        this.props.loginProviders[0],
+        <div>
+          <span className="label">{label}</span>
+          <div className="options">
+            <i className={`fa fa-${getLinkId(this.props.loginProviders[0])} fa-2`} />
+          </div>
+        </div>,
+        'main-header-item login-container')
+    }
+
+    const links = this.props.loginProviders.map((provider) =>
+      getLink(provider, <i className={`fa fa-${getLinkId(provider)} fa-2`} />))
 
     return (
       <span className="login-container">
-        <span className="label">{label || 'Log In:'}</span>
+        <span className="label">{label}</span>
         <div className="options">{links}</div>
       </span>
     )

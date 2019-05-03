@@ -2,10 +2,11 @@ API::Application.routes.draw do
 
   root :to => "home#index"
 
-  devise_for :users, :controllers => {:registrations => "registrations",
-                                      :omniauth_callbacks => "omniauth_callbacks",
-                                      :sessions => "sessions"}
-
+  scope defaults: { format: :json } do
+    devise_for :users, :controllers => {:registrations => "registrations",
+                                        :omniauth_callbacks => "omniauth_callbacks",
+                                        :sessions => "sessions"}
+  end
 
   get '/projects',                                            to: 'projects#index',       defaults: { format: 'json' }
   get '/projects/current',                                    to: 'projects#current',     defaults: { format: 'json' }

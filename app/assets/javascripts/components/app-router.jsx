@@ -9,30 +9,31 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import marked from '../lib/marked.min.js'
+import marked from '../lib/marked.min'
 
 import createReactClass from 'create-react-class'
-import { App } from './app.jsx'
-import { AppContext } from './app-context.jsx'
+import { App } from './app'
+import { AppContext } from './app-context'
 import { Route, Redirect, Switch } from 'react-router'
 import { HashRouter } from 'react-router-dom'
-import HomePage from './home-page.jsx'
-import LoginPage from './login-page.jsx'
+import HomePage from './home-page'
+import LoginPage from './login-page'
+import SignUpPage from './sign-up-page'
+import ForgotPasswordPage from './forgot-password-page'
 
-import Mark from './mark/index.jsx'
-import Transcribe from './transcribe/index.jsx'
-import Verify from './verify/index.jsx'
+import Mark from './mark/index'
+import Transcribe from './transcribe/index'
+import Verify from './verify/index'
 
 // TODO Group routes currently not implemented
-import GroupPage from './group-page.jsx'
-import GroupBrowser from './group-browser.jsx'
+import GroupPage from './group-page'
+import GroupBrowser from './group-browser'
 import FinalSubjectSetBrowser from './final-subject-set-browser'
 import FinalSubjectSetPage from './final-subject-set-page'
 import FinalSubjectSetDownload from './final-subject-set-download'
-import GenericPage from './generic-page'
 
-import Project from '../models/project.js'
-import API from '../lib/api.jsx'
+import Project from '../models/project'
+import API from '../lib/api'
 
 function getComponent(name) {
   switch (name) {
@@ -62,6 +63,8 @@ export default class AppRouter {
           <Redirect from="/home" to="/" />
           <Route exact name="home" path="/" component={HomePage} />
           <Route exact name="login" path="/login" component={LoginPage} />
+          <Route exact name="sign_up" path="/sign_up" component={SignUpPage} />
+          <Route exact name="forgot_password" path="/forgot_password" component={ForgotPasswordPage} />
           {(() => {
             const result = []
             for (w of Array.from(project.workflows)) {

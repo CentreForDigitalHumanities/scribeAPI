@@ -3,7 +3,7 @@ import { Redirect, NavLink } from 'react-router-dom'
 import { AppContext, requestUserFetch } from './app-context.jsx'
 
 @AppContext
-export default class LoginPage extends React.Component {
+export default class ForgotPasswordPage extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -23,7 +23,7 @@ export default class LoginPage extends React.Component {
   signIn(event) {
     event.preventDefault()
     const data = new FormData(event.target)
-    fetch('/users/sign_in', {
+    fetch('/users/password', {
       method: 'POST',
       body: data,
     }).then((response) => {
@@ -49,29 +49,25 @@ export default class LoginPage extends React.Component {
       return <Redirect to="/home" />
     }
     return <div className="page-content login-page">
-      <h1>Login</h1>
+      <h1>Reset Password</h1>
       <div>
         <form onSubmit={this.signIn}>
           {this.state.message && <span className="error-message">{this.state.message}</span>}
           <label>
             Email
-            <input type="email" name="email" required autoComplete="email" />
-          </label>
-          <label>
-            Password
-            <input type="password" name="password" required autoComplete="current-password" />
+            <input type="email" name="user[email]" required autoComplete="email" />
           </label>
           <p>
-            <button className="major-button">Sign In</button>
+            <button className="major-button">Send reset instructions</button>
           </p>
         </form>
         <p>
-          <NavLink to="/sign_up">
-            Create a new account
+          <NavLink to="/login">
+            Login
           </NavLink>
           &nbsp;
-          <NavLink to="/forgot_password" className="forgot-password">
-            Forgot your password?
+          <NavLink to="/sign_up">
+            Create a new account
           </NavLink>
         </p>
       </div>
