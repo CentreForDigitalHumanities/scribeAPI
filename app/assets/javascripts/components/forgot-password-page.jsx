@@ -33,7 +33,7 @@ export default class ForgotPasswordPage extends React.Component {
         this.setState({ redirect: true })
       } else {
         // invalid credentials: show message
-        this.setState({ message: 'Invalid email or password, check your credentials and try again.' })
+        this.setState({ message: 'Invalid email, check your address or create a new account.' })
       }
     }).catch(() => {
       this.setState({ message: 'Problem occurred. Try again or contact the admin.' })
