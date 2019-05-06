@@ -17,10 +17,10 @@ export default class ForgotPasswordPage extends React.Component {
       }
     }
 
-    this.signIn = this.signIn.bind(this)
+    this.forgotPassword = this.forgotPassword.bind(this)
   }
 
-  signIn(event) {
+  forgotPassword(event) {
     event.preventDefault()
     const data = new FormData(event.target)
     fetch('/users/password', {
@@ -51,14 +51,14 @@ export default class ForgotPasswordPage extends React.Component {
     return <div className="page-content login-page">
       <h1>Reset Password</h1>
       <div>
-        <form onSubmit={this.signIn}>
+        <form onSubmit={this.forgotPassword}>
           {this.state.message && <span className="error-message">{this.state.message}</span>}
           <label>
             Email
             <input type="email" name="user[email]" required autoComplete="email" />
           </label>
           <p>
-            <button className="major-button">Send reset instructions</button>
+            <button className="major-button">Send Reset Instructions</button>
           </p>
         </form>
         <p>

@@ -33,7 +33,6 @@ export default class SignUpPage extends React.Component {
       },
       body: JSON.stringify({ user })
     }).then((response) => {
-      console.log(response)
       if (response.status === 200) {
         requestUserFetch()
         // success: redirect to user page or target
@@ -75,7 +74,7 @@ export default class SignUpPage extends React.Component {
             <input type="password" name="password" required autoComplete="new-password" />
           </label>
           <label>
-            Password confirmation
+            Password Confirmation
             <input type="password" name="password_confirmation" required autoComplete="new-password" />
           </label>
           <p>
