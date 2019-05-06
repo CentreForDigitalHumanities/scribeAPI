@@ -49,7 +49,12 @@ export default class UserPage extends React.Component {
                 </tr>
               </tbody>
             </table>
-            <NavLink to="/change_password" className="major-button">Change Password</NavLink>
+            <p>
+              <NavLink to="/change_password" className="major-button">Change Password</NavLink>
+            </p>
+            <p>
+              <NavLink to="/delete_account">Delete account</NavLink>
+            </p>
           </div>
           <UserStats />
         </div>

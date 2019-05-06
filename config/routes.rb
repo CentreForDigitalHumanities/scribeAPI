@@ -18,6 +18,7 @@ API::Application.routes.draw do
   post '/tutorial_complete',                                  to: "users#tutorial_complete"
   
   get '/user_stats',                                          to: "users#stats"
+  post '/delete_user',                                        to: "users#delete"
 
   get '/projects/stats',                                      to: 'projects#stats'
 

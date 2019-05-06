@@ -29,6 +29,8 @@ class User
   field :current_sign_in_ip, :type => String
   field :last_sign_in_ip,    :type => String
 
+  field :deleted_at,         :type => Time
+
   field :uid,                :type => String
   field :provider,           :type => String    # e.g. 'facebook', 'google_oauth2', 'zooniverse'
 

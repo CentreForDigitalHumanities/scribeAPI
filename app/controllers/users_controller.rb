@@ -15,6 +15,26 @@ class UsersController < ApplicationController
     render json: AuthStateSerializer.new(user: current_or_guest_user, providers: User.auth_providers), status: 200
   end
 
+  def delete
+    # Soft delete a user to retain classifications
+    # Delete all identifiable information
+    user = require_user!
+
+    user.name = '[DELETED]'
+    user.email = ''
+    user.status = 'deleted'
+    user.deleted_at = Time.current
+    user.current_sign_in_ip = nil
+    user.last_sign_in_ip = nil
+    user.avatar = nil
+    user.profile_url = nil
+
+    user.save!(:validate => false)
+    sign_out user
+
+    render nothing: true, status: 204
+  end
+
   def stats
     return render text: "Guest users aren't allowed to view user statistics.", status: 403 if current_user.nil?
     mark_workflow = Workflow.find_by name: 'mark'

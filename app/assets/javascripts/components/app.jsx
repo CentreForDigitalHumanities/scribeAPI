@@ -60,30 +60,29 @@ export class App extends React.Component {
     this.setState({
       error: null
     })
-    const request = $.getJSON('/current_user')
+    fetch('/current_user', { method: 'GET' })
+      .then(response => response.json())
+      .then(result => {
+        if (result == null) {
+          return
+        }
 
-    request.done(result => {
-      if (result == null) {
-        return
-      }
+        if (result.data) {
+          this.setState({ user: new User(result.data) })
+        } else if (result.data == null) {
+          this.setState({ user: null })
+        }
 
-      if (result.data) {
-        this.setState({
-          user: new User(result.data)
-        })
-      }
-
-      if (result.meta != null && result.meta.providers) {
-        this.setState({ loginProviders: result.meta.providers })
-      }
-    })
-
-    request.fail(error => {
-      this.setState({
-        loading: false,
-        error: 'Having trouble logging you in'
+        if (result.meta != null && result.meta.providers) {
+          this.setState({ loginProviders: result.meta.providers })
+        }
       })
-    })
+      .catch(() => {
+        this.setState({
+          loading: false,
+          error: 'Having trouble logging you in'
+        })
+      })
   }
 
   setTutorialComplete() {
