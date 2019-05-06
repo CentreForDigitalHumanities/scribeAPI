@@ -13,23 +13,29 @@ h1,
 .home-page h2,
 .home-page h3,
 .custom-page h2,
-.custom-page h3 {
+.custom-page h3,
+.user-page h2,
+.user-page h3,
+.thank-you {
   font-family: 'Goudy Bookletter 1911', Georgia, serif;
   text-transform: none;
 }
 
 h1,
-.custom-page h1 {
+.custom-page h1,
+.user-page h1 {
   font-size: 5em;
 }
 
 .home-page h2,
-.custom-page h2 {
+.custom-page h2,
+.user-page h2 {
   font-size: 3em;
 }
 
 .home-page h3,
-.custom-page h3 {
+.custom-page h3,
+.user-page h3 {
   font-size: 2em;
   line-height: 1.3em;
   margin: 0.5em 0;
@@ -94,18 +100,14 @@ h1,
 }
 
 .page-content>div {
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
   background: rgba(255, 255, 255, 0.85);
   padding: 20px 40px;
 }
-
-.page-content>div.updated-at {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+.page-content>div:first-of-type {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
 }
-.page-content>div.updated-at,
-.page-content.login-page>div{
+.page-content>div:last-of-type {
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
 }
@@ -168,10 +170,10 @@ print {
   max-width: 1200px;
 }
 
-.login {
-  display: none;
+.login,
+.login .login-container .user-link {
+  color: white;
 }
-
 .group-browser .group {
   border: none;
   border-radius: 3px;

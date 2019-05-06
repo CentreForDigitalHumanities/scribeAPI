@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
     end
 
     if user
-     sign_in(user, :bypass => true)
+     sign_in(user)
       session[:user_id] = user.id
       respond_to do |format|
         format.json{render json: current_user}

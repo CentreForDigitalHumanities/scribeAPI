@@ -1,6 +1,6 @@
 import React from 'react'
 import { Redirect, NavLink } from 'react-router-dom'
-import { AppContext, requestUserFetch } from './app-context.jsx'
+import { AppContext, requestUserFetch } from './app-context'
 
 @AppContext
 export default class LoginPage extends React.Component {
@@ -8,7 +8,8 @@ export default class LoginPage extends React.Component {
     super()
     this.state = {
       message: null,
-      redirect: false
+      redirect: false,
+      target: undefined
     }
     if (document.referrer) {
       const url = new URL(document.referrer)
@@ -43,10 +44,16 @@ export default class LoginPage extends React.Component {
   render() {
     if (this.state.redirect) {
       if (this.state.target) {
-        window.location = this.state.target
-        return
+        switch (this.state.target) {
+          case '/':
+            return <Redirect to="/user" />
+
+          default:
+            window.location = this.state.target
+            return
+        }
       }
-      return <Redirect to="/home" />
+      return <Redirect to="/user" />
     }
     return <div className="page-content login-page">
       <h1>Login</h1>

@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 export default class Login extends React.Component {
@@ -58,10 +59,18 @@ export default class Login extends React.Component {
       <span className="login-container">
         {this.props.user.avatar &&
           <img src={`${this.props.user.avatar}`} />}
-        <span className="label">Hello {this.props.user.name} </span>
-        <a className="logout" onClick={this.signOut}>
-          Logout
-        </a>
+        <span className="label">Hello <NavLink to="/user" className="user-link">{this.props.user.name}</NavLink></span>
+        <div className="logged-in-options">
+          <NavLink to="/user" title="User Page" activeClassName="active">
+            <i className="fa fa-user fa-2" />
+          </NavLink>
+          {this.props.user.canViewAdmin && <a href="/admin" title="Admin">
+            <i className="fa fa-cog fa-2" />
+          </a>}
+          <a className="logout" onClick={this.signOut} title="Logout">
+            <i className="fa fa-sign-out fa-2" />
+          </a>
+        </div>
       </span>
     )
   }
@@ -69,6 +78,16 @@ export default class Login extends React.Component {
   renderLoginOptions(label = 'Log In:') {
     const getLinkId = (link) => link.id === 'zooniverse' ? 'dot-circle-o' : link.id
     const getLink = (provider, content, className) => {
+      if (/^\/#/.test(provider.path)) {
+        return <NavLink
+          key={`login-link-${provider.id}`}
+          to={provider.path.replace(/^\/#/, '')}
+          title={`Log in using ${provider.name}`}
+          className={className}
+          activeClassName="selected">
+          {content}
+        </NavLink>
+      }
       return (
         <a
           key={`login-link-${provider.id}`}

@@ -2,11 +2,13 @@ import React from 'react'
 import { withRouter } from 'react-router'
 import queryString from 'query-string'
 
-import MainHeader from '../partials/main-header.jsx'
-import Footer from '../partials/footer.jsx'
+import MainHeader from '../partials/main-header'
+import Footer from '../partials/footer'
 
-import BrowserWarning from './browser-warning.jsx'
-import { contextTypes, userFetchObservable } from './app-context.jsx'
+import BrowserWarning from './browser-warning'
+import { contextTypes, userFetchObservable } from './app-context'
+
+import User from '../models/user'
 
 @withRouter
 export class App extends React.Component {
@@ -67,7 +69,7 @@ export class App extends React.Component {
 
       if (result.data) {
         this.setState({
-          user: result.data
+          user: new User(result.data)
         })
       }
 

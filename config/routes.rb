@@ -17,6 +17,8 @@ API::Application.routes.draw do
   get '/current_user',                                        to: "users#logged_in_user"
   post '/tutorial_complete',                                  to: "users#tutorial_complete"
   
+  get '/user_stats',                                          to: "users#stats"
+
   get '/projects/stats',                                      to: 'projects#stats'
 
   get '/workflows/:workflow_id/subjects',                     to: 'subjects#index'

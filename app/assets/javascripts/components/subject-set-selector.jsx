@@ -2,7 +2,7 @@
  * Author: Alex Hebing @ Digital Humanities Lab (Utrecht University), 2019
  */
 import React from 'react'
-import DraggableModal from './draggable-modal.jsx'
+import DraggableModal from './draggable-modal'
 import GenericButton from './buttons/generic-button'
 
 export default class SubjectSetSelector extends React.Component {
@@ -43,7 +43,7 @@ export default class SubjectSetSelector extends React.Component {
       subjectSetTitles.push(
         <GenericButton
           key={subjectSets[i].id}
-          label={this.parseTitle(subjectSets[i].meta_data.set_key)}
+          label={SubjectSetSelector.parseTitle(subjectSets[i].meta_data.set_key)}
           className="ghost small-button selectable-subject-set"
           onClick={() => {
             this.onSubjectSetSelected(subjectSetId)
@@ -53,7 +53,7 @@ export default class SubjectSetSelector extends React.Component {
     return <div>{subjectSetTitles}</div>
   }
 
-  parseTitle(subjectSetKey) {
+  static parseTitle(subjectSetKey) {
     if (subjectSetKey.indexOf('_') != -1) {
       let splitSetKey = subjectSetKey.split('_')
       let author = splitSetKey[0].split('-').join(' ')

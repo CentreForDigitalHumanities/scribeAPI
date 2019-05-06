@@ -87,7 +87,6 @@
   @extend %reset-button
   +flex($grow: 14)
   color: rgba(255, 255, 255, 0.4)
-  overflow: hidden
   align-items: center
   text-transform: uppercase
   line-height: 72px
@@ -96,6 +95,13 @@
     padding-right: 2%
     float: right
 
+    .user-link
+      color: rgba(255, 255, 255, 0.4)
+      text-decoration: none
+      
+      &:hover
+        text-decoration: underline
+
   img
     max-height: 20px
     margin-right: 8px
@@ -103,10 +109,23 @@
   .guest-hello
     padding-right: 10px
 
-  .logout
-    padding-left: 6px
+  .logged-in-options
+    display: inline-block
 
-  &:hover
+    a
+      padding-left: 6px
+
+      &:not(.logout)
+        color: gray
+
+      &.active
+        color: $PRIMARY_NORMAL
+
+      &:hover
+        color: white
+
+  &:hover,
+  &:hover .user-link
     color: white
 
   .options

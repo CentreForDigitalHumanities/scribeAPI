@@ -1,7 +1,7 @@
 class UserSerializer < ActiveModel::MongoidSerializer
   root false
 
-  attributes :id, :guest, :name, :avatar, :tutorial_complete
+  attributes :id, :guest, :name, :avatar, :tutorial_complete, :sign_in_count, :created_at, :role
 
   def id
     object._id.to_s
