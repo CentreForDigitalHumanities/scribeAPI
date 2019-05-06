@@ -101,15 +101,17 @@ h1,
 
 .page-content>div {
   background: rgba(255, 255, 255, 0.85);
-  padding: 20px 40px;
+  padding: 5px 40px;
 }
 .page-content>div:first-of-type {
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
+  padding-top: 20px;
 }
 .page-content>div:last-of-type {
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
+  padding-bottom: 20px;
 }
 
 /* Introduction */
