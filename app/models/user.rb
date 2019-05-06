@@ -102,11 +102,11 @@ class User
   # Assigns role=team if email is in team_emails
   def apply_configured_user_role
     # Make admin?
-    if email == Project.current.admin_email
+    if email.downcase == Project.current.admin_email.downcase
       update_attribute :role, 'admin'
 
     # Make the team?
-    elsif Project.current.team_emails.include? email
+    elsif Project.current.team_emails.map(&:downcase).include? email.downcase
       update_attribute :role, 'team'
     end
   end
@@ -124,7 +124,7 @@ class User
   end
 
   def self.find_by_password(email, password)
-    if user = self.find_by({email: email})
+    if user = self.find_by({email: email.downcase})
       user.valid_password?(password) ? user : nil
     else
       nil

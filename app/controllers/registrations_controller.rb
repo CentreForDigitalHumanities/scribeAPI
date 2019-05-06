@@ -7,7 +7,7 @@ class RegistrationsController < Devise::RegistrationsController
   def create
     # http://www.artechspot.com/blog/customize-devise-sing-in-and-sign-up-to-respond-in-json
     build_resource(sign_up_params)
-
+    resource.email.downcase!
     resource.save
     yield resource if block_given?
     if resource.persisted?

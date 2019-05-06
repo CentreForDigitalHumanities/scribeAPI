@@ -62,7 +62,7 @@ export default class LoginPage extends React.Component {
           {this.state.message && <span className="error-message">{this.state.message}</span>}
           <label>
             Email
-            <input type="email" name="email" required autoComplete="email" />
+            <input type="email" name="email" required autoComplete="email" style={{textTransform: "lowercase"}}  />
           </label>
           <label>
             Password

@@ -67,7 +67,7 @@ export default class SignUpPage extends React.Component {
           </label>
           <label>
             Email
-            <input type="email" name="email" required autoComplete="email" />
+            <input type="email" name="email" required autoComplete="email" style={{textTransform: "lowercase"}} />
           </label>
           <label>
             Password
