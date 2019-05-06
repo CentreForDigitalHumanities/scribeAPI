@@ -22,6 +22,7 @@ import DeleteAccountPage from './delete-account-page'
 import HomePage from './home-page'
 import LoginPage from './login-page'
 import SignUpPage from './sign-up-page'
+import SignOut from './sign-out'
 import ForgotPasswordPage from './forgot-password-page'
 import UserPage from './user-page'
 
@@ -70,6 +71,7 @@ export default class AppRouter {
           <Route exact name="delete_account" path="/delete_account" component={DeleteAccountPage} />
           <Route exact name="login" path="/login" component={LoginPage} />
           <Route exact name="sign_up" path="/sign_up" component={SignUpPage} />
+          <Route exact name="sign_out" path="/sign_out" component={SignOut} />
           <Route exact name="forgot_password" path="/forgot_password" component={ForgotPasswordPage} />
           <Route exact name="user" path="/user" component={UserPage} />
           {(() => {

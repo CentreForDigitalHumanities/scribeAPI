@@ -1,7 +1,7 @@
 <div id="admin-header">
 
   <ul class="account-tabs">
-    <li>Hi, <%= link_to "#{current_user.name} (#{current_user.role.capitalize})", "/#user" %> <%= button_to "Sign out", destroy_user_session_path, :method => :delete %></li>
+    <li>Hi, <%= link_to "#{current_user.name} (#{current_user.role.capitalize})", "/#user" %> <%= link_to "Sign out", "/#/sign_out" %></li>
   </ul>
 
   <ul class="header-tabs">
