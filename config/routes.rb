@@ -4,6 +4,7 @@ API::Application.routes.draw do
 
   scope defaults: { format: :json } do
     devise_for :users, :controllers => {:registrations => "registrations",
+                                        :passwords => "passwords",
                                         :omniauth_callbacks => "omniauth_callbacks",
                                         :sessions => "sessions"}
   end

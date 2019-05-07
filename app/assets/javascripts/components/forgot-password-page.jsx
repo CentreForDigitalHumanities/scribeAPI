@@ -1,5 +1,5 @@
 import React from 'react'
-import { Redirect, NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { AppContext, requestUserFetch } from './app-context.jsx'
 
 @AppContext
@@ -8,7 +8,7 @@ export default class ForgotPasswordPage extends React.Component {
     super()
     this.state = {
       message: null,
-      redirect: false
+      success: false
     }
     if (document.referrer) {
       const url = new URL(document.referrer)
@@ -28,31 +28,33 @@ export default class ForgotPasswordPage extends React.Component {
       body: data,
     }).then((response) => {
       requestUserFetch()
-      if (response.status === 200) {
+      if (response.status === 201) {
         // success: redirect to home or target
-        this.setState({ redirect: true })
+        this.setState({
+          message: 'A mail with reset instructions has been sent. Check your spam box if it isn\'t in your inbox.',
+          success: true
+        })
       } else {
         // invalid credentials: show message
-        this.setState({ message: 'Invalid email, check your address or create a new account.' })
+        this.setState({
+          message: 'Invalid email, check your address or create a new account.',
+          success: false
+        })
       }
     }).catch(() => {
-      this.setState({ message: 'Problem occurred. Try again or contact the admin.' })
+      this.setState({
+        message: 'Problem occurred. Try again or contact the admin.',
+        success: false
+      })
     })
   }
 
   render() {
-    if (this.state.redirect) {
-      if (this.state.target) {
-        window.location = this.state.target
-        return
-      }
-      return <Redirect to="/home" />
-    }
     return <div className="page-content login-page">
       <h1>Reset Password</h1>
       <div>
         <form onSubmit={this.forgotPassword}>
-          {this.state.message && <span className="error-message">{this.state.message}</span>}
+          {this.state.message && <span className={this.state.success ? 'success-message' : 'error-message'}>{this.state.message}</span>}
           <label>
             Email
             <input type="email" name="user[email]" required autoComplete="email" />

@@ -67,7 +67,7 @@ export default class AppRouter {
         <Switch>
           <Redirect from="/home" to="/" />
           <Route exact name="home" path="/" component={HomePage} />
-          <Route exact name="change_password" path="/change_password" component={ChangePasswordPage} />
+          <Route exact name="change_password" path="/change_password/:reset_password_token?" component={ChangePasswordPage} />
           <Route exact name="delete_account" path="/delete_account" component={DeleteAccountPage} />
           <Route exact name="login" path="/login" component={LoginPage} />
           <Route exact name="sign_up" path="/sign_up" component={SignUpPage} />

@@ -8,7 +8,7 @@ export default class ChangePasswordPage extends React.Component {
     super()
     this.state = {
       errors: {},
-      message: null,
+      messages: [],
       redirect: false
     }
 
@@ -20,10 +20,10 @@ export default class ChangePasswordPage extends React.Component {
     const data = new FormData(event.target)
     const user = {}
     data.forEach((value, key) => { user[key] = value })
-    fetch('/users', {
-      method: 'PUT',
+    fetch(user['reset_password_token'] ? '/users/password' : '/users', {
+      method: 'PATCH',
       headers: {
-        'Accept': 'application/json, text/plain, */*',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ user })
@@ -37,10 +37,13 @@ export default class ChangePasswordPage extends React.Component {
       }
     }).then((payload) => {
       if (payload) {
-        this.setState({ errors:        payload.errors })
+        this.setState({
+          errors: payload.errors,
+          messages: payload.messages || []
+        })
       }
     }).catch(() => {
-      this.setState({ message: 'Problem occurred. Try again or contact the admin.' })
+      this.setState({ messages: ['Problem occurred. Try again or contact the admin.'] })
     })
   }
 
@@ -56,16 +59,20 @@ export default class ChangePasswordPage extends React.Component {
       }
       return <Redirect to="/user" />
     }
+
+    const reset_password_token = this.props.match.params.reset_password_token
     return <div className="page-content login-page">
       <h1>Change Password</h1>
       <div>
         <form onSubmit={this.changePassword}>
-          {this.state.message && <span className="error-message">{this.state.message}</span>}
+          {this.state.messages.map((message, i) => <span key={i} className="error-message">{message}</span>)}
           <label>
             Current Password
-            <input type="password" name="current_password" required autoComplete="current-password" />
+            {(reset_password_token && <input type="password" name="reset_password_token" value={reset_password_token} readOnly={true} autoComplete="off" />) ||
+              <input type="password" name="current_password" required autoComplete="current-password" />}
           </label>
           {this.showErrors('current_password')}
+          {this.showErrors('reset_password_token')}
           <label>
             New Password
             <input type="password" name="password" required autoComplete="new-password" />
