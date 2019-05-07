@@ -1,5 +1,6 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
+import classNames from 'classnames'
 import { AppContext, requestUserFetch } from './app-context.jsx'
 
 @AppContext
@@ -9,7 +10,8 @@ export default class ChangePasswordPage extends React.Component {
     this.state = {
       errors: {},
       messages: [],
-      redirect: false
+      redirect: false,
+      loading: false
     }
 
     this.changePassword = this.changePassword.bind(this)
@@ -20,6 +22,7 @@ export default class ChangePasswordPage extends React.Component {
     const data = new FormData(event.target)
     const user = {}
     data.forEach((value, key) => { user[key] = value })
+    this.setState({ loading: true })
     fetch(user['reset_password_token'] ? '/users/password' : '/users', {
       method: 'PATCH',
       headers: {
@@ -29,6 +32,7 @@ export default class ChangePasswordPage extends React.Component {
       body: JSON.stringify({ user })
     }).then((response) => {
       requestUserFetch()
+      this.setState({ loading: false })
       if (response.status === 204) {
         // success: redirect to home or target
         this.setState({ redirect: true })
@@ -84,7 +88,7 @@ export default class ChangePasswordPage extends React.Component {
           </label>
           {this.showErrors('password_confirmation')}
           <p>
-            <button className="major-button">Change Password</button>
+            <button className={classNames('major-button', { 'is-loading': this.state.loading })}> Change Password</button>
           </p>
         </form>
       </div>

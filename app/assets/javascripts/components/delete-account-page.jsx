@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import classNames from 'classnames'
 import { AppContext, requestUserFetch } from './app-context'
 
 @AppContext
@@ -7,16 +8,19 @@ export default class DeleteAccountPage extends React.Component {
   constructor() {
     super()
     this.state = {
-      deleted: false
+      deleted: false,
+      loading: false
     }
 
     this.delete = this.delete.bind(this)
   }
 
   delete() {
+    this.setState({ loading: true })
     fetch('/delete_user', {
       method: 'POST'
     }).then((response) => {
+      this.setState({ loading: false })
       if (response.status === 204) {
         this.setState({
           deleted: true
@@ -41,7 +45,7 @@ export default class DeleteAccountPage extends React.Component {
     return <div>
       <p>Would you like to delete your account? <strong>This cannot be undone!</strong></p>
       <p>
-        <button onClick={this.delete} className="major-button">Yes</button>
+        <button onClick={this.delete} className={classNames('major-button', { 'is-loading': this.state.loading })}>Yes</button>
         &nbsp;
         <NavLink to="/user" className="major-button">No</NavLink>
       </p>

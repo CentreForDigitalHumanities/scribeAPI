@@ -23,6 +23,7 @@
     "babel-preset-es2015": "^6.16.0",
     "babel-preset-react": "6.16.0",
     "babel-preset-stage-0": "6.24.1",
+    "classnames": "^2.2.6",
     "create-react-class": "^15.6.3",
     "historical-dates-ui": "0.0.6",
     "jquery": "^3.3.1",

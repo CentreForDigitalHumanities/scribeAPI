@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import classNames from 'classnames'
 import { AppContext, requestUserFetch } from './app-context.jsx'
 
 @AppContext
@@ -8,7 +9,8 @@ export default class ForgotPasswordPage extends React.Component {
     super()
     this.state = {
       message: null,
-      success: false
+      success: false,
+      loading: false
     }
     if (document.referrer) {
       const url = new URL(document.referrer)
@@ -23,11 +25,13 @@ export default class ForgotPasswordPage extends React.Component {
   forgotPassword(event) {
     event.preventDefault()
     const data = new FormData(event.target)
+    this.setState({ loading: true })
     fetch('/users/password', {
       method: 'POST',
       body: data,
     }).then((response) => {
       requestUserFetch()
+      this.setState({ loading: false })
       if (response.status === 201) {
         // success: redirect to home or target
         this.setState({
@@ -60,7 +64,7 @@ export default class ForgotPasswordPage extends React.Component {
             <input type="email" name="user[email]" required autoComplete="email" />
           </label>
           <p>
-            <button className="major-button">Send Reset Instructions</button>
+            <button className={classNames('major-button', { 'is-loading': this.state.loading })}>Send Reset Instructions</button>
           </p>
         </form>
         <p>

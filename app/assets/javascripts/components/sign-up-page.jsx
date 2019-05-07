@@ -1,5 +1,6 @@
 import React from 'react'
 import { Redirect, NavLink } from 'react-router-dom'
+import classNames from 'classnames'
 import { AppContext, requestUserFetch } from './app-context.jsx'
 
 @AppContext
@@ -8,7 +9,8 @@ export default class SignUpPage extends React.Component {
     super()
     this.state = {
       message: null,
-      redirect: false
+      redirect: false,
+      loading: false
     }
     if (document.referrer) {
       const url = new URL(document.referrer)
@@ -22,6 +24,7 @@ export default class SignUpPage extends React.Component {
 
   signUp(event) {
     event.preventDefault()
+    this.setState({ loading: true })
     const data = new FormData(event.target)
     const user = {}
     data.forEach((value, key) => { user[key] = value })
@@ -33,6 +36,7 @@ export default class SignUpPage extends React.Component {
       },
       body: JSON.stringify({ user })
     }).then((response) => {
+      this.setState({ loading: false })
       if (response.status === 200) {
         requestUserFetch()
         // success: redirect to user page or target
@@ -67,7 +71,7 @@ export default class SignUpPage extends React.Component {
           </label>
           <label>
             Email
-            <input type="email" name="email" required autoComplete="email" style={{textTransform: "lowercase"}} />
+            <input type="email" name="email" required autoComplete="email" style={{ textTransform: 'lowercase' }} />
           </label>
           <label>
             Password
@@ -78,7 +82,7 @@ export default class SignUpPage extends React.Component {
             <input type="password" name="password_confirmation" required autoComplete="new-password" />
           </label>
           <p>
-            <button className="major-button">Sign Up</button>
+            <button className={classNames('major-button', { 'is-loading': this.state.loading })}>Sign Up</button>
           </p>
           <p>
             <NavLink to="/forgot_password" className="forgot-password">

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Redirect, NavLink } from 'react-router-dom'
+import classNames from 'classnames'
 import { AppContext, requestUserFetch } from './app-context'
 
 @AppContext
@@ -9,7 +10,8 @@ export default class LoginPage extends React.Component {
     this.state = {
       message: null,
       redirect: false,
-      target: undefined
+      target: undefined,
+      loading: false
     }
     if (document.referrer) {
       const url = new URL(document.referrer)
@@ -24,11 +26,13 @@ export default class LoginPage extends React.Component {
   signIn(event) {
     event.preventDefault()
     const data = new FormData(event.target)
+    this.setState({ loading: true })
     fetch('/users/sign_in', {
       method: 'POST',
       body: data,
     }).then((response) => {
       requestUserFetch()
+      this.setState({ loading: false })
       if (response.status === 200) {
         // success: redirect to home or target
         this.setState({ redirect: true })
@@ -62,14 +66,14 @@ export default class LoginPage extends React.Component {
           {this.state.message && <span className="error-message">{this.state.message}</span>}
           <label>
             Email
-            <input type="email" name="email" required autoComplete="email" style={{textTransform: "lowercase"}}  />
+            <input type="email" name="email" required autoComplete="email" style={{ textTransform: 'lowercase' }} />
           </label>
           <label>
             Password
             <input type="password" name="password" required autoComplete="current-password" />
           </label>
           <p>
-            <button className="major-button">Sign In</button>
+            <button className={classNames('major-button', { 'is-loading': this.state.loading })}>Sign In</button>
           </p>
         </form>
         <p>
