@@ -1,91 +1,144 @@
 {
-    "title": "CEMROL",
-    "short_title": "CEMROL",
-    "summary": "Collecting Epistolary Metadata of the Republic of Letters",
-    "logo": "/images/logo.png",
-    "favicon": "/images/favicon.ico",
-    "background": "/images/cropped-Gysbrechts.jpg",
-    "show_labels": true,
-    "show_total_group_subjects_count": false,
-    "show_nothing_to_mark_button": false,
-    "local_login": "CEMROL Account",
-    "contact_details": "Questions or comments? Contact us at skillnet(at)uu.nl",
-    "terms_map": {
-        "group": "language",
-        "subject set": "book",
-        "subject": "page",
-        "mark": "mark",
-        "mark_pending": "Pages to Mark",
-        "mark_finished": "Marked Pages",
-        "transcribe_pending": "Markings to Transcribe",
-        "transcribe_finished": "Transcribed Markings"
+  "title": "CEMROL",
+  "short_title": "CEMROL",
+  "summary": "Collecting Epistolary Metadata of the Republic of Letters",
+  "logo": "/images/logo.png",
+  "favicon": "/images/favicon.ico",
+  "background": "/images/cropped-Gysbrechts.jpg",
+  "show_labels": true,
+  "show_total_group_subjects_count": false,
+  "show_nothing_to_mark_button": false,
+  "local_login": "CEMROL Account",
+  "contact_details": "Questions or comments? Contact us at skillnet(at)uu.nl",
+  "terms_map": {
+    "group": "language",
+    "subject set": "book",
+    "subject": "page",
+    "mark": "mark",
+    "mark_pending": "Pages to Mark",
+    "mark_finished": "Marked Pages",
+    "transcribe_pending": "Markings to Transcribe",
+    "transcribe_finished": "Transcribed Markings"
+  },
+  "admin_email": "s.j.j.spoel@uu.nl",
+  "team_emails": [
+    "d.k.w.vanmiert@uu.nl",
+    "i.a.e.buhre@uu.nl",
+    "r.o.buning@uu.nl",
+    "k.e.hollewand@uu.nl",
+    "m.llano@uu.nl",
+    "l.r.price@uu.nl",
+    "k.scholten@uu.nl",
+    "h.simonsen@students.uu.nl",
+    "i.vanvugt@uu.nl"
+  ],
+  "team": [
+    {
+      "name": "Dr Dirk van Miert",
+      "role": "Project Leader",
+      "image": "https://skillnet.nl/wp-content/uploads/sites/330/2017/11/Foto-Dirk.jpeg",
+      "organization": "SKILLNET",
+      "url": "https://skillnet.nl/dr-dirk-van-miert"
     },
-    "admin_email": "s.j.j.spoel@uu.nl",
-    "team_emails": [
-        "D.K.W.vanMiert@uu.nl",
-        "K.E.Hollewand@uu.nl",
-        "R.O.Buning@uu.nl"
-    ],
-    "team": [
-        {
-            "name": "Dr Dirk van Miert",
-            "role": "Project Leader",
-            "image": "https://skillnet.nl/wp-content/uploads/sites/330/2017/11/Foto-Dirk-100x100.jpeg",
-            "organization": "SKILLNET"
-        },
-        {
-            "name": "Isabelle Buhre MSc MA",
-            "role": "Research Assistant",
-            "image": "https://skillnet.nl/wp-content/uploads/sites/330/2018/05/Foto-Isabelle-Buhre-klein-100x100.jpg",
-            "organization": "SKILLNET"
-        },
-        {
-            "name": "Dr Robin Buning",
-            "role": "Project Assistant",
-            "image": "https://skillnet.nl/wp-content/uploads/sites/330/2018/04/Robin_UU-100x100.png",
-            "organization": "SKILLNET"
-        }
-    ],
-    "organizations": [
-        {
-            "title": "SKILLNET",
-            "description": "SKILLNET electronically unravels the social structure (size, density, aggregation-level) of the huge networks of the Republic of Letters.",
-            "url": "https://skillnet.nl/",
-            "logo": "https://skillnet.nl/wp-content/themes/UU2014/images/uu-logo.svg"
-        }
-    ],
-    "menus": {
-        "main": [
-            {
-                "label": "Intro",
-                "page": "intro"
-            },
-            {
-                "label": "About",
-                "page": "about"
-            }
-        ],
-        "footer": []
+    {
+      "name": "Isabelle Buhre MSc MA",
+      "role": "Research Assistant",
+      "image": "https://skillnet.nl/wp-content/uploads/sites/330/2018/05/Foto-Isabelle-Buhre-klein.jpg",
+      "organization": "SKILLNET",
+      "url": "https://skillnet.nl/751-2"
     },
-    "externals": [
+    {
+      "name": "Dr Robin Buning",
+      "role": "Project Assistant",
+      "image": "https://skillnet.nl/wp-content/uploads/sites/330/2018/04/Robin_UU.png",
+      "organization": "SKILLNET",
+      "url": "https://skillnet.nl/dr-robin-buning"
+    },
+    {
+      "name": "Dr Karen Hollewand",
+      "role": "Postdoc",
+      "image": "https://skillnet.nl/wp-content/uploads/sites/330/2018/10/s200_karen.hollewand.jpg",
+      "organization": "SKILLNET",
+      "url": "https://skillnet.nl/dr-karen-hollewand"
+    },
+    {
+      "name": "Manuel Llano MA",
+      "role": "PhD candidate",
+      "image": "https://skillnet.nl/wp-content/uploads/sites/330/2018/01/Llano-Portrait.jpg",
+      "organization": "SKILLNET",
+      "url": "https://skillnet.nl/manuel-llano-ma"
+    },
+    {
+      "name": "Leonie Price MA",
+      "role": "Associate Research Fellow",
+      "image": "https://skillnet.nl/wp-content/uploads/sites/330/2019/02/IMG_20190221_155446.jpg",
+      "organization": "SKILLNET",
+      "url": "https://skillnet.nl/leonie-price-ma"
+    },
+    {
+      "name": "Koen Scholten MSc",
+      "role": "PhD candidate",
+      "image": "https://skillnet.nl/wp-content/uploads/sites/330/2017/12/IMG_0221_reduced-size.jpg",
+      "organization": "SKILLNET",
+      "url": "https://skillnet.nl/koen-scholten-msc"
+    },
+    {
+      "name": "Halfdan Simonsen BA",
+      "role": "Intern",
+      "image": "https://skillnet.nl/wp-content/uploads/sites/330/2018/10/84E38D0F-85F9-457D-B260-4BC093A6D582-e1539276091222.jpeg",
+      "organization": "SKILLNET",
+      "url": "https://skillnet.nl/halfdan-simonsen-ba-2-12-2017"
+    },
+    {
+      "name": "Ingeborg van Vugt MA",
+      "role": "Postdoc",
+      "image": "https://skillnet.nl/wp-content/uploads/sites/330/2019/05/0003.jpg",
+      "organization": "SKILLNET",
+      "url": "https://skillnet.nl/ingeborg-van-vugt-ma"
+    }
+  ],
+  "organizations": [
+    {
+      "title": "SKILLNET",
+      "description": "SKILLNET electronically unravels the social structure (size, density, aggregation-level) of the huge networks of the Republic of Letters.",
+      "url": "https://skillnet.nl/",
+      "logo": "https://skillnet.nl/wp-content/themes/UU2014/images/uu-logo.svg"
+    }
+  ],
+  "menus": {
+    "main": [
       {
-        "id": "emlo_people",
-        "uri": "https://emlo-collect.bodleian.ox.ac.uk/api/people/{query}?key={env:EMLO_KEY}",
-        "id_field": "uuid",
-        "display_field": "name"
+        "label": "Intro",
+        "page": "intro"
       },
       {
-        "id": "emlo_places",
-        "uri": "https://emlo-collect.bodleian.ox.ac.uk/api/places/{query}?key={env:EMLO_KEY}",
-        "id_field": "uuid",
-        "display_field": "loc"
+        "label": "About",
+        "page": "about"
       }
     ],
-    "export_specs": [
-      {
-        "name": "Letter",
-        "spec_fields": [],
-        "post_steps": ["extract_letters.rb"]
-      }
-    ]
+    "footer": []
+  },
+  "externals": [
+    {
+      "id": "emlo_people",
+      "uri": "https://emlo-collect.bodleian.ox.ac.uk/api/people/{query}?key={env:EMLO_KEY}",
+      "id_field": "uuid",
+      "display_field": "name"
+    },
+    {
+      "id": "emlo_places",
+      "uri": "https://emlo-collect.bodleian.ox.ac.uk/api/places/{query}?key={env:EMLO_KEY}",
+      "id_field": "uuid",
+      "display_field": "loc"
+    }
+  ],
+  "export_specs": [
+    {
+      "name": "Letter",
+      "spec_fields": [],
+      "post_steps": [
+        "extract_letters.rb"
+      ]
+    }
+  ]
 }
