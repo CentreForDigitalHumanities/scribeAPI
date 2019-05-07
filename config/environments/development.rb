@@ -29,10 +29,10 @@ API::Application.configure do
     address: ENV["MAIL_ADDRESS"] || "smtp.gmail.com",
     port: (ENV["MAIL_PORT"] || "587").to_i,
     domain: ENV["DOMAIN_NAME"],
-    authentication: "plain",
+    authentication: ("plain" if (ENV["MAIL_USERNAME"] || ENV["GMAIL_USERNAME"]).present?),
     enable_starttls_auto: (ENV["MAIL_TTLS"] || "true") != "false",
-    user_name: ENV["MAIL_USERNAME"] || ENV["GMAIL_USERNAME"],
-    password: ENV["MAIL_PASSWORD"] || ENV["GMAIL_PASSWORD"]
+    user_name: (ENV["MAIL_USERNAME"] || ENV["GMAIL_USERNAME"]).presence,
+    password: (ENV["MAIL_PASSWORD"] || ENV["GMAIL_PASSWORD"]).presence
   }
   # Send email in development mode.
   config.action_mailer.perform_deliveries = true
