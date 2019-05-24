@@ -228,6 +228,13 @@ namespace :project do
       project.page_navs = {} if options[:nav]
       project.page_navs[options[:base_key]] = options[:nav] if options[:nav]
 
+      # Allow overriding the name derived from the filename
+      lines = content.split("\n")
+      if lines[0].match(/^\#\#\# NAME: .* \#\#\#$/)
+        name = lines[0][10..-5]
+        content = lines[1..-1].join("\n")
+      end
+
       project.pages << {
         key: ( options[:base_key].nil? ? '' : "#{options[:base_key]}/" ) + page_key,
         name: name,

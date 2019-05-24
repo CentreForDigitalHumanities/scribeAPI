@@ -64,6 +64,30 @@
   border-color: #8cbc8c
   outline: none
 
+.ui-accordion .ui-icon,
+.ui-state-default .ui-icon
+  background: none
+  text-indent: 0
+  height: auto
+  width: auto
+  top: auto
+  margin-top: 0
+
+  &:after
+    content: '▷'
+
+.ui-accordion .ui-state-hover .ui-icon
+  background: none
+
+  &:after
+    content: '►'
+
+.ui-accordion .ui-state-active .ui-icon
+  background: none
+
+  &:after
+    content: '▼'
+
 #accordion-help-modal
   text-align: left
   .ui-accordion-header

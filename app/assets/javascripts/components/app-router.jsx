@@ -9,16 +9,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import marked from '../lib/marked.min'
 
-import createReactClass from 'create-react-class'
 import { App } from './app'
-import { AppContext } from './app-context'
 import { Route, Redirect, Switch } from 'react-router'
 import { HashRouter } from 'react-router-dom'
 
 import ChangePasswordPage from './change-password-page'
 import DeleteAccountPage from './delete-account-page'
+import CustomPage from './custom-page'
 import HomePage from './home-page'
 import LoginPage from './login-page'
 import SignUpPage from './sign-up-page'
@@ -184,8 +182,8 @@ export default class AppRouter {
                 <Route
                   exact
                   key={key}
-                  path={'/' + page.name}
-                  component={this.controllerForPage(page)}
+                  path={'/' + page.key}
+                  render={() => <CustomPage page={page} />}
                 />
               )
             })
@@ -216,67 +214,6 @@ export default class AppRouter {
     // return Router.run(routes, (Handler, state) =>
     //   React.render(<Handler />, document.body)
     // );
-  }
-
-  controllerForPage(page) {
-    return AppContext(createReactClass({
-      displayName: `${page.name}Page`,
-
-      componentWillMount() { },
-      // pattern = new RegExp('^(field_guide#(.*))')
-      // selectedID = pattern.match("#{window.location.hash}")
-      // if selectedID
-      //   $('.selected-content').removeClass("selected-content")
-
-      //   $("div#" + selectedID).addClass("selected-content"))
-      //   $("a#" + selectedID).addClass("selected-content"))
-
-      componentDidMount() {
-        const pattern = new RegExp('#/[A-z]*#(.*)')
-        const selectedID = `${window.location.hash}`.match(pattern)
-
-        if (selectedID) {
-          $('.selected-content').removeClass('selected-content')
-
-          $(`div#${selectedID[1]}`).addClass('selected-content')
-          $(`a#${selectedID[1]}`).addClass('selected-content')
-        }
-
-        const elms = $(ReactDOM.findDOMNode(this)).find('a.about-nav')
-        elms.on('click', function (e) {
-          e.preventDefault()
-          $('.selected-content').removeClass('selected-content')
-          $(this).addClass('selected-content')
-
-          const divId = $(this).attr('href')
-          return $(divId).addClass('selected-content')
-        })
-
-        const el = $(ReactDOM.findDOMNode(this)).find('#accordion')
-        return el.accordion({
-          collapsible: true,
-          active: false,
-          heightStyle: 'content'
-        })
-      },
-
-      navToggle(e) { },
-
-      render() {
-        const formatted_name = page.name.replace('_', ' ')
-        return (
-          <div className="page-content custom-page" id={`${page.name}`}>
-            <h1>{formatted_name}</h1>
-            <div dangerouslySetInnerHTML={{ __html: marked(page.content) }} />
-            {page.group_browser != null && page.group_browser !== '' &&
-              <div className="group-area">
-                <GroupBrowser project={this.props.project} title={page.group_browser} />
-              </div>}
-            <div className="updated-at">Last Update {page.updated_at}</div>
-          </div>
-        )
-      }
-    }))
   }
 }
 

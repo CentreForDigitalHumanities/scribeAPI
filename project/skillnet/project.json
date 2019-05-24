@@ -114,6 +114,10 @@
       {
         "label": "About",
         "page": "about"
+      },
+      {
+        "label": "FAQ",
+        "page": "faq"
       }
     ],
     "footer": []
