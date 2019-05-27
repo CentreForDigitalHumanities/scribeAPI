@@ -26,7 +26,7 @@
     "classnames": "^2.2.6",
     "core-js": "3",
     "create-react-class": "^15.6.3",
-    "historical-dates-ui": "0.1.1",
+    "historical-dates-ui": "0.1.2",
     "jquery": "^3.4.1",
     "jquery-ui-dist": "^1.12.1",
     "json-api-client": "^0.4.4",

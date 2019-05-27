@@ -3631,10 +3631,10 @@ hex-color-regex@^1.1.0:
   resolved "https://registry.yarnpkg.com/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==
 
-historical-dates-ui@0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/historical-dates-ui/-/historical-dates-ui-0.1.1.tgz#cb92700ae2858cb5486a54aeb8b3b8bdd35b724c"
-  integrity sha512-kQP6yUy/cb4Rir3ie0vNNVo+IP3N9nmclXPTsaIU/h1yD2BHGdjZ8xGk379qimKk4cOzE3bYVTcsFevuKryBOw==
+historical-dates-ui@0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/historical-dates-ui/-/historical-dates-ui-0.1.2.tgz#3a99457bacb0f47be26bc05fb99cab2b91a6bbc7"
+  integrity sha512-VmuVv55kBVdtA0rDlPk6DWJBRB+QqjyPUuWnwLpmV2TJRxiNH98smvbNVLhPedMxc5tKu/FI9MufP3UjbKSfzQ==
   dependencies:
     historical-dates "^0.2.0"
 
