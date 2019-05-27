@@ -1,6 +1,29 @@
 const { environment } = require('@rails/webpacker')
-const merge = require('webpack-merge')
 const webpack = require('webpack')
+
+environment.config.merge({
+  resolve: {
+    alias: {
+      jquery: 'jquery/src/jquery',
+      React: 'react',
+      ReactDOM: 'react-dom'
+    }
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
+      }
+    ]
+  }
+})
 
 // Add an additional plugin of your choosing : ProvidePlugin
 environment.plugins.prepend('Provide', new webpack.ProvidePlugin({

@@ -34,7 +34,7 @@ describe('SingleChoiceTask/pickOne', function () {
   }
 
   // mock of the props.onChange from subject-viewer
-  const clickRecord = jest.genMockFunction()
+  const clickRecord = jest.fn()
 
   const shallowRenderer = new ShallowRenderer()
   shallowRenderer.render(

@@ -4,7 +4,7 @@ ruby '2.2.10'
 
 gem 'rails', '~> 4.2.6'
 gem 'sass-rails'
-gem 'webpacker', '~> 3.5'
+gem 'webpacker', '~> 4.x'
 gem 'turbolinks'
 gem 'jbuilder', '~> 1.2'
 gem 'devise', '3.4.0'
