@@ -25,7 +25,7 @@
     "babel-preset-stage-0": "6.24.1",
     "classnames": "^2.2.6",
     "create-react-class": "^15.6.3",
-    "historical-dates-ui": "0.0.6",
+    "historical-dates-ui": "0.1.1",
     "jquery": "^3.3.1",
     "jquery-ui-dist": "^1.12.1",
     "json-api-client": "^0.4.4",

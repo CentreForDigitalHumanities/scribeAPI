@@ -107,12 +107,16 @@ export default class HistoricalDateTool extends React.Component {
     const ann = this.state.annotation
     const value = ann[this.fieldKey()]
     function dateToPlainObject(date, key) {
-      if (date[key])
-        date[key] = {
-          year: date[key].year,
-          month: date[key].month,
-          day: date[key].month
-        }
+      let plain = {
+        year: date[key].year,
+        month: date[key].month,
+        day: date[key].day
+      }
+      if (plain.year === undefined) plain.year = '??'
+      if (plain.month === undefined) plain.month = '??'
+      if (plain.day === undefined) plain.day = '??'
+
+      date[key] = plain
     }
     if (value) {
       dateToPlainObject(value, 'date')
@@ -159,7 +163,7 @@ export default class HistoricalDateTool extends React.Component {
   } // report updated annotation to parent
 
   handleChangeDate(e) {
-    this.updateValue({ ...e, type: e.type || '' })
+    this.updateValue({ ...e })
   }
 
   handleChangeText(e) {
@@ -187,7 +191,7 @@ export default class HistoricalDateTool extends React.Component {
     } // hide transcribe tool while loading image
 
     let val = this.state.annotation[this.fieldKey()]
-      || { text: '', date: null, type: '' }
+      || { text: '', date: null, type: undefined }
     if (!this.props.standalone) {
       label = this.props.label != null ? this.props.label : ''
       if (Array.isArray(label)) {
@@ -232,7 +236,9 @@ export default class HistoricalDateTool extends React.Component {
           value: val.text,
           disabled: this.props.badSubject
         })} />
-        <DateAnnotatorComponent {...Object.assign({ onChange: this.handleChangeDate.bind(this) }, { text: val.text, type: val.type })} />
+        <div style={{ display: !val.text ? 'none' : '' }}>
+          <DateAnnotatorComponent {...Object.assign({ onChange: this.handleChangeDate.bind(this) }, { text: val.text, type: val.type })} />
+        </div>
       </div>
     )
 
