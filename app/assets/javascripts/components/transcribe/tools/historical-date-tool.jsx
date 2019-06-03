@@ -107,6 +107,10 @@ export default class HistoricalDateTool extends React.Component {
     const ann = this.state.annotation
     const value = ann[this.fieldKey()]
     function dateToPlainObject(date, key) {
+      if (!date[key]) {
+        // no value defined
+        return
+      }
       let plain = {
         year: date[key].year,
         month: date[key].month,
