@@ -107,7 +107,7 @@ export default {
     // Apply defaults to unset params:
     const _params = $.extend(
       {
-        limit: 10,
+        limit: 25,
         workflow_id: this.getActiveWorkflow().id,
         random: true
       },

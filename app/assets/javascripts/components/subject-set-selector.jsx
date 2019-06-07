@@ -47,26 +47,43 @@ export default class SubjectSetSelector extends React.Component {
       this.sortByGroupId(subjectSets)
     }
 
-    for (var i = 0; i < subjectSets.length; i++) {
-      let subjectSetId = subjectSets[i].id
-      let subjectSetLan = subjectSets[i].meta_data.langs
+    const sorted = subjectSets
+      .map(subjectSet => ({
+        id: subjectSet.id,
+        language: subjectSet.meta_data.langs,
+        hide: subjectSet.meta_data.hide || false,
+        label: SubjectSetSelector.parseTitle(subjectSet.meta_data.set_key)
+      }))
+      .filter(s => !s.hide)
+      .sort((a, b) => {
+        // sort by language then by label (title)
+        if (a.language > b.language) {
+          return 1
+        } else if (a.language < b.language) {
+          return -1
+        }
+        return a.label >= b.label ? 1 : -1
+      })
+
+    for (var i = 0; i < sorted.length; i++) {
+      let { id, language, label } = sorted[i]
 
       // if Mark is navigated to via menu (not a specific language)...
       if (!this.props.group_id) {
         // ... add language headers 
-        if (i === 0 || currentLanguage !== subjectSetLan) {
-          subjectSetTitles.push(<h6 key={i}>{subjectSetLan}</h6>)
-          currentLanguage = subjectSetLan
+        if (i === 0 || currentLanguage !== language) {
+          subjectSetTitles.push(<h6 key={i}>{language}</h6>)
+          currentLanguage = language
         }
       }
 
       subjectSetTitles.push(
         <GenericButton
-          key={subjectSets[i].id}
-          label={SubjectSetSelector.parseTitle(subjectSets[i].meta_data.set_key)}
+          key={id}
+          label={label}
           className="ghost small-button selectable-subject-set"
           onClick={() => {
-            this.onSubjectSetSelected(subjectSetId)
+            this.onSubjectSetSelected(id)
           }}>
         </GenericButton>)
     }
