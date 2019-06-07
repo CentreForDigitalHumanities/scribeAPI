@@ -282,9 +282,7 @@ export default class LightBox extends React.Component {
       this.props.subject_set.subjects[indexOfFirst] ===
       this.props.subject_set.subjects[0]
     ) {
-      this.props.prevPage(() =>
-        this.setState({ first: this.props.subject_set.subjects[0] }, callback)
-      )
+      this.props.prevPage()
     } else {
       this.setState({
         first: this.props.subject_set.subjects[indexOfFirst - 3]
@@ -312,9 +310,7 @@ export default class LightBox extends React.Component {
         second ===
         this.props.subject_set.subjects[this.props.subject_set.subjects.length - 1])
     ) {
-      this.props.nextPage(() =>
-        this.setState({ first: this.props.subject_set.subjects[0] }, callback)
-      )
+      this.props.nextPage()
       // NOTE: for some reason, LightBox does not receive correct value for @props.subject_index, which has led to this awkard callback function above --STI
       // @setState first: @props.subject_set.subjects[0], => @forceUpdate()
 
