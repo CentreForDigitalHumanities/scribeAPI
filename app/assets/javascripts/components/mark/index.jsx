@@ -58,7 +58,7 @@ export default AppContext(createReactClass({
   },
 
   componentWillReceiveProps(new_props) {
-    return this.setState({
+    this.setState({
       showingTutorial: this.showTutorialBasedOnUser(new_props.context.user)
     })
   },
@@ -76,12 +76,12 @@ export default AppContext(createReactClass({
   componentDidMount() {
     this.getCompletionAssessmentTask()
     this.fetchSubjectSetsBasedOnProps()
-    return this.fetchGroups()
+    this.fetchGroups()
   },
 
   componentWillMount() {
     this.setState({ taskKey: this.getActiveWorkflow().first_task })
-    return this.beginClassification()
+    this.beginClassification()
   },
 
 
@@ -89,7 +89,7 @@ export default AppContext(createReactClass({
   componentDidUpdate(prev_props) {
     // If visitor nav'd from, for example, /mark/[some id] to /mark, this component won't re-mount, so detect transition here:
     if (prev_props.hash !== this.props.hash) {
-      return this.fetchSubjectSetsBasedOnProps()
+      this.fetchSubjectSetsBasedOnProps()
     }
   },
 
@@ -154,49 +154,31 @@ export default AppContext(createReactClass({
           Next
         </button>
       )
+    } else if (this.state.taskKey === 'completion_assessment_task') {
+      return (
+        <button
+          type="button"
+          className="continue major-button"
+          disabled={waitingForAnswer}
+          onClick={this.completeSubjectAssessment}
+        >
+          Next
+        </button>
+      )
+    }
+    else if (this.state.badSubject || this.getNextTask()) {
+      return (
+        <button
+          type="button"
+          className="continue major-button"
+          disabled={!this.state.badSubject && waitingForAnswer}
+          onClick={this.completeSubjectSet}
+        >
+          Done
+        </button>
+      )
     } else {
-      if (this.state.taskKey === 'completion_assessment_task') {
-        return (
-          <button
-            type="button"
-            className="continue major-button"
-            disabled={waitingForAnswer}
-            onClick={this.completeSubjectAssessment}
-          >
-            Next
-          </button>
-        )
-      }
-      else {
-        if (this.getNextTask()) {
-          return (
-            <button
-              type="button"
-              className="continue major-button"
-              disabled={waitingForAnswer}
-              onClick={this.completeSubjectSet}
-            >
-              Done
-            </button>
-          )
-        } else {
-          if (this.state.badSubject || this.getNextTask()) {
-            return (
-              <button
-                type="button"
-                className="continue major-button"
-                disabled={waitingForAnswer}
-                onClick={this.completeSubjectSet}
-              >
-                Done
-            </button>
-            )
-          }
-          else {
-            return (undefined)
-          }
-        }
-      }
+      return (undefined)
     }
   },
 
@@ -277,7 +259,7 @@ export default AppContext(createReactClass({
   onSubjectSetSelected(subjectSetId) {
     this.setState({ selectSubjectSet: false })
     this.props.match.params.subject_set_id = subjectSetId
-    return this.fetchSubjectSetsBasedOnProps()
+    this.fetchSubjectSetsBasedOnProps()
   },
 
   completeSubjectSet() {
@@ -285,11 +267,13 @@ export default AppContext(createReactClass({
     this.beginClassification()
 
     // TODO: Should maybe make this workflow-configurable?
-    const show_subject_assessment = true
-    if (show_subject_assessment) {
+    const showSubjectAssessment = !this.state.badSubject
+    if (showSubjectAssessment) {
       return this.setState({
         taskKey: 'completion_assessment_task'
       })
+    } else {
+      return this.advanceToNextSubject()
     }
   },
 
@@ -435,6 +419,7 @@ export default AppContext(createReactClass({
                     <TaskComponent
                       key={this.getCurrentTask().key}
                       task={currentTask}
+                      disabled={this.state.badSubject}
                       annotation={
                         (left1 = __guard__(
                           this.getCurrentClassification(),
@@ -448,7 +433,7 @@ export default AppContext(createReactClass({
                       subject={this.getCurrentSubject()}
                     />
                     <nav className="task-nav">
-                      {false ? (
+                      {false &&
                         <button
                           type="button"
                           className="back minor-button"
@@ -456,22 +441,16 @@ export default AppContext(createReactClass({
                           onClick={this.destroyCurrentAnnotation}
                         >
                           Back
-                      </button>
-                      ) : (
-                          undefined
-                        )}
+                        </button>}
                       {this.getNavigationalButton(waitingForAnswer)}
                     </nav>
                     <div className="help-bad-subject-holder">
-                      {this.getCurrentTask().help != null ? (
+                      {this.getCurrentTask().help != null &&
                         <HelpButton
                           onClick={this.toggleHelp}
                           label=""
                           className="task-help-button"
-                        />
-                      ) : (
-                          undefined
-                        )}
+                        />}
                       {onFirstAnnotation && !this.state.nothingToMark &&
                         <BadSubjectButton
                           class="bad-subject-button"
@@ -513,33 +492,25 @@ export default AppContext(createReactClass({
               }
               <div className="task-secondary-area">
 
-                {this.getCurrentTask() != null ? (
+                {this.getCurrentTask() != null &&
                   <p>
                     <a className="tutorial-link" onClick={this.toggleTutorial}>
                       View A Tutorial
-                  </a>
-                  </p>
-                ) : (
-                    undefined
-                  )}
+                    </a>
+                  </p>}
                 {
                   this.getActiveWorkflow().show_transcribe_now_button &&
-                    this.getCurrentTask() != null &&
-                    this.getActiveWorkflow() != null &&
-                    this.getWorkflowByName('transcribe') != null ? (
-                      <p>
-                        <NavLink
-                          to={`/transcribe/${
-                            this.getWorkflowByName('transcribe').id
-                            }/${__guard__(this.getCurrentSubject(), x5 => x5.id)}`}
-                          className="transcribe-link"
-                        >
-                          Transcribe this {this.props.context.project.term('subject')} now!
-                      </NavLink>
-                      </p>
-                    ) : (
-                      undefined
-                    )}
+                  this.getCurrentTask() != null &&
+                  this.getActiveWorkflow() != null &&
+                  this.getWorkflowByName('transcribe') != null &&
+                  <p>
+                    <NavLink
+                      to={`/transcribe/${this.getWorkflowByName('transcribe').id}/${
+                        __guard__(this.getCurrentSubject(), x5 => x5.id)}`}
+                      className="transcribe-link">
+                      Transcribe this {this.props.context.project.term('subject')} now!
+                    </NavLink>
+                  </p>}
                 {this.getActiveWorkflow() != null &&
                   (this.state.groups != null
                     ? this.state.groups.length
@@ -550,7 +521,7 @@ export default AppContext(createReactClass({
                         className="about-link"
                       >
                         About this {this.props.context.project.term('group')}.
-                    </NavLink>
+                      </NavLink>
                     </p>
                   ) : (
                     undefined
@@ -605,15 +576,12 @@ export default AppContext(createReactClass({
               />
             )
         )}
-        {this.state.helping ? (
+        {this.state.helping &&
           <HelpModal
             help={this.getCurrentTask().help}
             onDone={() => this.setState({ helping: false })}
-          />
-        ) : (
-            undefined
-          )}
-        {this.state.lightboxHelp ? (
+          />}
+        {this.state.lightboxHelp &&
           <HelpModal
             help={{
               title: 'The Lightbox',
@@ -621,31 +589,26 @@ export default AppContext(createReactClass({
                 '<p>This Lightbox displays a complete set of documents in order. You can use it to go through the documents sequentially—but feel free to do them in any order that you like! Just click any thumbnail to open that document and begin marking it.</p><p>However, please note that **once you start marking a page, the Lightbox becomes locked ** until you finish marking that page! You can select a new page once you have finished.</p>'
             }}
             onDone={() => this.setState({ lightboxHelp: false })}
-          />
-        ) : (
-            undefined
-          )}
-        {this.getCurrentTask() != null
-          ? (() => {
-            const result = []
-            const iterable = this.getCurrentTask().tool_config.options
-            for (let i = 0; i < iterable.length; i++) {
-              tool = iterable[i]
-              if (
-                tool.help &&
-                tool.generates_subject_type &&
-                this.state.activeSubjectHelper === tool.generates_subject_type
-              ) {
-                result.push(
-                  <HelpModal help={tool.help} onDone={this.hideSubjectHelp} />
-                )
-              } else {
-                result.push(undefined)
-              }
+          />}
+        {this.getCurrentTask() != null && (() => {
+          const result = []
+          const iterable = this.getCurrentTask().tool_config.options
+          for (let i = 0; i < iterable.length; i++) {
+            tool = iterable[i]
+            if (
+              tool.help &&
+              tool.generates_subject_type &&
+              this.state.activeSubjectHelper === tool.generates_subject_type
+            ) {
+              result.push(
+                <HelpModal help={tool.help} onDone={this.hideSubjectHelp} />
+              )
+            } else {
+              result.push(undefined)
             }
-            return result
-          })()
-          : undefined}
+          }
+          return result
+        })()}
       </div>
     )
   }

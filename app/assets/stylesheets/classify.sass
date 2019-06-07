@@ -137,6 +137,12 @@
 
       .workflow-task
         margin-bottom: 10px
+        transition: opacity 0.5s
+
+        &[disabled] 
+          pointer-events: none
+          opacity: 0.5
+
         > span:first-child > p:first-child
           margin-top: 0
           padding-right: 10px
