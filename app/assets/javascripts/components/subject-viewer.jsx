@@ -405,20 +405,21 @@ export default class SubjectViewer extends React.Component {
     const { currentSubtool } = props
     for (let i = 0; i < props.subject.child_subjects.length; i++) {
       const child_subject = props.subject.child_subjects[i]
-      if (child_subject == null) {
+      if (child_subject == null || child_subject.region == null) {
         continue
       }
-      marks[i] = child_subject.region
-      marks[i].subject_id = child_subject.id // child_subject.region.subject_id = child_subject.id # copy id field into region (not ideal)
-      marks[i].isTranscribable =
+      let mark = child_subject.region
+      mark.subject_id = child_subject.id // child_subject.region.subject_id = child_subject.id # copy id field into region (not ideal)
+      mark.isTranscribable =
         !child_subject.user_has_classified &&
         child_subject.status !== 'retired'
-      marks[i].belongsToUser = child_subject.belongs_to_user
-      marks[i].groupActive =
+      mark.belongsToUser = child_subject.belongs_to_user
+      mark.groupActive =
         (currentSubtool != null
           ? currentSubtool.generates_subject_type
           : undefined) === child_subject.type
-      marks[i].user_has_deleted = child_subject.user_has_deleted
+      mark.user_has_deleted = child_subject.user_has_deleted
+      marks.push(mark)
     }
 
     // Also present visible 'interim mark's for this subject:

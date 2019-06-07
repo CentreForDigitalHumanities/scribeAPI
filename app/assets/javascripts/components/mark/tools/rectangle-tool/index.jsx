@@ -72,7 +72,26 @@ export default class RectangleTool extends React.Component {
     return { x, y, width, height, hide: false, new: false }
   }
 
-  static initValid(mark) {
+  static initValid(mark, marks) {
+    if (mark.width < MINIMUM_SIZE || mark.height < MINIMUM_SIZE) {
+      return false
+    }
+
+    let markXRight = mark.x + mark.width,
+      markYBottom = mark.y + mark.height
+    for (let candidate of marks) {
+      if (candidate.user_has_deleted ||
+        candidate.toolName !== mark.toolName ||
+        candidate.label !== mark.label) {
+        continue
+      }      
+      
+      if (mark.x < (candidate.x + candidate.width) && markXRight > candidate.x &&
+        mark.y < (candidate.y + candidate.height) && markYBottom > candidate.y) {
+        return false // overlap
+      }
+    }
+
     return mark.width > MINIMUM_SIZE && mark.height > MINIMUM_SIZE
   }
 
