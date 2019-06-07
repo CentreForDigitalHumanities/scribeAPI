@@ -143,18 +143,7 @@ export default AppContext(createReactClass({
       return (undefined)
     }
 
-    if (this.getNextTask() && !this.state.nothingToMark && !this.state.badSubject) {
-      return (
-        <button
-          type="button"
-          className="continue major-button"
-          disabled={waitingForAnswer}
-          onClick={this.navigateTaskOrNextPage}
-        >
-          Next
-        </button>
-      )
-    } else if (this.state.taskKey === 'completion_assessment_task') {
+    if (this.state.taskKey === 'completion_assessment_task') {
       return (
         <button
           type="button"
@@ -165,13 +154,23 @@ export default AppContext(createReactClass({
           Next
         </button>
       )
-    }
-    else if (this.state.badSubject || this.getNextTask()) {
+    } else if (!this.state.nothingToMark && !this.state.badSubject) {
       return (
         <button
           type="button"
           className="continue major-button"
-          disabled={!this.state.badSubject && waitingForAnswer}
+          disabled={waitingForAnswer}
+          onClick={this.getNextTask() ? this.navigateTaskOrNextPage : this.completeSubjectSet}
+        >
+          Next
+        </button>
+      )
+    } else if (this.state.badSubject || this.state.nothingToMark) {
+      return (
+        <button
+          type="button"
+          className="continue major-button"
+          disabled={true}
           onClick={this.completeSubjectSet}
         >
           Done
@@ -220,15 +219,16 @@ export default AppContext(createReactClass({
       // classifications[@state.classificationIndex].annotation = d #[k] = v for k, v of d
 
       return this.setState({ classifications }, () => {
-        // Alex Hebing: Navigate for tasks of type PickOneButtons
-        if (this.hasPickOneButtonsTool() && this.getNextTask()) {
-          this.advanceToNextTask()
-        }
-        else if (this.state.taskKey === 'completion_assessment_task') { // equivalent of Next (Page) button
+        if (this.state.taskKey === 'completion_assessment_task') { // equivalent of Next (Page) button
           this.completeSubjectAssessment()
-        }
-        else if (!this.getNextTask()) { // equivalent of clicking 'Done' button
-          this.completeSubjectSet()
+        } else if (this.hasPickOneButtonsTool()) {
+          // PickOneButtons get navigated on clicking on the answer
+          if (this.getNextTask()) {
+            this.advanceToNextTask()
+          } else {
+            // ask for the completion assessment
+            this.completeSubjectSet()
+          }
         }
 
         return this.forceUpdate()

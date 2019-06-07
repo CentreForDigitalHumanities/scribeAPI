@@ -330,7 +330,6 @@
         "file": "m_end"
       },
       "tool_config": {
-        "displays_transcribe_button": true,
         "options": [{
           "type": "horizontalLineTool",
           "label": "Letter end",
