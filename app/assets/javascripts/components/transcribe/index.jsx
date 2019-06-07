@@ -132,18 +132,16 @@ export default AppContext(createReactClass({
   // transition back to mark workflow
   returnToMarking() {
     let query = queryString.parse(this.props.location.search)
-    return this.props.context.router.transitionTo(
-      'mark',
-      {},
-      {
+    return this.context.router.history.push(
+      '/mark?' +
+      queryString.stringify({
         subject_set_id: this.getCurrentSubject().subject_set_id,
         selected_subject_id: this.getCurrentSubject().parent_subject_id,
         mark_task_key: query.mark_key,
         subject_id: this.getCurrentSubject().id,
 
         page: query.page
-      }
-    )
+      }))
   },
 
   render() {

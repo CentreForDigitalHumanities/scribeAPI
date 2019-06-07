@@ -7,6 +7,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import createReactClass from 'create-react-class'
+import qs from 'query-string'
 
 const NameSearch = createReactClass({
   displayName: 'NameSearch',
@@ -57,10 +58,8 @@ const NameSearch = createReactClass({
 
       select: (e, ui) => {
         e.target.value
-        return this.props.context.router.transitionTo(
-          'mark',
-          {},
-          { subject_set_id: ui.item.value.id }
+        this.context.router.history.push(
+          '/mark?' + qs.stringify({ subject_set_id: ui.item.value.id })
         )
       }
     })

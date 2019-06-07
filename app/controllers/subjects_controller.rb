@@ -12,11 +12,14 @@ class SubjectsController < ApplicationController
     random                = get_bool :random, false
     limit                 = get_int :limit, 10
     page                  = get_int :page, 1
+    min_subject_order     = get_int :min_subject_order, 0
     type                  = params[:type]
     # `status` filter must be one of: 'active', 'any'
     status                = ['active','any'].include?(params[:status]) ? params[:status] : 'active'
 
     @subjects = Subject.page(page).per(limit)
+
+    @subjects = @subjects.where({"order" => {"$gte" => min_subject_order}}) if min_subject_order > 0
 
     # Filter by workflow (There should almost always be a workflow_id filter)
     @subjects = @subjects.by_workflow(workflow_id) if workflow_id
@@ -35,7 +38,6 @@ class SubjectsController < ApplicationController
 
     # Filter by group?
     @subjects = @subjects.by_group(group_id) if group_id
-
 
     if ! subject_set_id
       # Randomize?

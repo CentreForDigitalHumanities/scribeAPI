@@ -19,14 +19,6 @@ export default class HomePage extends React.Component {
     return this.setState({ project: new_props.project })
   }
 
-  markClick() {
-    return this.props.context.router.transitionTo('mark', {})
-  }
-
-  transcribeClick() {
-    return this.props.context.router.transitionTo('transcribe', {})
-  }
-
   render() {
     return (
       <div className="home-page">

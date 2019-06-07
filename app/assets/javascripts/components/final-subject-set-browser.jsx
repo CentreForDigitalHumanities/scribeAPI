@@ -1,5 +1,7 @@
 import React from 'react'
 import createReactClass from 'create-react-class'
+import qs from 'query-string'
+
 import API from '../lib/api'
 import LoadingIndicator from './loading-indicator'
 import Pagination from './pagination'
@@ -77,7 +79,7 @@ export default createReactClass({
     let keyword = this.state.entered_keyword, // refs.search_input?.getDOMNode().value.trim() unless keyword?
       field = this.state.selected_field // this.refs.search_field?.getDOMNode().value.trim()
 
-    this.props.context.router.transitionTo('final_subject_sets', null, { keyword: keyword, field: field })
+    this.context.router.history.push('/final_subject_sets?' + qs.stringify({ keyword: keyword, field: field }))
   },
 
   loadMore: () => {

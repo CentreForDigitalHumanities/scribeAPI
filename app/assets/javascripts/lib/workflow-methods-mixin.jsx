@@ -546,21 +546,29 @@ export default {
 
   // This is the version of advanceToNextSubject for workflows that consume subject sets (mark)
   _advanceToNextSubjectInSubjectSets() {
-    let new_subject_set_index = this.state.subject_set_index
-    let new_subject_index = this.state.subject_index + 1
+    const subjectSet = this.getCurrentSubjectSet()
+    let newSubjectSetIndex = this.state.subject_set_index
+    // use the order of subjects: try to get the next subject
+    // the available orders will change (this subject will disappear, there might be simultaneous annotators)
+    const nextSubject = subjectSet.subjects[this.state.subject_index + 1]
+    let newSubjectOrder = nextSubject
+      ? nextSubject.order
+      : (subjectSet.subjects[this.state.subject_index].order + 1)
 
     // If we've exhausted pages in this subject set, move to next one:
-    if (new_subject_index >= this.getCurrentSubjectSet().subjects.length) {
-      new_subject_set_index += 1
-      new_subject_index = 0
+    if (newSubjectOrder > subjectSet.subjects_count) {
+      newSubjectSetIndex += 1
+      newSubjectOrder = 0
     }
 
     // If we've exhausted all subject sets, collapse in shame
-    if (new_subject_set_index >= this.state.subjectSets.length) {
+    if (newSubjectSetIndex >= this.state.subjectSets.length) {
+      // TODO: subject_sets_total_pages doesn't exist
       if (this.state.subject_sets_current_page < this.state.subject_sets_total_pages) {
         this.fetchSubjectSets({
           page: this.state.subject_sets_current_page + 1
         })
+        return
       } else {
         this.setState({
           taskKey: null,
@@ -568,9 +576,7 @@ export default {
             header: 'All Done!',
             message: `There's nothing more for you to ${this.props.workflowName} here.`,
             onClick: () => {
-              if (typeof this.props.context.router.transitionTo === 'function') {
-                this.props.context.router.transitionTo('mark')
-              } // "/#/mark"
+              // "/#/mark"
               return this.setState({
                 notice: null,
                 taskKey: this.getActiveWorkflow().first_task
@@ -585,17 +591,21 @@ export default {
 
     // console.log "Mark#index Advancing to subject_set_index #{new_subject_set_index} (of #{@state.subjectSets.length}), subject_index #{new_subject_index} (of #{@state.subjectSets[new_subject_set_index].subjects.length})"
 
-    this.setState(
-      {
-        subject_set_index: new_subject_set_index,
-        subject_index: new_subject_index,
-        taskKey: this.getActiveWorkflow().first_task,
-        currentSubToolIndex: 0
-      },
+    this.fetchSubjectsForCurrentSubjectSet(
+      null,
+      null,
       () => {
-        this.fetchSubjectsForCurrentSubjectSet(1, 100)
-      }
-    )
+        this.setState(
+          {
+            subject_set_index: newSubjectSetIndex,
+            subject_index: 0,
+            taskKey: this.getActiveWorkflow().first_task,
+            currentSubToolIndex: 0
+          })
+        // scroll to the top of the next page
+        $('html, body').scrollTop(0)
+      },
+      newSubjectOrder)
   },
 
   commitClassificationAndContinue(d) {

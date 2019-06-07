@@ -1,4 +1,7 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import qs from 'query-string'
+
 import DraggableModal from '../../../draggable-modal.jsx'
 import SmallButton from '../../../buttons/small-button.jsx'
 import HelpButton from '../../../buttons/help-button.jsx'
@@ -23,6 +26,10 @@ export default class CompositeTool extends React.Component {
     annotation: {},
     task: null,
     subject: null
+  }
+
+  static contextTypes = {
+    router: PropTypes.object
   }
 
   // this can go into a mixin? (common across all transcribe tools)
@@ -112,7 +119,7 @@ export default class CompositeTool extends React.Component {
         this.props.returnToMarking()
       }
     } else if (this.props.transcribeMode == 'verify') {
-      this.props.context.router.transitionTo('verify')
+      this.context.router.history.push('/verify')
     }
   }
 
@@ -121,14 +128,13 @@ export default class CompositeTool extends React.Component {
     this.commitAnnotation()
 
     // transition back to mark
-    this.props.context.router.transitionTo(
-      'mark',
-      {},
-      {
+    this.context.router.history.push(
+      '/mark?',
+      qs.stringify({
         subject_set_id: this.props.subject.subject_set_id,
         selected_subject_id: this.props.subject.parent_subject_id,
         page: this.props.subjectCurrentPage
-      }
+      })
     )
   }
 

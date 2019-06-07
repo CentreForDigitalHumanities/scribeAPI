@@ -2,6 +2,7 @@
  * Author: Alex Hebing @ Digital Humanities Lab (Utrecht University), 2019
  */
 import React from 'react'
+import PropTypes from 'prop-types'
 import DraggableModal from './draggable-modal'
 import GenericButton from './buttons/generic-button'
 
@@ -9,6 +10,25 @@ export default class SubjectSetSelector extends React.Component {
   static defaultProps = {
     classes: '',
     doneButtonLabel: 'Give me a random source'
+  }
+
+  static contextTypes = {
+    router: PropTypes.object
+  }
+
+  constructor() {
+    super()
+    this.state = {
+      redirect: false,
+      subjectSetId: null
+    }
+  }
+
+  componentWillMount() {
+    const subjectSets = this.props.subjectSets
+    if (subjectSets.length === 1) {
+      this.onSubjectSetSelected(subjectSets[0].id)
+    }
   }
 
   sortByGroupId(subjectSets) {
@@ -64,29 +84,35 @@ export default class SubjectSetSelector extends React.Component {
     }
   }
 
-  onSelectRandomSubjectSet() {
+  onSelectRandomSubjectSet = () => {
     this.onSubjectSetSelected(undefined)
   }
 
-  onSubjectSetSelected(subjectSetId) {
+  onSubjectSetSelected = (subjectSetId) => {
     let { onSelected } = this.props
     onSelected(subjectSetId)
   }
 
   render() {
+    // let { redirect, subjectSetId } = this.state
+    const subjectSets = this.props.subjectSets
+    // if (redirect) {
+    //   this.context.rout
+    //   return <Redirect to={`/${this.props.workflow}?subject_set_id=${subjectSetId || ''}`} />
+    // }
     return (
       <DraggableModal
         ref="tutorialModal"
         header='Please select a source'
         doneButtonLabel="Give me a random source"
-        onDone={this.onSelectRandomSubjectSet.bind(this)}
+        onDone={this.onSelectRandomSubjectSet}
         width={800}
         classes="help-modal"
         closeButton={true}
-        onClose={this.onSelectRandomSubjectSet.bind(this)}>
+        onClose={this.onSelectRandomSubjectSet}>
         <div>
           <p>Please select the source you would like to work on.</p>
-          {this.getSubjectSets(this.props.subjectSets)}
+          {this.getSubjectSets(subjectSets)}
         </div>
       </DraggableModal>
     )

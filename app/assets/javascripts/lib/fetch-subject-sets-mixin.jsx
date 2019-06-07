@@ -45,7 +45,10 @@ export default {
         ? this.props.match.params.subject_set_id
         : query.subject_set_id
     if (subject_set_id != null) {
-      return this.fetchSubjectSet(subject_set_id, postFetchCallback)
+      this.setState({
+        selectSubjectSet: false
+      })
+      this.fetchSubjectSet(subject_set_id, postFetchCallback)
 
       // Fetch subject-sets by filters:
     } else {
@@ -53,7 +56,7 @@ export default {
       const params = {
         group_id: query.group_id != null ? query.group_id : null
       }
-      return this.fetchSubjectSets(params, postFetchCallback)
+      this.fetchSubjectSets(params, postFetchCallback)
     }
   },
 
@@ -90,7 +93,7 @@ export default {
   fetchSubjectSet(subject_set_id, callback) {
     const request = API.type('subject_sets').get(subject_set_id, {})
 
-    return request.then(set => {
+    request.then(set => {
       this.setState({ subjectSets: [set] }, () => {
         this.fetchSubjectsForCurrentSubjectSet(1, null, callback)
       })
@@ -100,7 +103,6 @@ export default {
   // This is the main fetch method for subject sets. (fetches via SubjectSetsController#index)
   fetchSubjectSets(params, callback) {
     params = $.extend({ workflow_id: this.getActiveWorkflow().id }, params)
-    const _callback = sets => { }
 
     // Apply defaults to unset params:
     const _params = $.extend(
@@ -120,7 +122,7 @@ export default {
       }
     }
 
-    return API.type('subject_sets')
+    API.type('subject_sets')
       .get(params)
       .then(sets => {
         if (sets.length === 0)
@@ -128,19 +130,24 @@ export default {
         else
           this.setState({ subjectSets: sets }, () => {
             if (this.getActiveWorkflow().name.toLowerCase() !== 'transcribe') {
-              return this.fetchSubjectsForCurrentSubjectSet(1, null, callback)
+              this.fetchSubjectsForCurrentSubjectSet(1, null, callback)
             }
           })
       })
   },
 
   // PB: Setting default limit to 120 because it's a multiple of 3 mandated by thumb browser
-  fetchSubjectsForCurrentSubjectSet(page, limit, callback) {
+  // Changed it to 3 because getting 120 is slow
+  fetchSubjectsForCurrentSubjectSet(page = null, limit = null, callback = undefined, minSubjectOrder = 0) {
+    if (this.state.selectSubjectSet) {
+      // selecting a subject set, don't retrieve anything yet
+      return
+    }
     if (page == null) {
       page = 1
     }
     if (limit == null) {
-      limit = 120
+      limit = 3
     }
     const ind = this.state.subject_set_index
     const sets = this.state.subjectSets
@@ -153,6 +160,7 @@ export default {
       subject_set_id: sets[ind].id,
       page,
       limit,
+      min_subject_order: minSubjectOrder,
       type: 'root',
       status: 'active'
     }

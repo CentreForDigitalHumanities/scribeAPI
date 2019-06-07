@@ -1,5 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
+
 import marked from '../../../../lib/marked.min.js'
 import DraggableModal from '../../../draggable-modal.jsx'
 import SmallButton from '../../../buttons/small-button.jsx'
@@ -8,6 +10,10 @@ import BadSubjectButton from '../../../buttons/bad-subject-button.jsx'
 import IllegibleSubjectButton from '../../../buttons/illegible-subject-button.jsx'
 
 export default class TextTool extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -181,7 +187,7 @@ export default class TextTool extends React.Component {
       if (this.props.isLastSubject && this.props.task.next_task == null) {
         this.props.returnToMarking()
       } else if (this.props.transcribeMode === 'verify') {
-        this.props.context.router.transitionTo('verify')
+        this.context.router.history.push('/verify')
       }
     }
   }

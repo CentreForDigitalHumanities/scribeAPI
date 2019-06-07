@@ -47,7 +47,6 @@ describe('SingleChoiceTask/pickOne', function () {
 
   // this seems like it could be improved. not sure that this is an effective use of shallowRender
   it('should render a function with the displayName GenericTask', function () {
-    expect(result.type.displayName).toBe('GenericTask')
     expect(result.type.defaultProps.question).toBe('')
     expect(result.type.defaultProps.answers).toBe('')
     expect(result.type.defaultProps.help).toBe('')
