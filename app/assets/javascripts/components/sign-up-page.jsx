@@ -1,6 +1,8 @@
 import React from 'react'
 import { Redirect, NavLink } from 'react-router-dom'
 import classNames from 'classnames'
+
+import marked from '../lib/marked.min.js'
 import { AppContext, requestUserFetch } from './app-context.jsx'
 
 @AppContext
@@ -60,6 +62,8 @@ export default class SignUpPage extends React.Component {
       }
       return <Redirect to="/intro" />
     }
+
+    const termsConditions = this.props.context.project.partials['terms-conditions']
     return <div className="page-content login-page">
       <h1>Sign Up</h1>
       <div>
@@ -81,6 +85,7 @@ export default class SignUpPage extends React.Component {
             Password Confirmation
             <input type="password" name="password_confirmation" required autoComplete="new-password" />
           </label>
+          {termsConditions && <p dangerouslySetInnerHTML={{ __html: marked(termsConditions) }}></p>}
           <p>
             <button className={classNames('major-button', { 'is-loading': this.state.loading })}>Sign Up</button>
           </p>
