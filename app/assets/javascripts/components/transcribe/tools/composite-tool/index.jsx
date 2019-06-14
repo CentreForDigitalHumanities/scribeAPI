@@ -78,7 +78,7 @@ export default class CompositeTool extends React.Component {
   handleChange(annotation) {
     this.setState({ annotation })
 
-    this.props.onChange(annotation)
+    this.props.onChange({...annotation})
   } // forward annotation to parent
 
   // Fires when user hits <enter> in an input

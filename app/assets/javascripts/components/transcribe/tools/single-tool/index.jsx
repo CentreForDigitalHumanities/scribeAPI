@@ -5,23 +5,23 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 
-import React from "react";
-import createReactClass from "create-react-class";
+import React from 'react';
+import createReactClass from 'create-react-class';
 
-import Draggable from "../../../../lib/draggable.jsx";
-import DoneButton from "./done-button.jsx";
-import inputComponents from "../../input-components/index.jsx";
+import Draggable from '../../../../lib/draggable.jsx';
+import DoneButton from './done-button.jsx';
+import inputComponents from '../../input-components/index.jsx';
 
 const TextTool = createReactClass({
-  displayName: "SingleTool",
+  displayName: 'SingleTool',
 
   getInitialState() {
     return {
       viewerSize: this.props.viewerSize,
       annotation: {
-        value: ""
+        value: ''
       }
-    };
+    }
   },
 
   getDefaultProps() {
@@ -31,39 +31,39 @@ const TextTool = createReactClass({
       subject: null,
       clickOffsetX: 0,
       clickOffsetY: 0
-    };
+    }
   },
 
   componentWillReceiveProps() {
     return this.setState({
-      annotation: this.props.annotation
-    });
+      annotation: { ...this.props.annotation }
+    })
   },
 
   componentDidMount() {
     // not sure if this does anything? --STI
-    return this.updatePosition();
+    return this.updatePosition()
   },
 
   handleInitStart(e, d) {
     // prevent dragging from non-divs (a bit hacky) --STI
-    this.setState({ preventDrag: e.target.nodeName !== "DIV" });
+    this.setState({ preventDrag: e.target.nodeName !== 'DIV' })
 
     this.props.clickOffsetX =
-      e.nativeEvent.offsetX + e.nativeEvent.srcElement.offsetParent.offsetLeft;
+      e.nativeEvent.offsetX + e.nativeEvent.srcElement.offsetParent.offsetLeft
     return (this.props.clickOffsetY =
-      e.nativeEvent.offsetY + e.nativeEvent.srcElement.offsetParent.offsetTop);
+      e.nativeEvent.offsetY + e.nativeEvent.srcElement.offsetParent.offsetTop)
   },
 
   handleInitDrag(e, d) {
     if (this.state.preventDrag) {
-      return;
+      return
     } // not too happy about this one
 
-    const dx = e.clientX - this.props.clickOffsetX + window.scrollX;
-    const dy = e.clientY - this.props.clickOffsetY + window.scrollY;
+    const dx = e.clientX - this.props.clickOffsetX + window.scrollX
+    const dy = e.clientY - this.props.clickOffsetY + window.scrollY
 
-    return this.setState({ dragged: true, dx, dy });
+    return this.setState({ dragged: true, dx, dy })
   },
 
   // Expects size hash with:
@@ -75,76 +75,76 @@ const TextTool = createReactClass({
   onViewerResize(size) {
     this.setState({
       viewerSize: size
-    });
-    return this.updatePosition();
+    })
+    return this.updatePosition()
   },
 
   updatePosition() {
     // HANDLE DIFFERENT TOOLS
-    let x, y;
-    const { toolName } = this.props.subject.data;
+    let x, y
+    const { toolName } = this.props.subject.data
     switch (toolName) {
-      case "pointTool":
-        x = this.props.subject.data.x + 40;
-        y = this.props.subject.data.y + 40; // TODO: don't hard-wire dimensions
+      case 'pointTool':
+        x = this.props.subject.data.x + 40
+        y = this.props.subject.data.y + 40 // TODO: don't hard-wire dimensions
         break;
       case 'horizontalLineTool':
         x = this.props.subject.data.x
         y = this.props.subject.data.y + this.props.subject.data.height
-        break;
-      case "rectangleTool":
+        break
+      case 'rectangleTool':
         x = this.props.subject.data.x
-        y = this.props.subject.data.y + this.props.subject.data.height;
+        y = this.props.subject.data.y + this.props.subject.data.height
         break;
-      case "textRowTool":
+      case 'textRowTool':
         x =
           this.state.viewerSize != null
             ? (this.state.viewerSize.w - 650) / 2
-            : 0; // TODO: don't hard-wire dimensions
-        y = this.props.subject.data.yLower;
+            : 0 // TODO: don't hard-wire dimensions
+        y = this.props.subject.data.yLower
         break;
       default:
         console.log(
           `ERROR: Cannot update position on unknown transcription tool ${toolName}!`
-        );
+        )
     }
 
     if (this.state.viewerSize != null && !this.state.dragged) {
       return this.setState({
         dx: x * this.state.viewerSize.scale.horizontal,
         dy: y * this.state.viewerSize.scale.vertical
-      });
+      })
     }
   },
 
   commitAnnotation() {
-    return this.props.onComplete(this.state.annotation);
+    return this.props.onComplete({ ...this.state.annotation })
   },
 
   handleChange(e) {
-    this.state.annotation.value = e.target.value;
-    return this.forceUpdate();
+    this.state.annotation.value = e.target.value
+    return this.forceUpdate()
   },
 
   handleKeyPress(e) {
     if ([13].indexOf(e.keyCode) >= 0) {
       // ENTER:
-      this.commitAnnotation();
-      return e.preventDefault();
+      this.commitAnnotation()
+      return e.preventDefault()
     }
   },
 
   render() {
-    let toolType;
+    let toolType
     if (this.props.viewerSize == null || this.props.subject == null) {
-      return null;
+      return null
     }
 
     // If user has set a custom position, position based on that:
     const style = {
       left: this.state.dx,
       top: this.state.dy
-    };
+    }
 
     const val =
       (this.state.annotation != null
@@ -153,20 +153,20 @@ const TextTool = createReactClass({
         ? this.state.annotation != null
           ? this.state.annotation.value
           : undefined
-        : "";
+        : '';
 
-    if (this.props.subject.type === "item_location") {
-      toolType = "testComponent";
+    if (this.props.subject.type === 'item_location') {
+      toolType = 'testComponent';
     } else {
-      toolType = this.props.task.tool_options.tool_type;
+      toolType = this.props.task.tool_options.tool_type
     }
 
     if (inputComponents[toolType] == null) {
-      console.log(`ERROR: Field type, ${toolType}, does not exist!`);
-      return null;
+      console.log(`ERROR: Field type, ${toolType}, does not exist!`)
+      return null
     }
 
-    const InputComponent = inputComponents[toolType];
+    const InputComponent = inputComponents[toolType]
 
     return (
       <Draggable
@@ -185,7 +185,7 @@ const TextTool = createReactClass({
                 ? this.state.annotation != null
                   ? this.state.annotation.value
                   : undefined
-                : ""
+                : ''
             }
             instruction={this.props.task.instruction}
             handleChange={this.handleChange}
@@ -194,8 +194,8 @@ const TextTool = createReactClass({
           />
         </div>
       </Draggable>
-    );
+    )
   }
-});
+})
 
-export default TextTool;
+export default TextTool

@@ -12,7 +12,7 @@ export default class HistoricalDateTool extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      annotation: props.annotation != null ? props.annotation : {},
+      annotation: props.annotation != null ? { ...props.annotation } : {},
       viewerSize: props.viewerSize
     }
   }
@@ -68,7 +68,7 @@ export default class HistoricalDateTool extends React.Component {
 
     // Required to ensure tool has cleared annotation even if tool doesn't unmount between tasks:
     this.setState({
-      annotation: new_props.annotation != null ? new_props.annotation : {},
+      annotation: new_props.annotation != null ? { ...new_props.annotation } : {},
       viewerSize: new_props.viewerSize
     })
   }
@@ -127,7 +127,7 @@ export default class HistoricalDateTool extends React.Component {
       dateToPlainObject(value, 'gregorianDate')
       dateToPlainObject(value, 'julianDate')
     }
-    this.props.onComplete(ann)
+    this.props.onComplete({ ...ann })
 
     if (
       this.props.transcribeMode === 'page' ||
@@ -160,7 +160,7 @@ export default class HistoricalDateTool extends React.Component {
 
         // if composite-tool is used, this will be a callback to CompositeTool::handleChange()
         // otherwise, it'll be a callback to Transcribe::handleDataFromTool()
-        this.props.onChange(newAnnotation)
+        this.props.onChange({ ...newAnnotation })
       }
       return { annotation: newAnnotation }
     })

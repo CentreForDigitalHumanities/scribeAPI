@@ -17,7 +17,7 @@ export default class TextTool extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      annotation: this.props.annotation && this.props.annotation || {},
+      annotation: this.props.annotation && { ... this.props.annotation } || {},
       viewerSize: this.props.viewerSize,
       autocompleting: false
     }
@@ -108,7 +108,7 @@ export default class TextTool extends React.Component {
 
     // Required to ensure tool has cleared annotation even if tool doesn't unmount between tasks:
     this.setState({
-      annotation: new_props.annotation && new_props.annotation || {},
+      annotation: new_props.annotation && { ...new_props.annotation } || {},
       viewerSize: new_props.viewerSize
     })
   }
@@ -178,7 +178,7 @@ export default class TextTool extends React.Component {
   // NOTE: doesn't get called unless @props.standalone is true
   commitAnnotation() {
     const ann = this.state.annotation
-    this.props.onComplete(ann)
+    this.props.onComplete({ ...ann })
 
     if (
       this.props.transcribeMode === 'page' ||
@@ -244,7 +244,6 @@ export default class TextTool extends React.Component {
 
   handleKeyDown(e) {
     this.handleChange(e) // updates any autocomplete values
-
     if (!this.state.autocompleting &&
       [13].indexOf(e.keyCode) >= 0 &&
       !e.shiftKey) {
