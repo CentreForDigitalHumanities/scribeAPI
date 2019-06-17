@@ -236,3 +236,7 @@ print {
 #accordion p {
   width: auto;
 }
+
+.custom-page .updated-at {
+  color: transparent
+}

@@ -29,7 +29,7 @@ export default class CustomPage extends React.Component {
       return $(divId).addClass('selected-content')
     })
 
-    const el = $(ReactDOM.findDOMNode(this)).find('#accordion')
+    const el = $(ReactDOM.findDOMNode(this)).find('#accordion,.accordion')
     return el.accordion({
       collapsible: true,
       active: false,
