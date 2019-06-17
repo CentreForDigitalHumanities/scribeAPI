@@ -3633,10 +3633,10 @@ hex-color-regex@^1.1.0:
   resolved "https://registry.yarnpkg.com/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==
 
-historical-dates-ui@0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/historical-dates-ui/-/historical-dates-ui-0.1.6.tgz#59e8158b6598e6de714785ed482431ea6a2dc3ad"
-  integrity sha512-hxhJbfbPNBY2BAKE02yOWOG43883evS1pgcxy/9Nua9exAeIqfAhhw5qQFo+tqEmiLI5ODvnd+2y+KGleELO4A==
+historical-dates-ui@0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/historical-dates-ui/-/historical-dates-ui-0.1.7.tgz#219e9476dfa000af01477297271df7328a6f0c02"
+  integrity sha512-HfVWO2xOo9lUBQKX0OgviIb1/aW8fazb2u5VRmnwnh8W8paOAk3LV11NeoeF7ZBtvGYFivBu3dXNZZjgjptNBQ==
   dependencies:
     core-js "^3.1.4"
     historical-dates "^0.2.1"
