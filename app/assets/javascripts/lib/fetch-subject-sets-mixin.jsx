@@ -165,6 +165,11 @@ export default {
       status: 'active'
     }
 
+    const activeWorkflow = this.getActiveWorkflow()
+    if (activeWorkflow) {
+      params['workflow_id'] = activeWorkflow.id
+    }
+
     const process_subjects = subjs => {
       sets[ind].subjects = subjs
 
