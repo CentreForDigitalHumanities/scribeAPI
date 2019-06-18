@@ -107,7 +107,6 @@ class Subject
 
   def increment_retire_count_by_one
     self.inc(retire_count: 1)
-    self.check_retire_by_vote
     self.check_retire_by_number
   end
 
@@ -146,35 +145,26 @@ class Subject
     end
   end
 
-  # find all the classifications for subject where task_key == compleletion_assesment_task
-  # calculate the percetage vote for retirement (pvr)
-  # if pvr is equal or greater than retire_limit, set self.status == retired.
-  def check_retire_by_vote
-    if number_of_completion_assessments > 2 && percentage_for_retire >= workflow.retire_limit
-      increment_parents_subject_count_by -1 if self.retire! && parent_subject
-    end
-  end
-
   def percentage_for_retire
     assesment_classifications = number_of_completion_assessments
     retire_count.to_f / assesment_classifications.to_f
   end
 
   def number_of_completion_assessments
-    classifications.where(task_key: "completion_assessment_task").count || 0
+    count = classifications.where(task_key: "completion_assessment_task").count || 0
+    count + (classifications.where(task_key: "anything_left_to_mark").count || 0)
   end
 
 
-  # Alex Hebing: Added this method to ensure retiring of 
-  # subjects by number (instead of percentage, i.e. 'vote').
+  # Retire by the number of completion assesments, follows the definition in the manual:
+  # "retire_limit: Number indicating threshold for retiring the subject operated on in
+  # a given workflow. Mostly relevant to Mark workflow, where retire_limit is the number
+  # of times we require someone to say "There is nothing left to mark."
+  # In the Transcription & Verification workflows, retire_limit is ignored in favor of
+  # generates_subject_after."
   def check_retire_by_number
-    # Alex Hebing: Also count the number of times the new task was executed
-    assesment_classifications = classifications.where(task_key: "completion_assessment_task").count
-    assesment_classifications = assesment_classifications + classifications.where(task_key: "anything_left_to_mark").count
-
-    if assesment_classifications >= 2
-      if retire_count >= workflow.retire_limit
-        self.retire!
+    if retire_count >= workflow.retire_limit
+      if self.retire!
         increment_parents_subject_count_by -1 if parent_subject
       end
     end
