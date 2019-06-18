@@ -521,6 +521,7 @@ export default AppContext(createReactClass({
                       <NavLink
                         to={`/groups/${this.getCurrentSubjectSet().group_id}`}
                         className="about-link"
+                        target="_blank"
                       >
                         About this {this.props.context.project.term('group')}.
                       </NavLink>
