@@ -3,9 +3,12 @@
  */
 import React from 'react'
 import PropTypes from 'prop-types'
+import API from '../lib/api.jsx'
+import { AppContext } from './app-context.jsx'
 import DraggableModal from './draggable-modal'
 import GenericButton from './buttons/generic-button'
 
+@AppContext
 export default class SubjectSetSelector extends React.Component {
   static defaultProps = {
     classes: '',
@@ -22,6 +25,19 @@ export default class SubjectSetSelector extends React.Component {
       redirect: false,
       subjectSetId: null
     }
+  }
+
+  componentDidMount() {
+    const project_id = this.props.context.project.id
+    API.type('groups')
+      .get({ project_id })
+      .then(groupList => {
+        const groups = {}
+        for (let group of groupList) {
+          groups[group.id] = group
+        }
+        this.setState({ groups })
+      })
   }
 
   componentWillMount() {
@@ -41,7 +57,8 @@ export default class SubjectSetSelector extends React.Component {
 
   getSubjectSets(subjectSets) {
     let subjectSetTitles = []
-    let currentLanguage
+    let currentGroupName
+    let currentGroupItems
 
     if (subjectSets.length > 1) {
       this.sortByGroupId(subjectSets)
@@ -50,34 +67,40 @@ export default class SubjectSetSelector extends React.Component {
     const sorted = subjectSets
       .map(subjectSet => ({
         id: subjectSet.id,
-        language: subjectSet.meta_data.langs,
+        groupName: this.state.groups[subjectSet.group_id].name,
         hide: subjectSet.meta_data.hide || false,
         label: SubjectSetSelector.parseTitle(subjectSet.meta_data.set_key)
       }))
       .filter(s => !s.hide)
       .sort((a, b) => {
-        // sort by language then by label (title)
-        if (a.language > b.language) {
+        // sort by groupName then by label (title)
+        if (a.groupName > b.groupName) {
           return 1
-        } else if (a.language < b.language) {
+        } else if (a.groupName < b.groupName) {
           return -1
         }
         return a.label >= b.label ? 1 : -1
       })
 
     for (var i = 0; i < sorted.length; i++) {
-      let { id, language, label } = sorted[i]
+      let { id, groupName, label } = sorted[i]
 
-      // if Mark is navigated to via menu (not a specific language)...
+      // if Mark is navigated to via menu (not a specific groupName)...
       if (!this.props.group_id) {
-        // ... add language headers 
-        if (i === 0 || currentLanguage !== language) {
-          subjectSetTitles.push(<h6 key={i}>{language}</h6>)
-          currentLanguage = language
+        // ... add groupName headers 
+        if (i === 0 || currentGroupName !== groupName) {
+          currentGroupItems = []
+          subjectSetTitles.push(<fieldset key={i}>
+            <legend>{groupName}</legend>
+            {currentGroupItems}
+          </fieldset>)
+          currentGroupName = groupName
         }
+      } else {
+        currentGroupItems = subjectSetTitles
       }
 
-      subjectSetTitles.push(
+      currentGroupItems.push(
         <GenericButton
           key={id}
           label={label}
@@ -111,12 +134,7 @@ export default class SubjectSetSelector extends React.Component {
   }
 
   render() {
-    // let { redirect, subjectSetId } = this.state
     const subjectSets = this.props.subjectSets
-    // if (redirect) {
-    //   this.context.rout
-    //   return <Redirect to={`/${this.props.workflow}?subject_set_id=${subjectSetId || ''}`} />
-    // }
     return (
       <DraggableModal
         ref="tutorialModal"
@@ -124,13 +142,14 @@ export default class SubjectSetSelector extends React.Component {
         doneButtonLabel="Give me a random source"
         onDone={this.onSelectRandomSubjectSet}
         width={800}
-        classes="help-modal"
+        classes="help-modal subject-set-selector"
         closeButton={true}
         onClose={this.onSelectRandomSubjectSet}>
-        <div>
+        {!this.state.groups && <div className="is-loading" style={{ height: '100px' }}></div>}
+        {this.state.groups && <div>
           <p>Please select the source you would like to work on.</p>
           {this.getSubjectSets(subjectSets)}
-        </div>
+        </div>}
       </DraggableModal>
     )
   }

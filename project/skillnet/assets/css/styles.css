@@ -233,6 +233,11 @@ print {
   border-radius: 3px 3px 0 0;
 }
 
+.help-modal .modal-body {
+  width: 680px;
+  box-sizing: border-box;
+}
+
 #accordion p {
   width: auto;
 }
