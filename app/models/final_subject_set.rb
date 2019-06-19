@@ -104,7 +104,7 @@ class FinalSubjectSet
 
     subjects.destroy_all
 
-    subject_set.subjects.root.each do |subject|
+    Array.new(subject_set.subjects.root).each do |subject|
       subjects << FinalSubject.create_from_subject(subject)
     end
   end
