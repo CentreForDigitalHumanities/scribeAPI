@@ -61,7 +61,7 @@ class FinalSubject
   def build_assertions!
     assertions.destroy_all
 
-    flattened_subjects(subject.child_subjects).each do |s|
+    Array.new(flattened_subjects(subject.child_subjects)).each do |s|
       assertions << FinalSubjectAssertion.create_from_subject(s[:subject], s[:parents])
     end
 
