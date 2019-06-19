@@ -27,7 +27,7 @@
         <br />(<%= @subject.flagged_bad_count %> "Bad Subject" votes)
       <% end %> 
       <% if @subject.retire_count %>
-        <br />Votes for retrement: <%= (@subject.percentage_for_retire * 100).round %>% (<%= @subject.retire_count %> of <%= @subject.number_of_completion_assessments %> completion assessments)
+        <br />Votes for retirement: <%= (@subject.percentage_for_retire * 100).round %>% (<%= @subject.retire_count %> of <%= @subject.number_of_completion_assessments %> completion assessments)
       <% end %> 
     </dd>
 

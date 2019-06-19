@@ -39,22 +39,20 @@ class SubjectsController < ApplicationController
     # Filter by group?
     @subjects = @subjects.by_group(group_id) if group_id
 
-    if ! subject_set_id
-      # Randomize?
-      # @subjects = @subjects.random(limit: limit) if random
-      # PB: Above randomization method produces better randomness, but inconsistent totals
-      @subjects = @subjects.random_order if random
+    # Randomize?
+    # @subjects = @subjects.random(limit: limit) if random
+    # PB: Above randomization method produces better randomness, but inconsistent totals
+    @subjects = @subjects.random_order if random
 
-      # If user/guest active, filter out anything already classified:
-      @subjects = @subjects.user_has_not_classified user.id.to_s if ! user.nil?
+    # If user/guest active, filter out anything already classified:
+    @subjects = @subjects.user_has_not_classified user.id.to_s if ! user.nil?
 
-      # Should we filter out subjects that the user herself created?
-      if ! user.nil? && ! (workflow = Workflow.find(workflow_id)).nil? && ! workflow.subjects_classifiable_by_creator
-        # Note: creating_user_ids are stored as ObjectIds, so no need to filter on user.id.to_s:
-        @subjects = @subjects.user_did_not_create user.id if ! user.nil?
-      end
+    # Should we filter out subjects that the user herself created?
+    if ! user.nil? && workflow_id && ! (workflow = Workflow.find(workflow_id)).nil? && ! workflow.subjects_classifiable_by_creator
+      # Note: creating_user_ids are stored as ObjectIds, so no need to filter on user.id.to_s:
+      @subjects = @subjects.user_did_not_create user.id if ! user.nil?
     end
-
+      
     links = {
       "next" => {
         href: @subjects.next_page.nil? ? nil : url_for(controller: 'subjects', page: @subjects.next_page),

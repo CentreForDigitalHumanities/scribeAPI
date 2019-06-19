@@ -162,7 +162,10 @@ export default AppContext(createReactClass({
           disabled={waitingForAnswer}
           onClick={this.getNextTask() ? this.navigateTaskOrNextPage : this.completeSubjectSet}
         >
-          Next
+          {this.state.taskKey === 'anything_left_to_mark' &&
+            `${this.state.classifications[this.state.classificationIndex].annotation.value}`.toLowerCase() == 'no' ?
+            'Done' :
+            'Next'}
         </button>
       )
     } else if (this.state.badSubject || this.state.nothingToMark) {
@@ -170,7 +173,6 @@ export default AppContext(createReactClass({
         <button
           type="button"
           className="continue major-button"
-          disabled={true}
           onClick={this.completeSubjectSet}
         >
           Done
@@ -519,6 +521,7 @@ export default AppContext(createReactClass({
                       <NavLink
                         to={`/groups/${this.getCurrentSubjectSet().group_id}`}
                         className="about-link"
+                        target="_blank"
                       >
                         About this {this.props.context.project.term('group')}.
                       </NavLink>
