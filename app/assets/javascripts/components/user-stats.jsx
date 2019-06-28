@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 import pluralize from 'pluralize'
 
 import { AppContext } from './app-context'
-import SubjectSetSelector from './subject-set-selector'
+import { parseTitle } from './subject-set-selector'
 
 @AppContext
 export default class UserStats extends React.Component {
@@ -73,7 +73,7 @@ export default class UserStats extends React.Component {
               .map((subjectSetId) => {
                 const workflowCounts = stats[subjectSetId]
                 return <tr key={subjectSetId}>
-                  <th>{SubjectSetSelector.parseTitle(workflowCounts.key)}</th>
+                  <th>{parseTitle(workflowCounts.key)}</th>
                   {showWorkflows.map((workflow) =>
                     <td key={workflow.id}>
                       {workflowCounts[workflow.id] || 0}

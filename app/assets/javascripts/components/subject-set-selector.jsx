@@ -69,7 +69,7 @@ export default class SubjectSetSelector extends React.Component {
         id: subjectSet.id,
         groupName: this.state.groups[subjectSet.group_id].name,
         hide: subjectSet.meta_data.hide || false,
-        label: SubjectSetSelector.parseTitle(subjectSet.meta_data.set_key)
+        label: parseTitle(subjectSet.meta_data.set_key)
       }))
       .filter(s => !s.hide)
       .sort((a, b) => {
@@ -113,17 +113,6 @@ export default class SubjectSetSelector extends React.Component {
     return <div>{subjectSetTitles}</div>
   }
 
-  static parseTitle(subjectSetKey) {
-    if (subjectSetKey.indexOf('_') != -1) {
-      let splitSetKey = subjectSetKey.split('_')
-      let author = splitSetKey[0].split('-').join(' ')
-      let title = splitSetKey[1].split('-').join(' ')
-      return author + '. ' + title + '.'
-    } else {
-      return subjectSetKey.split('-').join(' ')
-    }
-  }
-
   onSelectRandomSubjectSet = () => {
     this.onSubjectSetSelected(undefined)
   }
@@ -152,5 +141,16 @@ export default class SubjectSetSelector extends React.Component {
         </div>}
       </DraggableModal>
     )
+  }
+}
+
+export function parseTitle(subjectSetKey) {
+  if (subjectSetKey.indexOf('_') != -1) {
+    let splitSetKey = subjectSetKey.split('_')
+    let author = splitSetKey[0].split('-').join(' ')
+    let title = splitSetKey[1].split('-').join(' ')
+    return author + '. ' + title + '.'
+  } else {
+    return subjectSetKey.split('-').join(' ')
   }
 }
