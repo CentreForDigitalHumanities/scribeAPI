@@ -11,6 +11,8 @@
 
 **Wees niet bang om fouten te maken!**
 
+Meer informatie over speciale karakters, afkortingen en Romeinse datums kunt u vinden op de <a href="https://skillnet.nl/sources/#Tools%20for%20Early%20Modern%20Letters" target="_blank" rel="noopener noreferrer">website van het SKILLNET-project</a>.
+
 <h2>English</h2>
 
 - Also transcribe the large capitals (initials) at the beginning of letters, even if they partly fall outside of the marking box.
@@ -23,3 +25,5 @@
 - The sign **CIƆ** or **cIɔ** in Roman numbers stands for **M** and the sign **IƆ** or **Iɔ** stands for **D**. So please transcribe **CIƆ IƆ** as **M D**.
 
 **Do not be afraid to make mistakes!**
+
+More information about special characters, abbreviations and Roman dates can be found on the <a href="https://skillnet.nl/sources/#Tools%20for%20Early%20Modern%20Letters" target="_blank" rel="noopener noreferrer">website of the SKILLNET project</a>.
