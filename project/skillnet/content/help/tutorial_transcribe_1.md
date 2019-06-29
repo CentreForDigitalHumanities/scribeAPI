@@ -1,7 +1,15 @@
-# Transcribe
+# Transcribeer / Transcribe
 
-Transcribe the text exactly as you see it. For additional help and sample transcriptions, each transcription prompt has an "Need some help" button providing field specific context.
+Transcribeer de tekst precies zoals u hem ziet. Voor extra hulp en voorbeelden van transcripties heeft elk invoervenster een "Need some help"-knop met context voor dat specifieke veld.
+
+Als de tekst moeilijk te lezen is, transcibeer hem dan zo goed als mogelijk en ga door.
+
+Als het veld onleesbaar is, markeer het dan als _Illegible_ en ga door naar het volgende invoervenster. Als er geen informatie is om te transcriberen of als u er zeker van bent dat de informatie fout is, selecteer dan _Bad mark_ en ga door naar het volgende invoervenster.
+
+<h2>English</h2>
+
+Transcribe the text exactly as you see it. For additional help and sample transcriptions, each transcription prompt has a "Need some help" button providing field specific context.
 
 If the text is hard to read, give it your best shot and keep going.
 
-If the field is indecipherable, mark it as _Illegible_ and move on to the next entry. If there is no information to transcribe, select _Bad region_ and move on to the next entry.
+If the field is indecipherable, mark it as _Illegible_ and move on to the next entry. If there is no information to transcribe or you are certain the information is wrong, select _Bad mark_ and move on to the next entry.
