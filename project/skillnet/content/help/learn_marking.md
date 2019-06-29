@@ -8,4 +8,4 @@ You may see existing rectangles on the page. If this is the case, someone has al
 
 You can adjust the digitized pages with tools on the left hand side of the screen. Here you'll find the zoom tool and a mark toggle.
 
-The marks created in this task identify the fields to be transcribed in step 2.
+The marks created in this task identify the fields to be transcribed in the next task phase.
