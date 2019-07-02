@@ -3643,6 +3643,11 @@ historical-dates-ui@0.1.7:
     react-app-polyfill "^1.0.1"
     string.prototype.trimleft "^2.0.0"
 
+historical-dates@0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/historical-dates/-/historical-dates-0.2.2.tgz#bd745715ac66959a69f3766d0fc22a83635ff65e"
+  integrity sha512-ESIqYwqvfjYsmWQJQouUkmgPgxs+R3rUfvtokxs0f3Rnnack9ojl+R1tSOy9EwqpJrQaNpppziUX+RRzPUwbIw==
+
 historical-dates@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/historical-dates/-/historical-dates-0.2.1.tgz#c3b0a67c90885bb7806191c95a3e208d3954a9df"
