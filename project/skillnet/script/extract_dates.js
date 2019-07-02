@@ -1,4 +1,5 @@
 var fs = require('fs')
+var { parseDateString } = require('historical-dates')
 
 function dateToString(date) {
   if (!date) { return 'unknown' }
@@ -23,10 +24,20 @@ async function extractRoman(jsonPath) {
     for (const subject of subjects) {
       for (const assertion of subject.assertions) {
         if (assertion.task_key === 'sk_date') {
+          var date = assertion.data.value.calendar === 'julian' ? assertion.data.value.julianDate : assertion.data.value.gregorianDate
+          if (!date) {
+            try {
+              date = parseDateString(assertion.data.value.text)
+            }
+            catch (err) {
+              // couldn't parse this date
+              console.log(err)
+            }
+          }
           values[toRow(
             assertion.data.value.text,
             assertion.data.value.type,
-            assertion.data.value.calendar === 'julian' ? assertion.data.value.julianDate : assertion.data.value.gregorianDate)] = true
+            date)] = true
         }
       }
     }
