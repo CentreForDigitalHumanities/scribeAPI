@@ -1,5 +1,9 @@
 # Karakters / Characters
 
+<div class="i18n">
+<span class="lang">nederlands</span>
+<span class="lang">english</span>
+<div class="nederlands">
 - Transcribeer ook de grote hoofdletters (initialen) aan het begin van brieven, ook al vallen ze gedeeltelijk buiten het markeringshokje.
 - Behandel <span stijl="font-variant:small-caps">kleinkapitaal</span> als gewone hoofdletters.
 - Let op: de **s** wordt vaak afgedrukt als **ſ**. Als deze **s** cursief is gedrukt, ziet hij eruit als **ʃ**. Deze **s** ziet er dus uit als een (lange) **f** maar is in feite een **s**.
@@ -12,9 +16,8 @@
 **Wees niet bang om fouten te maken!**
 
 Meer informatie over speciale karakters, afkortingen en Romeinse datums kunt u vinden op de <a href="https://skillnet.nl/sources/#Tools%20for%20Early%20Modern%20Letters" target="_blank" rel="noopener noreferrer">website van het SKILLNET-project</a>.
-
-<h2>English</h2>
-
+</div>
+<div class="english">
 - Also transcribe the large capitals (initials) at the beginning of letters, even if they partly fall outside of the marking box.
 - Treat <span style="font-variant:small-caps">small caps</span> as normal caps.
 - Note the **s** is often printed as **ſ**. If this **s** is italiced, it looks as **ʃ**. So this **s** looks like a (long) **f** but it is in fact an **s**.
@@ -27,3 +30,5 @@ Meer informatie over speciale karakters, afkortingen en Romeinse datums kunt u v
 **Do not be afraid to make mistakes!**
 
 More information about special characters, abbreviations and Roman dates can be found on the <a href="https://skillnet.nl/sources/#Tools%20for%20Early%20Modern%20Letters" target="_blank" rel="noopener noreferrer">website of the SKILLNET project</a>.
+</div>
+</div>
