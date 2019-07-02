@@ -6,31 +6,50 @@ function dateToString(date) {
 }
 
 function toRow(text, type, gregorianDate) {
-  return [text, type || 'unknown', dateToString(gregorianDate)].join(',')
+  return [escapeCell(text), type || 'unknown', dateToString(gregorianDate)].join(',')
 }
 
-function extractRoman(jsonPath) {
-  fs.readFile(jsonPath, 'utf8', function (err, contents) {
+function escapeCell(text) {
+  if (/[",]/.test(text)) {
+    return `"${text.replace('"', '""')}"`
+  }
+  return text
+}
+
+async function extractRoman(jsonPath) {
+  await new Promise((resolve) => fs.readFile(jsonPath, 'utf8', function (err, contents) {
     const data = JSON.parse(contents)
     const subjects = data.subjects
     for (const subject of subjects) {
       for (const assertion of subject.assertions) {
         if (assertion.task_key === 'sk_date') {
-          console.log(toRow(
+          values[toRow(
             assertion.data.value.text,
             assertion.data.value.type,
-            assertion.data.value.calendar === 'julian' ? assertion.data.value.julianDate : assertion.data.value.gregorianDate))
+            assertion.data.value.calendar === 'julian' ? assertion.data.value.julianDate : assertion.data.value.gregorianDate)] = true
         }
       }
     }
+    resolve()
+  }))
+}
+
+var values = {}
+
+async function main() {
+  // async function do(d) {
+  return new Promise((resolve) => {
+    fs.readdir('.', async (err, files) => {
+      await Promise.all(files.map(file => {
+        if (/\.json$/.test(file)) {
+          return extractRoman(file)
+        }
+      }))
+
+      fs.writeFile('export_dates.csv', `text,type,parsed\n${Object.keys(values).sort().join('\n')}\n`, (err) => err && console.error(err))
+      resolve()
+    })
   })
 }
 
-console.log('text,type,parsed')
-fs.readdir('.', (err, files) => {
-  files.forEach(file => {
-    if (/\.json$/.test(file)) {
-      extractRoman(file)
-    }
-  })
-})
+main()
