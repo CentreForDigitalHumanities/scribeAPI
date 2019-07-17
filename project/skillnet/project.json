@@ -141,7 +141,8 @@
       "name": "Letter",
       "spec_fields": [],
       "post_steps": [
-        "extract_letters.rb"
+        "extract_letters.rb",
+        "extract_dates.js"
       ]
     }
   ]

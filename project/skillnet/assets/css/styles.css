@@ -245,3 +245,25 @@ print {
 .custom-page .updated-at {
   color: transparent
 }
+
+.i18n .lang {
+  color: #3f5765;
+  cursor: pointer;
+  background: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-family: 'Goudy Bookletter 1911', Georgia, serif;
+  text-transform: capitalize;
+}
+
+.i18n .lang:hover {
+  text-decoration: underline;
+}
+.i18n .lang.english::before {
+  content: ' · ';
+}
+.i18n .nederlands,
+.i18n .english {
+  display: none;
+  padding-top: 10px;
+}

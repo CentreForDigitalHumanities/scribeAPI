@@ -530,7 +530,12 @@ namespace :project do
         project.export_document_specs.each do |spec|
           spec.post_steps.each do |step|
             script_dir = Rails.root.join('project', project_key, 'script', step)
-            system "ruby #{script_dir} #{path}"
+            if path.end_with? ".rb"
+              system "ruby #{script_dir} #{path}"
+            end
+            if path.end_with? ".js"
+              system "node #{script_dir} #{path}"
+            end
           end
         end
 
