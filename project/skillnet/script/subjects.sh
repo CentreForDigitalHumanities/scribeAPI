@@ -7,7 +7,7 @@
 
 mkdir -p ~/skillnet-output
 echo "file_path,thumbnail,set_key,langs" >> ~/skillnet-output/group.csv
-knownLanguages=("EN" "FR" "GER" "GR" "IT" "LAT" "SPAN")
+knownLanguages=("EN" "FR" "GE" "GER" "GR" "IT" "LA" "LAT" "SP" "SPAN" "NL")
 IFS=$'\n';for file in $(ls "$1"); do
   if [[ $file != Verwijder* && $file != *"Geen brieven"* ]]; then
     if [[ -f "$1/$file" ]]; then
@@ -52,13 +52,13 @@ IFS=$'\n';for file in $(ls "$1"); do
       mkdir -p ~/skillnet-output/$setKey
 
       # work-around for pdftk not liking unicode and not working from /tmp/
-      ln -s $1/$file ~/skillnet-output/$setKey/input.pdf
+      cp $1/$file ~/skillnet-output/$setKey/input.pdf
       cd ~/skillnet-output/$setKey
 
       # converting them in one go results in a huge collection of enormous PDFs
       # convert one by one
       pageCount=$(pdftk input.pdf dump_data|grep NumberOfPages| awk '{print $2}')
-      for i in `seq -w 1 $pageCount`;      
+      for i in `seq -w 1 $pageCount`;
       do
         if [ ! -f $i.jpg ]; then
           eval "pdftk input.pdf cat $i output $i.pdf"
