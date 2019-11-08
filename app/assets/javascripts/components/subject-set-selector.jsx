@@ -145,6 +145,11 @@ export default class SubjectSetSelector extends React.Component {
 }
 
 export function parseTitle(subjectSetKey) {
+  // skip the page numbers
+  let yearIndex = subjectSetKey.search(/\d{4}.*$/)
+  if (yearIndex > 10) {
+    subjectSetKey = subjectSetKey.substring(0, yearIndex + 4)
+  }
   if (subjectSetKey.indexOf('_') != -1) {
     let splitSetKey = subjectSetKey.split('_')
     let author = splitSetKey[0].split('-').join(' ')
