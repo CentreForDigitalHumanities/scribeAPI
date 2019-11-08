@@ -1,14 +1,14 @@
-
-
 import React from 'react'
-import createReactClass from 'create-react-class'
+import PropTypes from 'prop-types'
 
-const LoadingIndicator = createReactClass({
-  displayName: 'LoadingIndicator',
+export default class LoadingIndicator extends React.Component {
+  static propTypes = {
+    fixed: PropTypes.bool
+  }
 
   render() {
     return (
-      <span className="loading-indicator">
+      <span className={'loading-indicator' + (this.props.fixed ? ' is-fixed' : '')}>
         Loading
         <span>•</span>
         <span>•</span>
@@ -16,6 +16,4 @@ const LoadingIndicator = createReactClass({
       </span>
     )
   }
-})
-
-export default LoadingIndicator
+}

@@ -98,7 +98,7 @@ export default AppContext(createReactClass({
               return (<NoMoreSubjectsModal header={this.state.userClassifiedAll ? "You verified them all!" : "Nothing to verify"} workflowName={this.props.workflowName} project={this.props.project} />)
             }
             else if (!this.state.subjects) {
-              return (<LoadingIndicator />)
+              return (<LoadingIndicator fixed={true} />)
             } else if (this.getCurrentSubject() != null) {
               let VerifyComponent
               return (
