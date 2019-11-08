@@ -122,7 +122,7 @@ export default createReactClass({
         </div>
       </form>
 
-      {(this.state.fetching_keyword && <LoadingIndicator />) ||
+      {(this.state.fetching_keyword && <LoadingIndicator fixed={true} />) ||
         (this.state.searched_query && this.state.searched_query.keyword && this.state.results.length == 0 &&
           <p>No matches yet for "{this.state.searched_query.keyword}"</p>) ||
         (this.state.results.length > 0 &&

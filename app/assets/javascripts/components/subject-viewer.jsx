@@ -541,7 +541,7 @@ export default class SubjectViewer extends React.Component {
     )
 
     if (this.state.loading) {
-      markingSurfaceContent = <LoadingIndicator />
+      markingSurfaceContent = <LoadingIndicator fixed={true} />
     } else {
       markingSurfaceContent = (
         <svg
