@@ -23,20 +23,16 @@ export default createReactClass({
   },
 
   render() {
-    const imageHTML = `<image xlink:href='${this.props.src}' width='${
-      this.props.width
-    }' height='${this.props.height}' />`
     return (
-      <g
-        {...Object.assign(
-          {
-            key: this.props.src,
-            className: 'svg-image-container',
-            dangerouslySetInnerHTML: { __html: imageHTML }
-          },
-          this.props
-        )}
-      />
+      <g {...Object.assign(
+        {
+          key: this.props.src,
+          className: 'svg-image-container',
+        },
+        this.props
+      )}>
+        <image href={this.props.src} width={this.props.width} height={this.props.height} />
+      </g>
     )
   }
 })
