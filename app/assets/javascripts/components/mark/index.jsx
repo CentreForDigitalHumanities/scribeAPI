@@ -349,9 +349,9 @@ export default AppContext(createReactClass({
       <div className="classifier mark">
         <div className="subject-area">
           {(() => {
-            if (this.state.noMoreSubjectSets) {
+            if (this.state.noMoreSubjects || this.state.noMoreSubjectSets) {
               return (
-                <NoMoreSubjectsModal header="Nothing more to mark" workflowName={this.props.workflowName} project={this.props.project} />
+                <NoMoreSubjectsModal header="Nothing more to mark" workflowName={this.props.workflowName} project={this.props.context.project} />
               )
             } else if (this.state.notice) {
               return (

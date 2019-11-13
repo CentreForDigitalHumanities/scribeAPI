@@ -81,7 +81,7 @@ export default class SubjectSetToolbar extends React.Component {
           <div
             className={`light-box-area multi-page pane${this.state.activePane === 'multi-page' ? ' active' : ''}`}
           >
-            {this.props.subject_set ? (
+            {this.props.subject_set && this.props.subject_set.subjects.length ? (
               <LightBox
                 subject_set={this.props.subject_set}
                 subject_index={this.props.subject_index}

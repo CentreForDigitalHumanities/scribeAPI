@@ -72,7 +72,7 @@ export default createReactClass({
   },
 
   render() {
-    if (this.props.subject_set.subjects == null) {
+    if (this.props.subject_set.subjects == null || this.props.subject_set.subjects.length == 0) {
       return null
     }
 
