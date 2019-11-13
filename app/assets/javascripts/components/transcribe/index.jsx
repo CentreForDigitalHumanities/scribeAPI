@@ -8,11 +8,11 @@
  */
 
 import React from 'react'
-import { NavLink } from 'react-router-dom'
 import createReactClass from 'create-react-class'
 import queryString from 'query-string'
 import { AppContext } from '../app-context.jsx'
 import SubjectViewer from '../subject-viewer.jsx'
+import NoMoreSubjectsModal from '../no-more-subjects-modal'
 import FetchSubjectsMixin from '../../lib/fetch-subjects-mixin.jsx'
 import ForumSubjectWidget from '../forum-subject-widget.jsx'
 
@@ -197,28 +197,8 @@ We are currently looking for a subject for you to '}
             )}
           {(() => {
             if (this.state.noMoreSubjects) {
-              $('html, body')
-                .stop()
-                .animate({ scrollTop: 0 }, 500)
-              const groupId = this.props.context.groupId
-              const markLink = '/mark' + (groupId ? `?group_id=${groupId}` : '')
               return (
-                <DraggableModal
-                  y={100}
-                  header={
-                    this.state.userClassifiedAll
-                      ? 'Thanks for transcribing!'
-                      : 'Nothing to transcribe'
-                  }
-                  buttons={<GenericButton label="Continue" to={markLink} />}
-                >
-                  {'\
-Currently, there are no '}
-                  {this.props.context.project.term('subject')}s for you to{' '}
-                  {this.props.workflowName}. Try <NavLink to={markLink}>marking</NavLink>
-                  {' instead!\
-'}
-                </DraggableModal>
+                <NoMoreSubjectsModal header="Nothing more to mark" workflowName={this.props.workflowName} project={this.props.context.project} />
               )
             } else if (this.state.selectSubjectSet && this.state.subjectSets) {
               let query = queryString.parse(this.props.location.search)
