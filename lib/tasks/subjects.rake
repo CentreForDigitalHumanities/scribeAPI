@@ -176,12 +176,14 @@ namespace :subjects do
           width = subj['width'].nil? ? nil : subj['width'].to_i
           height = subj['height'].nil? ? nil : subj['height'].to_i
 
-          # Always update dimensions when manually calling this rake task:          
-          require 'fastimage'
-          width, height = FastImage.size(subj['file_path'],:raise_on_failure=>false, :timeout=>10.0)
-          puts "        - Autodetected image size: #{width} x #{height}"
-          subj['width'] = width
-          subj['height'] = height
+          if width.nil? or height.nil?
+            # Save updated dimensions in CSV if they haven't been set yet:
+            require 'fastimage'
+            width, height = FastImage.size(subj['file_path'],:raise_on_failure=>false, :timeout=>10.0)
+            puts "        - Autodetected image size: #{width} x #{height}"
+            subj['width'] = width
+            subj['height'] = height
+          end
           row = headers.map { |cell| subj[cell] }
           csv_file << row
         end
