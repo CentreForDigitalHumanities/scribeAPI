@@ -86,15 +86,20 @@ class FinalSubjectSet
 
   def self.assert_for_set(set, rebuild=false)
     # If final_subject_set record was built after most recent generated subject, consider skipping
+    skip_update = false
     if ! rebuild && (final_ss = find_by(subject_set:set))
       subjs_updated = set.subjects.max(:updated_at)
-      return if final_ss.updated_at > subjs_updated
+      skip_update = final_ss.updated_at > subjs_updated
     end
     inst = find_or_create_by subject_set: set
     inst.project = set.project
     inst.meta_data = set.meta_data
-    inst.update_subjects
-    inst.build_search_terms
+    if !skip_update
+      inst.update_subjects
+      inst.build_search_terms
+    end
+    # rebuild the export document, in case the export specification changed
+    # but no new classifications were added
     inst.build_export_document
     puts "Saving final subject set: #{inst.id}"
     inst.save! 
@@ -110,7 +115,16 @@ class FinalSubjectSet
   end
 
   def self.rebuild_indexes(for_project)
-    collection.indexes.drop_all unless self.count == 0  # If no records yet saved, moped will error when dropping indexes
+    # If no records yet saved, moped will error when dropping indexes
+    new_export_keys = for_project.export_names.map {|(key,name)|key}
+    curr_export_keys = collection.indexes
+      .select {|index| index[:name].start_with?("search_terms_by_field.")}
+      .map {|index| index[:name].sub("search_terms_by_field.", "").sub("_1", "")}
+
+    if self.count != 0 and curr_export_keys.sort != new_export_keys.sort
+      Rails.logger.info "Export keys changed, rebuilding index"
+      collection.indexes.drop_all
+    end
     for_project.export_names.each do |(key,name)|
       index({"search_terms_by_field.#{key}" => 1}, {background: true})
       index({"export_document.export_fields.name" => 1, "export_document.export_fields.value" => 1})
