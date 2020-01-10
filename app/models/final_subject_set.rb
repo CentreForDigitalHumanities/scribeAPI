@@ -107,10 +107,21 @@ class FinalSubjectSet
 
   def update_subjects
 
-    subjects.destroy_all
+    # parent subject could have been destroyed
+    subjects.each do |subject|
+      if subject.subject.nil?
+        subject.destroy
+      end
+    end
 
     Array.new(subject_set.subjects.root).each do |subject|
-      subjects << FinalSubject.create_from_subject(subject)
+      existing = subjects.find_by(subject: subject)
+      if !existing or existing.updated_at.blank? or existing.updated_at < subject.updated_at
+        if existing
+          existing.destroy
+        end
+        subjects << FinalSubject.create_from_subject(subject)
+      end
     end
   end
 
