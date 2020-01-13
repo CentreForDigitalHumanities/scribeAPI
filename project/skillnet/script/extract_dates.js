@@ -49,17 +49,15 @@ var values = {}
 
 async function main() {
   // async function do(d) {
-  return new Promise((resolve) => {
-    fs.readdir('.', async (err, files) => {
-      await Promise.all(files.map(file => {
-        if (/\.json$/.test(file)) {
-          return extractRoman(file)
-        }
-      }))
-
-      fs.writeFile('export_dates.csv', `text,type,parsed\n${Object.keys(values).sort().join('\n')}\n`, (err) => err && console.error(err))
-      resolve()
-    })
+  return new Promise(async(resolve) => {
+    const file = process.argv[2]
+    await extractRoman(file)
+    const exportPath = file.replace(/\/[^/]*$/, '') + '/export_dates.csv'
+    if (!fs.existsSync(exportPath)) {
+      fs.writeFileSync(exportPath, 'text,type,parsed\n')
+    }
+    fs.appendFile(exportPath,`${Object.keys(values).sort().join('\n')}\n`, (err) => err && console.error(err))
+    resolve()
   })
 }
 

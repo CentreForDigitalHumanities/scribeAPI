@@ -97,11 +97,12 @@ class FinalSubjectSet
     if !skip_update
       inst.update_subjects
       inst.build_search_terms
+      inst.updated_at = Time.now
     end
     # rebuild the export document, in case the export specification changed
     # but no new classifications were added
     inst.build_export_document
-    puts "Saving final subject set: #{inst.id}"
+    Rails.logger.info "Saving final subject set: #{inst.id}"
     inst.save! 
   end
 
