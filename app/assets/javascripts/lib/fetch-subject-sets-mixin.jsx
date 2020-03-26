@@ -172,12 +172,13 @@ export default {
 
     const process_subjects = subjs => {
       sets[ind].subjects = subjs
-
+      const noMoreSubjects = !subjs || subjs.length == 0
       this.setState(
         {
+          noMoreSubjects,
           subjectSets: sets,
-          subjects_current_page: subjs[0].getMeta('current_page'),
-          subjects_total_pages: subjs[0].getMeta('total_pages')
+          subjects_current_page: noMoreSubjects ? 0 : subjs[0].getMeta('current_page'),
+          subjects_total_pages: noMoreSubjects ? 0 : subjs[0].getMeta('total_pages')
         },
         () => {
           typeof callback === 'function' ? callback(sets) : undefined

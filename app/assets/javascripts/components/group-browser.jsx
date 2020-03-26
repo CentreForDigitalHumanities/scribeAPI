@@ -2,16 +2,18 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import API from '../lib/api.jsx'
 import { AppContext } from './app-context.jsx'
+import LoadingIndicator from './loading-indicator.jsx'
 
 @AppContext
 export default class GroupBrowser extends React.Component {
   constructor() {
     super()
-    this.state = { groups: [] }
+    this.state = { loading: false, groups: [] }
   }
 
   componentDidMount() {
     const project_id = this.props.project.id
+    this.setState({ loading: true })
     API.type('groups')
       .get({ project_id })
       .then(groups => {
@@ -19,7 +21,7 @@ export default class GroupBrowser extends React.Component {
           // hide buttons by default
           group.showButtons = false
         }
-        this.setState({ groups })
+        this.setState({ loading: false, groups })
       })
   }
 
@@ -84,6 +86,9 @@ export default class GroupBrowser extends React.Component {
   }
 
   render() {
+    if (this.state.loading) {
+      return <LoadingIndicator />
+    }
     // Only display GroupBrowser if more than one group defined:
     if (this.state.groups.length <= 1) {
       return null

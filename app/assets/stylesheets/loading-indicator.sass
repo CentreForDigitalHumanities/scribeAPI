@@ -11,12 +11,13 @@
     transform: translateY(0.3em)
 
 .loading-indicator
-  position: fixed
-  top: 50vh
   color: #fff
   letter-spacing: 0.1em
   display: inline-block
 
+  &.is-fixed
+    position: fixed
+    top: 50vh
 
   > *
     $TIME: 500ms

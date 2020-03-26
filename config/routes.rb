@@ -16,6 +16,7 @@ API::Application.routes.draw do
   get '/workflows/:id',                                       to: 'workflow#show',        defaults: { format: 'json' }
 
   get '/current_user',                                        to: "users#logged_in_user"
+  get '/current_email',                                       to: "users#current_email"
   post '/tutorial_complete',                                  to: "users#tutorial_complete"
   
   get '/user_stats',                                          to: "users#stats"

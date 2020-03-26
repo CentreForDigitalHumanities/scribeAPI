@@ -14,6 +14,7 @@ import { App } from './app'
 import { Route, Redirect, Switch } from 'react-router'
 import { HashRouter } from 'react-router-dom'
 
+import ChangeAccountPage from './change-account-page'
 import ChangePasswordPage from './change-password-page'
 import DeleteAccountPage from './delete-account-page'
 import CustomPage from './custom-page'
@@ -65,6 +66,7 @@ export default class AppRouter {
         <Switch>
           <Redirect from="/home" to="/" />
           <Route exact name="home" path="/" component={HomePage} />
+          <Route exact name="change_account" path="/change_account" component={ChangeAccountPage} />
           <Route exact name="change_password" path="/change_password/:reset_password_token?" component={ChangePasswordPage} />
           <Route exact name="delete_account" path="/delete_account" component={DeleteAccountPage} />
           <Route exact name="login" path="/login" component={LoginPage} />

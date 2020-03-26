@@ -145,12 +145,27 @@ export default class SubjectSetSelector extends React.Component {
 }
 
 export function parseTitle(subjectSetKey) {
-  if (subjectSetKey.indexOf('_') != -1) {
-    let splitSetKey = subjectSetKey.split('_')
-    let author = splitSetKey[0].split('-').join(' ')
-    let title = splitSetKey[1].split('-').join(' ')
-    return author + '. ' + title + '.'
-  } else {
-    return subjectSetKey.split('-').join(' ')
+  // skip the page numbers
+  let yearIndex = subjectSetKey.search(/\d{4}.*$/)
+  if (yearIndex > 10) {
+    subjectSetKey = `${subjectSetKey.substring(0, yearIndex).replace(/-+$/g, '')}, ${parseYearParts(subjectSetKey.substr(yearIndex))}`
   }
+  return subjectSetKey.replace(/-/g, ' ')
+}
+
+function parseYearParts(yearParts) {
+  const yearSearch = /\d{4}/g
+  let min = 0, max = 0
+  let match
+  while ((match = yearSearch.exec(yearParts))) {
+    let year = parseInt(match, 10)
+    if (min == 0) {
+      min = year
+    }
+    if (year > max) {
+      max = year
+    }
+  }
+
+  return max > min ? `${min} — ${max}` : min
 }
