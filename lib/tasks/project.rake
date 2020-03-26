@@ -439,8 +439,8 @@ namespace :project do
 
   desc "Build final_subject* data in database"
   task :build_final_data, [:project_key, :rebuild, :start, :limit] => :environment do |task, args|
-    args.with_defaults rebuild: true, start: 0, limit: Float::INFINITY
-    rebuild = args[:rebuild] != 'false'
+    args.with_defaults rebuild: false, start: 0, limit: Float::INFINITY
+    rebuild = args[:rebuild] and args[:rebuild] != 'false'
     start = args[:start].to_i
     limit = args[:limit].to_f
 
@@ -459,16 +459,16 @@ namespace :project do
 
     # Do any of this project's workflow tasks have configured export_names? If not, warn:
     has_export_names = ! project.workflows.map { |w| w.tasks }.flatten.select { |t| ! t.export_name.blank? }.empty? 
-    puts "WARNING: No export_names found in workflow configuration. This may make it tricky to interpret the field-level data. See `export_name` documentation in https://github.com/zooniverse/scribeAPI/wiki/Project-Workflows#tasks" if ! has_export_names
+    Rails.logger.info "WARNING: No export_names found in workflow configuration. This may make it tricky to interpret the field-level data. See `export_name` documentation in https://github.com/zooniverse/scribeAPI/wiki/Project-Workflows#tasks" if ! has_export_names
 
     if project.export_document_specs.blank?
-      puts "No export_spec configured; Add one before building"
+      Rails.logger.info "No export_spec configured; Add one before building"
       exit
     end
 
+    Rails.logger.info "Building #{count} subjects (rebuild=#{rebuild}, start=#{start}, limit=#{limit})"
     # Rebuild indexes
     FinalSubjectSet.rebuild_indexes Project.current
-
     (start..last_index).step(step).each do |offset|
       sets = project.subject_sets.offset(offset).limit(step).each_with_index do |set, i|
 
@@ -482,7 +482,7 @@ namespace :project do
         $stderr.print "\r#{'%.8f' % complete}% complete. #{'%.1f' % remaining}h remaining. Built item #{offset +i+1} of #{count}"
       end
     end
-
+    Rails.logger.info "Completed build"
   end
 
   desc "Using data in final_subject* collections, generate a series of JSON exports and attempt to create a downloadable ZIP"
@@ -492,14 +492,14 @@ namespace :project do
 
     # Make sure user has run build_final_data first:
     if project.final_subject_sets.empty?
-      puts "No FinalSubjectSets found."
+      Rails.logger.info "No FinalSubjectSets found."
       exit
     end
 
     haz_amazon = true
     missing_env_keys = ['S3_EXPORT_BUCKET','S3_EXPORT_PATH','AWS_REGION','AWS_ACCESS_KEY_ID','AWS_SECRET_ACCESS_KEY'].select { |k| ENV[k].nil? }
     if ! missing_env_keys.empty?
-      puts "Can not export data to Amazon without setting #{missing_env_keys.join ", "}, exporting locally"
+      Rails.logger.info "Can not export data to Amazon without setting #{missing_env_keys.join ", "}, exporting locally"
       haz_amazon = false
     end
 
@@ -518,6 +518,8 @@ namespace :project do
     limit = 100
     count = FinalSubjectSet.count
 
+    Rails.logger.info "Exporting #{count} subjects"
+
     (0..count).step(limit).each do |offset|
       project.final_subject_sets.offset(offset).limit(limit).each_with_index do |set, i|
         path = "#{local_export_base}/#{set.subject_set_id}.json"
@@ -530,11 +532,17 @@ namespace :project do
         project.export_document_specs.each do |spec|
           spec.post_steps.each do |step|
             script_dir = Rails.root.join('project', project_key, 'script', step)
-            if path.end_with? ".rb"
-              system "ruby #{script_dir} #{path}"
+            script = nil
+            if step.end_with? ".rb"
+              script = "ruby #{script_dir} #{path}"
             end
-            if path.end_with? ".js"
-              system "node #{script_dir} #{path}"
+            if step.end_with? ".js"
+              script = "node #{script_dir} #{path}"
+            end
+            if script.nil?
+              Rails.logger.info "Unknown script extension: #{step}"
+            elsif not system(script)
+              Rails.logger.info "Script returned false, inspect #{path}"
             end
           end
         end
@@ -544,7 +552,7 @@ namespace :project do
         per_set = ellapsed / built
         remaining = per_set * (count - (offset + i+1)) / 60
         complete = (offset + i+1).to_f / count * 100
-        $stderr.print "\r#{'%.8f' % complete}% complete. #{'%.1f' % remaining}m remaining. Built #{offset +i+1} of #{count}"
+        $stderr.print "\r#{'%.8f' % complete}% complete. #{'%.1f' % remaining}m remaining. Exported #{offset +i+1} of #{count}"
       end
     end
 
@@ -586,7 +594,7 @@ namespace :project do
 
     FinalDataExport.create path: export_url, num_final_subject_sets: count, project: project
 
-    puts "Finished building exports. Download at: #{export_url}"
+    Rails.logger.info "Finished building exports. Download at: #{export_url}"
 
   end
 
@@ -596,7 +604,7 @@ namespace :project do
     # (Important for heroku scheduler, which can schedule daily but not weekly)
     if ! args[:ensure_day_of_week_is].blank? 
       if Date.today.strftime("%A").downcase != args[:ensure_day_of_week_is].downcase
-        puts "Aborting because today is not #{args[:ensure_day_of_week_is]}"
+        Rails.logger.info "Aborting because today is not #{args[:ensure_day_of_week_is]}"
         exit
       end
     end

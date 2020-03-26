@@ -7,6 +7,13 @@ class UsersController < ApplicationController
     respond_with AuthStateSerializer.new(user: current_or_guest_user, providers: providers)
   end
 
+  def current_email
+    email = current_user.email
+    respond_to do |format|
+      format.json{render json: { :email => email}}
+    end
+  end
+
   def tutorial_complete
 
     user = require_user!

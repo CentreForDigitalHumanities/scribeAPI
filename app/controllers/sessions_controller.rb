@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
     end
 
     if user
-     sign_in(user)
+      sign_in(user)
       session[:user_id] = user.id
       respond_to do |format|
         format.json{render json: current_user}
@@ -34,7 +34,10 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    session[:user_id] = nil
+    # prevent the user from restoring the session
+    # by re-using the old cookie value
+    # https://github.com/heartcombo/devise/issues/3031
+    current_user.invalidate_all_sessions!
     sign_out(current_user)
 
     respond_to do |format|

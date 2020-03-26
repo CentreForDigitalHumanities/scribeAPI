@@ -13,6 +13,7 @@ class User
   ## Database authenticatable
   field :email,              :type => String, :default => ""
   field :encrypted_password, :type => String, :default => ""
+  field :session_token,      :type => String, :default => ""
 
   ## Recoverable
   field :reset_password_token,   :type => String
@@ -59,6 +60,21 @@ class User
   # field :failed_attempts, :type => Integer, :default => 0 # Only if lock strategy is :failed_attempts
   # field :unlock_token,    :type => String # Only if unlock strategy is :email or :both
   # field :locked_at,       :type => Time
+  
+  # Ruby uses a CookieStore for storing the session,
+  # restoring a cookie, restores a session.
+  # https://www.acunetix.com/vulnerabilities/web/ruby-on-rails-cookiestore-session-cookie-persistence/
+  # To prevent that, a session token is set and used
+  # to check, this also means that it is only to run this application
+  # on a single device/browser from the same session.
+  # https://github.com/heartcombo/devise/issues/3031
+  def authenticatable_salt
+    "#{super}#{session_token}"
+  end
+
+  def invalidate_all_sessions!
+    self.session_token = SecureRandom.hex
+  end
 
   def tutorial_complete!
     self.tutorial_complete = true

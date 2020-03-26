@@ -25,10 +25,9 @@ class Export::DocumentBuilder
       fields = fields_for_field_spec(field_spec)
       doc.export_fields += fields if ! fields.blank?
     end
-    if doc.export_fields.size < 3
+    if doc.export_fields.size < @spec.spec_fields.size - 3
       puts "Insufficient fields found in final-subject-set #{@set.id}: #{@set.subjects.first.location['standard']}"
       nil
-
     else
       doc
     end
