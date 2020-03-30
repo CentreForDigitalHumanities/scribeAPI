@@ -30,7 +30,7 @@ gem 'newrelic_moped'
 
 gem 'puma', '~> 3.12.4'
 
-gem 'logstasher', '~> 0.6'
+gem 'logstasher', '~> 1.3'
 
 gem 'aws-sdk', '~> 2'
 gem 'write_xlsx'
