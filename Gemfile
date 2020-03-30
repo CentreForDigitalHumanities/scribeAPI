@@ -7,7 +7,7 @@ gem 'sass-rails'
 gem 'webpacker', '~> 4.x'
 gem 'turbolinks'
 gem 'jbuilder', '~> 1.2'
-gem 'devise', '3.4.0'
+gem 'devise', '4.7.1'
 gem 'omniauth-facebook'
 gem "omniauth-google-oauth2"
 gem 'omniauth-zooniverse', '~> 0.0.3'
