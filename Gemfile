@@ -7,7 +7,7 @@ gem 'sass-rails'
 gem 'webpacker', '~> 4.x'
 gem 'turbolinks'
 gem 'jbuilder', '~> 1.2'
-gem 'devise', '3.4.0'
+gem 'devise', '4.7.1'
 gem 'omniauth-facebook'
 gem "omniauth-google-oauth2"
 gem 'omniauth-zooniverse', '~> 0.0.3'
@@ -28,9 +28,9 @@ gem 'actionpack-action_caching'
 gem 'newrelic_rpm'
 gem 'newrelic_moped'
 
-gem 'puma', '~> 2.14.0'
+gem 'puma', '~> 3.12.4'
 
-gem 'logstasher', '~> 0.6'
+gem 'logstasher', '~> 1.3'
 
 gem 'aws-sdk', '~> 2'
 gem 'write_xlsx'
