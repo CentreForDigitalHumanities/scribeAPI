@@ -28,7 +28,7 @@
     "create-react-class": "^15.6.3",
     "historical-dates": "0.2.2",
     "historical-dates-ui": "0.1.7",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jquery-ui-dist": "^1.12.1",
     "json-api-client": "^0.4.4",
     "normalize.css": "^3.0.3",
