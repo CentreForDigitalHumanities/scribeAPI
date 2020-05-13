@@ -30,7 +30,8 @@
     "l.r.price@uu.nl",
     "k.scholten@uu.nl",
     "h.simonsen@students.uu.nl",
-    "i.vanvugt@uu.nl"
+    "i.vanvugt@uu.nl",
+    "l.m.melgarestrada@uu.nl"
   ],
   "team": [
     {
@@ -95,6 +96,13 @@
       "image": "https://skillnet.nl/wp-content/uploads/sites/330/2019/05/0003.jpg",
       "organization": "SKILLNET",
       "url": "https://skillnet.nl/ingeborg-van-vugt-ma"
+    },
+    {
+      "name": "Dr Liliana Melgar",
+      "role": "Data manager",
+      "image": "https://skillnet.nl/wp-content/uploads/sites/330/2020/04/thumbnail_LilianaMelgar-100x100.jpg",
+      "organization": "SKILLNET",
+      "url": "https://skillnet.nl/dr-liliana-melgar"
     }
   ],
   "organizations": [
