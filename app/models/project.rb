@@ -96,7 +96,7 @@ class Project
   def calc_stats
     # amount of days to calculate statistics for
     range_in_days = 7
-    datetime_format = "%Y-%m-%d %H:00"
+    datetime_format = "%Y-%-m-%d %-H:00"
 
     # determine date range
     current_time = Time.now.utc # Time.new

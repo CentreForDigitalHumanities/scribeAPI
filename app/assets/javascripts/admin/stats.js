@@ -57,7 +57,7 @@ class Stats {
     const y2 = d3.scale.linear().range([height2, 0])
 
     // brush
-    const drawCircles = function () {}
+    const drawCircles = function () { }
 
     const onbrush = function () {
       x.domain(brush.empty() ? x2.domain() : brush.extent())
@@ -306,9 +306,9 @@ class Stats {
     brush(svg.select('.brush').transition())
     return brush.event(
       svg
-      .select('.brush')
-      .transition()
-      .delay(1000)
+        .select('.brush')
+        .transition()
+        .delay(1000)
     )
   }
 
@@ -396,7 +396,7 @@ class Stats {
       .attr('class', 'arc')
 
     const onMouseenter = d =>
-      svg.select('.arc-center').text(Math.round((d.value / total) * 100) + '%')
+      svg.select('.arc-center').text(Math.round((d.value / total) * 100) + '%').append('svg:title').text(d.value)
 
     g.append('path')
       .attr('d', arc)
@@ -526,32 +526,38 @@ class Stats {
     })
 
     const components = [{
-        id: 'classifications',
-        count: data.classifications.count,
-        type: 'area',
-        unit: 'hour',
-        data: [{
-          label: 'Classifications',
-          values: data.classifications.data
-        }]
-      },
-      {
-        id: 'users',
-        count: data.users.count,
-        type: 'area',
-        unit: 'hour',
-        data: [{
-          label: 'Users',
-          values: data.users.data
-        }]
-      }
+      id: 'classifications',
+      count: data.classifications.count,
+      type: 'area',
+      unit: 'hour',
+      data: [{
+        label: 'Classifications',
+        values: data.classifications.data
+      }]
+    },
+    {
+      id: 'users',
+      count: data.users.count,
+      type: 'area',
+      unit: 'hour',
+      data: [{
+        label: 'Users',
+        values: data.users.data
+      }]
+    }
     ]
 
     for (let name in data.workflow_counts) {
       const d = data.workflow_counts[name]
+      // show the active number rather than the grand total:
+      // the text is about things "being marked/transcribed"
+      // which implies it does not pertain to those which are already done
+      // or are yet to be seen
+      const active = d.data.find(item => item.label === 'active')
+      const count = active && active.value || 0
       components.push({
         id: `${name}-subjects`,
-        count: d.total,
+        count,
         type: 'pie',
         data: d.data
       })
