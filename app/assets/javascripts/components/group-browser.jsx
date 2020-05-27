@@ -46,6 +46,8 @@ export default class GroupBrowser extends React.Component {
       groupNameClasses.push('active')
     }
 
+    const groupCounts = group.stats.workflow_counts
+
     return (
       <div
         onMouseOver={this.showButtonsForGroup.bind(this, group)}
@@ -55,16 +57,26 @@ export default class GroupBrowser extends React.Component {
         style={{ backgroundImage: `url(${group.cover_image_url})` }}
         key={group.id}
       >
+        {(() => {
+          if (groupCounts) {
+            const pending = group.stats.total_pending
+            const total = pending + group.stats.total_finished
+
+            return <p key={`progress-${group.id}`} className={`group-progress ${groupNameClasses.join(' ')}`} title={`${pending}/${total}`}>
+              <span>
+                {(Math.floor(group.stats.completeness * 100))}%
+              </span>
+            </p>
+          }
+        })()}
         <div className={`button-container ${buttonContainerClasses.join(' ')}`}>
           {(() => {
             const result = []
-            const groupCounts = group.stats.workflow_counts
             if (groupCounts) {
               for (let workflow of this.props.project.workflows) {
                 const workflowCounts = groupCounts[workflow.id]
-                if ((workflowCounts && (
-                  workflowCounts.active_subjects ||
-                  workflowCounts.inactive_subjects))) {
+                if (workflowCounts &&
+                  (workflowCounts.active_subjects || workflowCounts.inactive_subjects)) {
                   result.push(
                     <NavLink to={`/${workflow.name}?group_id=${group.id}`}
                       className="button small-button"

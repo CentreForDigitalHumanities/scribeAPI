@@ -37,17 +37,31 @@
   border: 5px solid #fff
   box-shadow: 0 0 0 1px silver
 
-  .group-name
+  .group-name,
+  .group-progress
     display: none
-    top: -210px
     position: relative
     font-family: Domine, serif
     font-size: 24px
     text-align: center
-    text-transform: uppercase
     text-shadow: 0 2px 5px rgba(0,0,0,.75)
+
     &.active
       display: block
+
+  .group-progress
+    float: right
+    height: 0
+    padding: 0
+    margin: 0
+    overflow: visible
+
+    &.active span
+      display: block
+
+  .group-name
+    top: -210px
+    text-transform: uppercase
 
   .button-container
     position: relative

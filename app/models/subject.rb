@@ -273,10 +273,16 @@ class Subject
   end
 
 
+  # Match definition to use for omitting hidden subjects
+  def self.hide_match
+    {"meta_data.hide" => { "$ne": "1" }}
+  end
+
+
   # Returns hash mapping distinct values for given field to matching count:
   def self.group_by_field(field, match={})
     agg = []
-    agg << {"$match" => match } if match
+    agg << {"$match" => self.hide_match().merge(match) } if match
     agg << {"$group" => { "_id" => "$#{field.to_s}", count: {"$sum" =>  1} }}
     self.collection.aggregate(agg).inject({}) do |h, p|
       h[p["_id"]] = p["count"]
@@ -287,7 +293,7 @@ class Subject
   # Same as above, but restricted to Group:
   def self.group_by_field_for_group(group, field, match={})
     self.collection.aggregate([
-      {"$match" => { "group_id" => group.id }.merge(match)}, 
+      {"$match" => { "group_id" => group.id}.merge(self.hide_match()).merge(match)}, 
       {"$group" => { "_id" => "$#{field.to_s}", count: {"$sum" =>  1} }}
 
     ]).inject({}) do |h, p|

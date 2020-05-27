@@ -211,13 +211,19 @@ print {
   justify-content: space-between;
 }
 
-.group .group-name {
+.group .group-name,
+.group .group-progress span {
   background: rgba(140, 188, 140, 0.8);
   font-family: 'Goudy Bookletter 1911', Georgia, serif;
   font-weight: normal;
   font-size: 36px;
   padding: 15px;
   text-transform: none;
+}
+
+.group .group-progress span {
+  background: rgba(0, 0, 0, 0.6);
+  border-bottom-left-radius: 3px;
 }
 
 .group-stats .completion {
