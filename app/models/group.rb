@@ -13,7 +13,7 @@ class Group
   # Do this here, because for Projects this is disabled
   set_callback :find, :after, :check_and_update_stats
 
-  update_interval 30
+  update_interval 120
 
   belongs_to :project
   has_many :subject_sets, dependent: :destroy
