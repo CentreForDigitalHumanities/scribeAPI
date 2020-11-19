@@ -4,6 +4,7 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
+import { getCsrfHeaders } from '../../lib/csrf'
 
  const DiscourseConnector = class DiscourseConnector {
   constructor(options, project) {
@@ -20,6 +21,7 @@
     return $.ajax({
       url,
       dataType: "json",
+      headers: getCsrfHeaders(),
       success: (resp => {
         let posts = resp.posts != null ? resp.posts : [];
 

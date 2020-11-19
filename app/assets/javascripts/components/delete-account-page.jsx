@@ -2,6 +2,7 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import classNames from 'classnames'
 import { AppContext, requestUserFetch } from './app-context'
+import { getCsrfHeaders } from '../lib/csrf'
 
 @AppContext
 export default class DeleteAccountPage extends React.Component {
@@ -18,7 +19,8 @@ export default class DeleteAccountPage extends React.Component {
   delete() {
     this.setState({ loading: true })
     fetch('/delete_user', {
-      method: 'POST'
+      method: 'POST',
+      headers: getCsrfHeaders(),
     }).then((response) => {
       this.setState({ loading: false })
       if (response.status === 204) {

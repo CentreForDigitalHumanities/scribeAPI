@@ -4,6 +4,7 @@ import pluralize from 'pluralize'
 
 import { AppContext } from './app-context'
 import { parseTitle } from './subject-set-selector'
+import { getCsrfHeaders } from '../lib/csrf'
 
 @AppContext
 export default class UserStats extends React.Component {
@@ -13,7 +14,7 @@ export default class UserStats extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/user_stats')
+    fetch('/user_stats', { headers: getCsrfHeaders() })
       .then(response => response.json())
       .then(stats => this.setState({ stats }))
   }

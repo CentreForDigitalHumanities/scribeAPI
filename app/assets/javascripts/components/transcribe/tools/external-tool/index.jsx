@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import marked from '../../../../lib/marked.min.js'
+import { getCsrfHeaders } from '../../../../lib/csrf'
 import DraggableModal from '../../../draggable-modal.jsx'
 import SmallButton from '../../../buttons/small-button.jsx'
 import LabeledRadioButton from '../../../buttons/labeled-radio-button.jsx'
@@ -172,6 +173,7 @@ export default class ExternalTool extends React.Component {
       data: {
         query
       },
+      headers: getCsrfHeaders(),
       method: 'get',
       dataType: 'json'
     }).then((items) => {

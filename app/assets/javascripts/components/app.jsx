@@ -9,6 +9,7 @@ import BrowserWarning from './browser-warning'
 import { contextTypes, userFetchObservable } from './app-context'
 
 import User from '../models/user'
+import { getCsrfHeaders } from '../lib/csrf'
 
 @withRouter
 export class App extends React.Component {
@@ -60,7 +61,7 @@ export class App extends React.Component {
     this.setState({
       error: null
     })
-    fetch('/current_user', { method: 'GET' })
+    fetch('/current_user', { method: 'GET', headers: getCsrfHeaders() })
       .then(response => response.json())
       .then(result => {
         if (result == null) {
@@ -100,9 +101,13 @@ export class App extends React.Component {
       return
     }
 
-    const request = $.post('/tutorial_complete')
-    request.fail(error => {
-      console.log('failed to set tutorial value for user')
+    $.ajax({
+      url: '/tutorial_complete',
+      method: 'post',
+      headers: getCsrfHeaders(),
+      error: () => {
+        console.log('failed to set tutorial value for user')
+      }
     })
   }
 

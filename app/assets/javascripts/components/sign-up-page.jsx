@@ -4,6 +4,7 @@ import classNames from 'classnames'
 
 import marked from '../lib/marked.min.js'
 import { AppContext, requestUserFetch } from './app-context.jsx'
+import { getCsrfHeaders } from '../lib/csrf'
 
 @AppContext
 export default class SignUpPage extends React.Component {
@@ -35,6 +36,7 @@ export default class SignUpPage extends React.Component {
       headers: {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json',
+        ...getCsrfHeaders()
       },
       body: JSON.stringify({ user })
     }).then((response) => {

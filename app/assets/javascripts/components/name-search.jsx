@@ -8,6 +8,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import createReactClass from 'create-react-class'
 import qs from 'query-string'
+import { getCsrfHeaders } from '../lib/csrf'
 
 const NameSearch = createReactClass({
   displayName: 'NameSearch',
@@ -29,6 +30,7 @@ const NameSearch = createReactClass({
           data: {
             q: request.term
           },
+          headers: getCsrfHeaders(),
           success: data => {
             let unit
             const names = []
