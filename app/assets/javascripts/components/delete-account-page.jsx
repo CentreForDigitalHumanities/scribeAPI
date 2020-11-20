@@ -16,11 +16,14 @@ export default class DeleteAccountPage extends React.Component {
     this.delete = this.delete.bind(this)
   }
 
-  delete() {
+  delete(event) {
+    event.preventDefault()
+    const data = new FormData(event.target)
     this.setState({ loading: true })
     fetch('/delete_user', {
       method: 'POST',
       headers: getCsrfHeaders(),
+      body: data
     }).then((response) => {
       this.setState({ loading: false })
       if (response.status === 204) {
@@ -29,8 +32,10 @@ export default class DeleteAccountPage extends React.Component {
         })
         // give the server some time to actually delete the account
         requestUserFetch()
+      } else if (response.status == 403) {
+        this.setState({ message: 'Password did not match. Please try again or contact support.' })
       } else {
-        alert('Something went wrong deleting your account. Please try again or contact support.')
+        this.setState({ message: 'Something went wrong deleting your account. Please try again or contact support.' })
       }
     })
   }
@@ -46,16 +51,24 @@ export default class DeleteAccountPage extends React.Component {
 
     return <div>
       <p>Would you like to delete your account? <strong>This cannot be undone!</strong></p>
-      <p>
-        <button onClick={this.delete} className={classNames('major-button', { 'is-loading': this.state.loading })}>Yes</button>
-        &nbsp;
-        <NavLink to="/user" className="major-button">No</NavLink>
-      </p>
+
+      <form onSubmit={this.delete}>
+        {this.state.message && <span className="error-message">{this.state.message}</span>}
+        <label>
+          Password
+          <input type="password" name="password" required autoComplete="current-password" />
+        </label>
+        <p>
+          <button className={classNames('major-button', { 'is-loading': this.state.loading })}>Yes</button>
+          &nbsp;
+          <NavLink to="/user" className="major-button">No</NavLink>
+        </p>
+      </form>
     </div>
   }
 
   render() {
-    return <div className="page-content user-page">
+    return <div className="page-content login-page">
       <h1>Delete Account</h1>
       <div>
         {this.renderContent()}
