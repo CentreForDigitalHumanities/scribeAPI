@@ -26,20 +26,23 @@ class UsersController < ApplicationController
     # Soft delete a user to retain classifications
     # Delete all identifiable information
     user = require_user!
+    if !User.find_by_password(user.email, params[:password])
+      render nothing: true, status: 403
+    else
+      user.name = '[DELETED]'
+      user.email = ''
+      user.status = 'deleted'
+      user.deleted_at = Time.current
+      user.current_sign_in_ip = nil
+      user.last_sign_in_ip = nil
+      user.avatar = nil
+      user.profile_url = nil
 
-    user.name = '[DELETED]'
-    user.email = ''
-    user.status = 'deleted'
-    user.deleted_at = Time.current
-    user.current_sign_in_ip = nil
-    user.last_sign_in_ip = nil
-    user.avatar = nil
-    user.profile_url = nil
+      user.save!(:validate => false)
+      sign_out user
 
-    user.save!(:validate => false)
-    sign_out user
-
-    render nothing: true, status: 204
+      render nothing: true, status: 204
+    end
   end
 
   def stats
