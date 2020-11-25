@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
 import marked from '../../../../lib/marked.min.js'
+import { getCsrfHeaders } from '../../../../lib/csrf'
 import DraggableModal from '../../../draggable-modal.jsx'
 import SmallButton from '../../../buttons/small-button.jsx'
 import HelpButton from '../../../buttons/help-button.jsx'
@@ -145,6 +146,7 @@ export default class TextTool extends React.Component {
           const field = `${this.props.task.key}:${this.fieldKey()}`
           $.ajax({
             url: `/classifications/terms/${this.props.workflow.id}/${field}`,
+            headers: getCsrfHeaders(),
             dataType: 'json',
             data: {
               q: request.term

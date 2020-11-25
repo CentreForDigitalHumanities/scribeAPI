@@ -2,6 +2,7 @@ import React from 'react'
 import { Redirect, NavLink } from 'react-router-dom'
 import classNames from 'classnames'
 import { AppContext, requestUserFetch } from './app-context'
+import { getCsrfHeaders } from '../lib/csrf'
 
 @AppContext
 export default class LoginPage extends React.Component {
@@ -29,6 +30,7 @@ export default class LoginPage extends React.Component {
     this.setState({ loading: true })
     fetch('/users/sign_in', {
       method: 'POST',
+      headers: getCsrfHeaders(),
       body: data,
     }).then((response) => {
       requestUserFetch()

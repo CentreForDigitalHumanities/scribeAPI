@@ -14,6 +14,7 @@ import React from 'react'
 window.React = React
 
 import createReactClass from 'create-react-class'
+import { getCsrfHeaders } from '../lib/csrf'
 const FavouriteButton = createReactClass({
   displayname: 'FavouriteButton',
 
@@ -31,21 +32,31 @@ const FavouriteButton = createReactClass({
       loading: true
     })
 
-    return $.post(`/subjects/${this.props.subject.id}/favourite`, () => {
-      return this.setState({
-        loading: false,
-        favourite: true
-      })
+    return $.ajax({
+      url: `/subjects/${this.props.subject.id}/favourite`,
+      method: 'post',
+      headers: getCsrfHeaders(),
+      success: () => {
+        return this.setState({
+          loading: false,
+          favourite: true
+        })
+      }
     })
   },
 
   remove_favourite(e) {
     e.preventDefault()
-    return $.post(`/subjects/${this.props.subject.id}/unfavourite`, () => {
-      return this.setState({
-        loading: false,
-        favourite: false
-      })
+    return $.ajax({
+      url: `/subjects/${this.props.subject.id}/unfavourite`,
+      method: 'post',
+      headers: getCsrfHeaders(),
+      success: () => {
+        return this.setState({
+          loading: false,
+          favourite: false
+        })
+      }
     })
   },
 

@@ -1,7 +1,8 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import classNames from 'classnames'
-import { AppContext, requestUserFetch } from './app-context.jsx'
+import { AppContext, requestUserFetch } from './app-context'
+import { getCsrfHeaders } from '../lib/csrf'
 
 @AppContext
 export default class ForgotPasswordPage extends React.Component {
@@ -28,6 +29,7 @@ export default class ForgotPasswordPage extends React.Component {
     this.setState({ loading: true })
     fetch('/users/password', {
       method: 'POST',
+      headers: getCsrfHeaders(),
       body: data,
     }).then((response) => {
       requestUserFetch()

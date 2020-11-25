@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { getCsrfHeaders } from '../lib/csrf'
 
 export default class Login extends React.Component {
   constructor() {
@@ -36,6 +37,7 @@ export default class Login extends React.Component {
     e.preventDefault()
     return fetch('/users/sign_out', {
       method: 'delete',
+      headers: getCsrfHeaders(),
       dataType: 'json'
     }).then(() => {
       return this.props.onLogout()

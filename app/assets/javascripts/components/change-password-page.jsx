@@ -2,6 +2,7 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 import classNames from 'classnames'
 import { AppContext, requestUserFetch } from './app-context.jsx'
+import { getCsrfHeaders } from '../lib/csrf'
 
 @AppContext
 export default class ChangePasswordPage extends React.Component {
@@ -28,6 +29,7 @@ export default class ChangePasswordPage extends React.Component {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        ...getCsrfHeaders()
       },
       body: JSON.stringify({ user })
     }).then((response) => {

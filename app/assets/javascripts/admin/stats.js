@@ -1,4 +1,5 @@
 import $ from 'jquery'
+import { getCsrfHeaders } from '../lib/csrf'
 
 class Stats {
   constructor() {
@@ -432,10 +433,15 @@ class Stats {
 
   recalculateStats() {
     $('.chart').empty()
-    return $.post('/admin/stats/recalculate.json', data => {
-      this.data = this.parseData(data.stats)
-      this.updateUI()
-      return this.addChartListeners()
+    return $.ajax({
+      url: '/admin/stats/recalculate.json',
+      method: 'post',
+      headers: getCsrfHeaders(),
+      success: (data) => {
+        this.data = this.parseData(data.stats)
+        this.updateUI()
+        return this.addChartListeners()
+      }
     })
   }
 
