@@ -21,6 +21,7 @@ gem "moped"
 
 gem 'rack-streaming-proxy', '~> 2.0.1'
 gem 'kaminari'
+gem 'kaminari-mongoid'
 gem 'fastimage', '1.7.0'
 
 gem 'actionpack-action_caching'
