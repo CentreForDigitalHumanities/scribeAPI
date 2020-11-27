@@ -6,6 +6,7 @@ node_js:
 services:
   - mongodb
 before_install:
+  - npm i -g $TRAVIS_NODE_VERSION
   - yarn install
 script:
   - yarn run test
