@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby '2.2.10'
 
-gem 'rails', '~> 4.2.6'
+gem 'rails', '~> 4.2', '>= 4.2.11.3'
 gem 'sass-rails'
 gem 'webpacker', '~> 4.x'
 gem 'turbolinks'

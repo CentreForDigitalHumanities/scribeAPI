@@ -38,7 +38,7 @@ We are launching Scribe with three very different projects by [Zooniverse](https
 
 ### Software versions
 
-* Node versions greater than 6. You might need to [use n](https://github.com/tj/n) to install and activate a specific version of Node for development. It has been tested to work in production with Node 8 and development using Node 12.
+* Node versions greater than 10. You might need to [use n](https://github.com/tj/n) to install and activate a specific version of Node for development. It has been tested to work in production with Node 10 and development using Node 13.
 
 * [Yarn](https://yarnpkg.com/) is required for [Webpacker](https://github.com/rails/webpacker).
 
