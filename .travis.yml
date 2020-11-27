@@ -1,13 +1,10 @@
 language: ruby
 rvm:
   - 2.2.10
-node_js:
-  - 10
 services:
   - mongodb
 before_install:
-# WTF??
-  - echo $TRAVIS_NODE_VERSION
+  - nvm install 10
   - node --version
   - yarn install
 script:
