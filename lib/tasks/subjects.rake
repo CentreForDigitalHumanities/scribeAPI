@@ -1,6 +1,6 @@
 require 'csv'
 require 'active_support'
-
+require 'digest'
 
 namespace :subjects do
   desc 'links a chain of rake tasks to setup a project, groups, and subjects'
@@ -67,6 +67,7 @@ namespace :subjects do
     # Loop over contents of group file, which has one subject per row
 
     subjects_by_set = {}
+    file_hash = 'MISSING'
 
     puts "    Reading subjects from: #{group_file}"
     if ! File.exist? group_file
@@ -79,6 +80,7 @@ namespace :subjects do
         subjects_by_set[key] ||= []
         subjects_by_set[key] << data
       end
+      file_hash = Digest::SHA256.hexdigest File.read group_file
     end
 
     subjects_by_set.each do |(set_key, subjects)|
@@ -88,8 +90,12 @@ namespace :subjects do
       name            = data['name']
       meta_data       = data.except('group_id', 'file_path', 'retire_count', 'thumbnail', 'width','height', 'order')
 
-      puts "    Adding subject set: #{set_key}"
+      puts "    Adding subject set: #{set_key} (#{file_hash})"
       subject_set = group.subject_sets.find_or_create_by key: set_key
+      if file_hash == subject_set.file_hash
+        puts "      - skipped subjects, file hash unchanged"
+        next
+      end
       subject_set.update_attributes({
         name: name,
         project: project,
@@ -145,6 +151,11 @@ namespace :subjects do
           puts "Added new subject: #{subject.location[:standard]}"
         end
       end
+
+      puts "      - saved subject set file hash #{file_hash}"
+      subject_set.update_attributes({
+        file_hash: file_hash
+      })
 
     end
   end

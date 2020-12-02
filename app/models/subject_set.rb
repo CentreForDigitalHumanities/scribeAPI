@@ -7,6 +7,7 @@ class SubjectSet
 
   field :key,                    type: String
   field :name,                   type: String
+  field :file_hash,              type: String, default: ""
   field :random_no ,             type: Float
   field :state ,                 type: String, default: "active"
   field :thumbnail,              type: String

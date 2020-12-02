@@ -49,6 +49,10 @@ namespace :project do
       puts "Done loading style for \"#{project.title}\""
     end
 
+    # Already expire the cache, this way any changes in the code are
+    # visible now already
+    ApplicationController.expire_action_cache 'home/index'
+
     # Load workflows:
     if ['all','workflows'].include? args[:area]
       begin
