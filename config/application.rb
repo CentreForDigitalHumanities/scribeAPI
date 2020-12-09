@@ -29,16 +29,13 @@ module API
       app.config.assets.precompile.shift
 
       # Explicitly register the extensions we are interested in compiling
-      app.config.assets.precompile.push(Proc.new do |path|
-        File.extname(path).in? [
-          '.html', '.erb', '.haml',                 # Templates
-          '.png',  '.gif', '.jpg', '.jpeg',         # Images
-          '.eot',  '.otf', '.svc', '.woff', '.ttf', # Fonts
-          '.mp4',                                   # Video
-          '.ico',                                   # Icon
-          '.jsx', '.js'
-        ]
-      end)
+      # (any css or js file which isn't prefixed with an underscore)
+      # regex on a file path:
+      # - a file is either at the start or prefixed by a slash
+      # - cannot contain a slash
+      # - must not start with an underscore
+      # - should have a .css or .js extension
+      app.config.assets.precompile += [/(^|[\/\\])[^_\/\\][^\/\\]*\.(css|js)$/i]
     end
 
     #config.browserify_rails.commandline_options = "-t [ babelify --presets [ react es2015 ] ]"    
