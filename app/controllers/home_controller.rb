@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  caches_action :index, :cache_path => "home/index"
+  caches_action :index, :layout => false, :cache_path => "home/index"
 
   def index
   end
