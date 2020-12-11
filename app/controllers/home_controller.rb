@@ -1,5 +1,6 @@
 class HomeController < ApplicationController
-  caches_action :index, :cache_path => "home/index"
+  # The view needs to be rerendered to update the CSRF meta tag
+  caches_action :index, :layout => false, :cache_path => "home/index"
 
   def index
   end
