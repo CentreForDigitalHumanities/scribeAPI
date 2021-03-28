@@ -40,6 +40,11 @@ export default class ForgotPasswordPage extends React.Component {
           message: 'A mail with reset instructions has been sent. Check your spam box if it isn\'t in your inbox.',
           success: true
         })
+      } else if (response.status === 429) {
+        this.setState({
+          message: 'Instructions already sent. Check your spam box. Please try again later.',
+          success: false
+        })
       } else {
         // invalid credentials: show message
         this.setState({
