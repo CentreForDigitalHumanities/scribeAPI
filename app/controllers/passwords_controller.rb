@@ -7,7 +7,7 @@ class PasswordsController < Devise::PasswordsController
 
   # POST /resource/password
   def create
-    email = resource_params["email"]
+    email = resource_params["email"].downcase
     user = User.find_by email: email
     if user && user[:reset_password_token] && user[:reset_password_sent_at]
       # prevent sending another password reset link too quickly

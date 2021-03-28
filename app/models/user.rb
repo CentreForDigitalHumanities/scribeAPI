@@ -12,6 +12,7 @@ class User
 
   ## Database authenticatable
   field :email,              :type => String, :default => ""
+  validates :email, length: { maximum: 320 }
   field :encrypted_password, :type => String, :default => ""
   field :session_token,      :type => String, :default => ""
 
@@ -24,6 +25,7 @@ class User
 
   ## Trackable
   field :name,               :type => String
+  validates :name, length: { maximum: 50 }
   field :sign_in_count,      :type => Integer, :default => 0
   field :current_sign_in_at, :type => Time
   field :last_sign_in_at,    :type => Time
