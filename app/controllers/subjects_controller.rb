@@ -12,11 +12,14 @@ class SubjectsController < ApplicationController
     random                = get_bool :random, false
     limit                 = get_int :limit, 10
     page                  = get_int :page, 1
+    min_subject_order     = get_int :min_subject_order, 0
     type                  = params[:type]
     # `status` filter must be one of: 'active', 'any'
     status                = ['active','any'].include?(params[:status]) ? params[:status] : 'active'
 
     @subjects = Subject.page(page).per(limit)
+
+    @subjects = @subjects.where({"order" => {"$gte" => min_subject_order}}) if min_subject_order > 0
 
     # Filter by workflow (There should almost always be a workflow_id filter)
     @subjects = @subjects.by_workflow(workflow_id) if workflow_id
@@ -36,23 +39,20 @@ class SubjectsController < ApplicationController
     # Filter by group?
     @subjects = @subjects.by_group(group_id) if group_id
 
+    # Randomize?
+    # @subjects = @subjects.random(limit: limit) if random
+    # PB: Above randomization method produces better randomness, but inconsistent totals
+    @subjects = @subjects.random_order if random
 
-    if ! subject_set_id
-      # Randomize?
-      # @subjects = @subjects.random(limit: limit) if random
-      # PB: Above randomization method produces better randomness, but inconsistent totals
-      @subjects = @subjects.random_order if random
+    # If user/guest active, filter out anything already classified:
+    @subjects = @subjects.user_has_not_classified user.id.to_s if ! user.nil?
 
-      # If user/guest active, filter out anything already classified:
-      @subjects = @subjects.user_has_not_classified user.id.to_s if ! user.nil?
-
-      # Should we filter out subjects that the user herself created?
-      if ! user.nil? && ! (workflow = Workflow.find(workflow_id)).nil? && ! workflow.subjects_classifiable_by_creator
-        # Note: creating_user_ids are stored as ObjectIds, so no need to filter on user.id.to_s:
-        @subjects = @subjects.user_did_not_create user.id if ! user.nil?
-      end
+    # Should we filter out subjects that the user herself created?
+    if ! user.nil? && workflow_id && ! (workflow = Workflow.find(workflow_id)).nil? && ! workflow.subjects_classifiable_by_creator
+      # Note: creating_user_ids are stored as ObjectIds, so no need to filter on user.id.to_s:
+      @subjects = @subjects.user_did_not_create user.id if ! user.nil?
     end
-
+      
     links = {
       "next" => {
         href: @subjects.next_page.nil? ? nil : url_for(controller: 'subjects', page: @subjects.next_page),
@@ -71,6 +71,7 @@ class SubjectsController < ApplicationController
       self: url_for(@subject)
     }
     @subject = Subject.find subject_id
+
     respond_with SubjectResultSerializer.new(@subject, scope: self.view_context), links: links
   end
 

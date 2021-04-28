@@ -10,7 +10,10 @@ class Group
   field :meta_data,       type: Hash
 
   include CachedStats
-  update_interval 30
+  # Do this here, because for Projects this is disabled
+  set_callback :find, :after, :check_and_update_stats
+
+  update_interval 120
 
   belongs_to :project
   has_many :subject_sets, dependent: :destroy
@@ -22,24 +25,34 @@ class Group
 
   def calc_stats
 
-    statuses = {
-      'active' => 0,
-      'inactive' => 0,
-      'retired' => 0,
-      'complete' => 0,
-    }.merge Subject.group_by_field_for_group(self, :status)
-
-    finished = statuses['complete'] + statuses['retired']
-    pending = statuses['active'] + statuses['inactive']
 
     # Sum total_subjects and active_subjects counts for all workflows:
-    workflow_counts = Subject.group_by_field_for_group(self, :workflow_id).inject({}) { |h, (id, c)| h[id.to_s] = {"total_subjects" => c} if id; h }
-    workflow_counts = Subject.group_by_field_for_group(self, :workflow_id, {status: 'active'}).inject(workflow_counts) { |h, (id, c)| h[id.to_s] = h[id.to_s].merge({"active_subjects" => c}) if id; h }
+    workflow_counts = Subject.group_by_field_for_group(self, :workflow_id).inject({}) { |h, (id, c)| h[id.to_s] = {
+      'active_subjects' => 0,
+      'inactive_subjects' => 0,
+      'total_subjects' => c
+    } if id; h }
+    { 'active' => 'active_subjects',
+      'inactive' => 'inactive_subjects' }.each do | status, key |
+      workflow_counts = Subject.group_by_field_for_group(self, :workflow_id, {status: status}).inject(workflow_counts) { |h, (id, c)| h[id.to_s] = h[id.to_s].merge({key => c}) if id; h }
+    end
+
+    total_finished = 0
+    total_pending = 0
+    workflow_counts.each do | _, stats |
+      pending = stats['active_subjects'] + stats['inactive_subjects']
+      finished = stats['total_subjects'] - pending
+      stats['finished_subjects'] = finished
+
+      total_finished += finished
+      total_pending += pending
+    end
+
 
     ret = {
-      total_finished: finished,
-      total_pending: pending,
-      completeness: finished.to_f / (pending + finished),
+      total_finished: total_finished,
+      total_pending: total_pending,
+      completeness: (total_pending > 0 || total_finished > 0) ? total_finished.to_f / (total_pending + total_finished) : 0,
       workflow_counts: workflow_counts
     }
 

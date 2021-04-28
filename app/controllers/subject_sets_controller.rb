@@ -21,6 +21,9 @@ class SubjectSetsController < ApplicationController
     # Filter by group_id? 
     query[:group_id] = group_id if ! group_id.nil? 
 
+    # Omit hidden subject sets
+    query["meta_data.hide"] = { "$ne" => "1" }
+
     # Override random if querying by subject_set_id:
     random = false if ! subject_set_id.nil?
 

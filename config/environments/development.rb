@@ -14,6 +14,7 @@ API::Application.configure do
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.default_url_options = { :host => ENV["DOMAIN_NAME"] || 'localhost:3000' }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -25,18 +26,14 @@ API::Application.configure do
   config.assets.debug = true
 
   config.action_mailer.smtp_settings = {
-    address: "smtp.gmail.com",
-    port: 587,
+    address: ENV["MAIL_ADDRESS"] || "smtp.gmail.com",
+    port: (ENV["MAIL_PORT"] || "587").to_i,
     domain: ENV["DOMAIN_NAME"],
-    authentication: "plain",
-    enable_starttls_auto: true,
-    user_name: ENV["GMAIL_USERNAME"],
-    password: ENV["GMAIL_PASSWORD"]
+    authentication: ("plain" if (ENV["MAIL_USERNAME"] || ENV["GMAIL_USERNAME"]).present?),
+    enable_starttls_auto: (ENV["MAIL_TTLS"] || "true") != "false",
+    user_name: (ENV["MAIL_USERNAME"] || ENV["GMAIL_USERNAME"]).presence,
+    password: (ENV["MAIL_PASSWORD"] || ENV["GMAIL_PASSWORD"]).presence
   }
   # Send email in development mode.
   config.action_mailer.perform_deliveries = true
-
-  # React:
-  config.react.variant = :development
-  config.react.addons = true
 end

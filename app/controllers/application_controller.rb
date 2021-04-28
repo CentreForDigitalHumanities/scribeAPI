@@ -1,13 +1,17 @@
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  # protect_from_forgery with: :exception
+  protect_from_forgery with: :exception
 
   serialization_scope :view_context
 
   # Get a User instance - either the currently logged-in user or a new Guest user
   def require_user!
     current_or_guest_user(create_if_missing = true)
+  end
+
+  def get_bot_user_from_request(request)
+    BotUser.by_auth request.headers
   end
 
   # Get currently logged-in user, creating guest as indicated

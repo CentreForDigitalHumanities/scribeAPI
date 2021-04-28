@@ -22,10 +22,10 @@ API::Application.configure do
   # config.action_dispatch.rack_cache = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this).
-  config.serve_static_assets = true
+  config.serve_static_files = true
 
   # Compress JavaScripts and CSS.
-  config.assets.js_compressor = :uglifier
+  # config.assets.js_compressor = :uglifier
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
@@ -66,7 +66,8 @@ API::Application.configure do
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_url_options = { :host => ENV["DOMAIN_NAME"] }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found).
@@ -76,15 +77,14 @@ API::Application.configure do
   config.active_support.deprecation = :notify
 
   config.action_mailer.smtp_settings = {
-    address: "smtp.gmail.com",
-    port: 587,
+    address: ENV["MAIL_ADDRESS"] || "smtp.gmail.com",
+    port: (ENV["MAIL_PORT"] || "587").to_i,
     domain: ENV["DOMAIN_NAME"],
-    authentication: "plain",
-    enable_starttls_auto: true,
-    user_name: ENV["GMAIL_USERNAME"],
-    password: ENV["GMAIL_PASSWORD"]
+    authentication: ("plain" if (ENV["MAIL_USERNAME"] || ENV["GMAIL_USERNAME"]).present?),
+    enable_starttls_auto: (ENV["MAIL_TTLS"] || "true") != "false",
+    user_name: (ENV["MAIL_USERNAME"] || ENV["GMAIL_USERNAME"]).presence || nil,
+    password: (ENV["MAIL_PASSWORD"] || ENV["GMAIL_PASSWORD"]).presence || nil
   }
-
 
   # Disable automatic flushing of the log to improve performance.
   # config.autoflush_log = false
@@ -97,8 +97,4 @@ API::Application.configure do
 
   # Enable the logstasher logs for the current environment
   config.logstasher.enabled = true
-
-  # React:
-  config.react.variant = :production
-  config.react.addons = true
 end

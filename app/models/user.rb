@@ -12,7 +12,9 @@ class User
 
   ## Database authenticatable
   field :email,              :type => String, :default => ""
+  validates :email, length: { maximum: 320 }
   field :encrypted_password, :type => String, :default => ""
+  field :session_token,      :type => String, :default => ""
 
   ## Recoverable
   field :reset_password_token,   :type => String
@@ -23,11 +25,14 @@ class User
 
   ## Trackable
   field :name,               :type => String
+  validates :name, length: { maximum: 50 }
   field :sign_in_count,      :type => Integer, :default => 0
   field :current_sign_in_at, :type => Time
   field :last_sign_in_at,    :type => Time
   field :current_sign_in_ip, :type => String
   field :last_sign_in_ip,    :type => String
+
+  field :deleted_at,         :type => Time
 
   field :uid,                :type => String
   field :provider,           :type => String    # e.g. 'facebook', 'google_oauth2', 'zooniverse'
@@ -36,7 +41,7 @@ class User
   field :profile_url,        :type => String    # URI of user profile, if any
   
   field :status,             :type => String, :default => 'active'
-  field :role,               :type => String, :default => 'user'  # user, admin, team
+  field :role,               :type => String, :default => 'user'  # user, admin, team, bot
   field :guest,              :type => Boolean, :default => false
   field :tutorial_complete,  :type => Boolean, :default => false
 
@@ -57,6 +62,21 @@ class User
   # field :failed_attempts, :type => Integer, :default => 0 # Only if lock strategy is :failed_attempts
   # field :unlock_token,    :type => String # Only if unlock strategy is :email or :both
   # field :locked_at,       :type => Time
+  
+  # Ruby uses a CookieStore for storing the session,
+  # restoring a cookie, restores a session.
+  # https://www.acunetix.com/vulnerabilities/web/ruby-on-rails-cookiestore-session-cookie-persistence/
+  # To prevent that, a session token is set and used
+  # to check, this also means that it is only to run this application
+  # on a single device/browser from the same session.
+  # https://github.com/heartcombo/devise/issues/3031
+  def authenticatable_salt
+    "#{super}#{session_token}"
+  end
+
+  def invalidate_all_sessions!
+    self.session_token = SecureRandom.hex
+  end
 
   def tutorial_complete!
     self.tutorial_complete = true
@@ -100,11 +120,11 @@ class User
   # Assigns role=team if email is in team_emails
   def apply_configured_user_role
     # Make admin?
-    if email == Project.current.admin_email
+    if email.downcase == Project.current.admin_email.downcase
       update_attribute :role, 'admin'
 
     # Make the team?
-    elsif Project.current.team_emails.include? email
+    elsif Project.current.team_emails.map(&:downcase).include? email.downcase
       update_attribute :role, 'team'
     end
   end
@@ -121,6 +141,13 @@ class User
     role == 'admin'
   end
 
+  def self.find_by_password(email, password)
+    if user = self.find_by({email: email.downcase})
+      user.valid_password?(password) ? user : nil
+    else
+      nil
+    end
+  end
 
   def self.find_for_oauth(access_token, signed_in_resource=nil)
 
@@ -190,7 +217,6 @@ class User
 
   def self.auth_providers
     providers = API::Application.config.auth_providers
-
     providers.map do |p|
       case p
       when 'facebook'
@@ -200,6 +226,11 @@ class User
       when 'zooniverse'
         { id: p, path: '/users/auth/zooniverse', name: 'Zooniverse' }
       end
+    end
+    if Project.current.local_login
+      providers + [{ id: 'user', path: '/#/login', name: Project.current.local_login}]
+    else
+      providers
     end
   end
 
@@ -221,5 +252,4 @@ class User
       h
     end
   end
-
 end
