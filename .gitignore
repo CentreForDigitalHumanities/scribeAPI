@@ -82,6 +82,13 @@ pickle-email-*.html
 # vim artifacts
 **.swp
 
+# Visual Studio Code artifacts
+.vscode/**/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
 # Environment files that may contain sensitive data
 .env
 .powenv

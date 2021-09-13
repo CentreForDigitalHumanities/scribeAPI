@@ -87,6 +87,10 @@ class FinalSubjectSet
   def self.assert_for_set(set, rebuild=false)
     # If final_subject_set record was built after most recent generated subject, consider skipping
     skip_update = false
+
+    # Store the current time, if new data is entered after this
+    # check, the results should be updated again next time
+    check_time = Time.now
     if ! rebuild && (final_ss = find_by(subject_set:set))
       subjs_updated = set.subjects.max(:updated_at)
       skip_update = final_ss.updated_at > subjs_updated
@@ -94,15 +98,18 @@ class FinalSubjectSet
     inst = find_or_create_by subject_set: set
     inst.project = set.project
     inst.meta_data = set.meta_data
-    if !skip_update
+    if skip_update
+      Rails.logger.info "SKIPPING subject set: #{set.key} (last updated #{subjs_updated})"
+    else
+      Rails.logger.info "Updating subject set: #{set.key}"
       inst.update_subjects
       inst.build_search_terms
-      inst.updated_at = Time.now
+      inst.updated_at = check_time
     end
     # rebuild the export document, in case the export specification changed
     # but no new classifications were added
     inst.build_export_document
-    Rails.logger.info "Saving final subject set: #{inst.id}"
+    Rails.logger.info "Saving final subject set: #{inst.id} (#{set.key})"
     inst.save! 
   end
 
