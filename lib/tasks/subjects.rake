@@ -15,6 +15,41 @@ namespace :subjects do
     project
   end
 
+  def hide_subjects(subject_set, file_path, hide)
+    if hide == "1"
+      complete_statuses = ["bad", "retired", "complete", "contentious"]
+      hide_subjects = subject_set.subjects.where(
+        "location.standard" => file_path,
+        "status" => { "$nin" => complete_statuses },
+        "meta_data.hide" => { "$ne" =>  "1" })
+      show_subjects = subject_set.subjects.where(
+        "location.standard" => file_path,
+        "status" => { "$in" => complete_statuses },
+        "meta_data.hide" => "1")
+    else
+      hide_subjects = []
+      show_subjects = subject_set.subjects.where(
+        "location.standard" => file_path,
+        "hide" => "1")
+    end
+
+    if show_subjects.count > 0
+      puts "Show #{show_subjects.count} previously hidden subject(s)"
+      show_subjects.each do |subject|
+        subject.meta_data['hide'] = nil
+        subject.save
+      end
+    end
+
+    if hide_subjects.count > 0
+      puts "Hide #{hide_subjects.count} subject(s)"
+      hide_subjects.each do |subject|
+        subject.meta_data['hide'] = "1"
+        subject.save
+      end
+    end
+  end
+
   task :load_groups, [:project_key] => :environment do |task, args|
     project_key = args[:project_key]
     subjects_dir = Rails.root.join('project', project_key, 'subjects')
@@ -93,8 +128,8 @@ namespace :subjects do
       puts "    Adding subject set: #{set_key} (#{file_hash})"
       subject_set = group.subject_sets.find_or_create_by key: set_key
       if file_hash == subject_set.file_hash
-        puts "      - skipped subjects, file hash unchanged"
-        next
+       puts "      - skipped subjects, file hash unchanged"
+       next
       end
       subject_set.update_attributes({
         name: name,
@@ -140,21 +175,28 @@ namespace :subjects do
             thumbnail: subj['thumbnail']
           },
           workflow: mark_workflow,
-          meta_data: meta_data,
+          meta_data: meta_data.merge({"hide" => subj['hide'] }),
           width: width,
           height: height,
           order: order,
           group: group
         })
+        if meta_data['hide'] == "1" && subj['hide'] != "1"
+          puts "Parts of subject set not hidden - show subject set!"
+          meta_data['hide'] = nil
+        end
         if new_subject
           subject.activate!
           puts "Added new subject: #{subject.location[:standard]}"
+        else
+          hide_subjects(subject_set, subj['file_path'], subj['hide'])
         end
       end
 
       puts "      - saved subject set file hash #{file_hash}"
       subject_set.update_attributes({
-        file_hash: file_hash
+        file_hash: file_hash,
+        meta_data: meta_data
       })
 
     end
