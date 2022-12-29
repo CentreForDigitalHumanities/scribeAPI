@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/131759256.svg)](https://zenodo.org/badge/latestdoi/131759256)
+
 > **Warning**
 
 > This project is experimental and not well supported.
