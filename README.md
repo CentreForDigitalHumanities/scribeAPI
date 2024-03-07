@@ -10,6 +10,15 @@
 
 This fork by the [Digital Humanities Lab at Utrecht University](https://dig.hum.uu.nl/) has additional functionality and updated dependencies and was worked on for the [CEMROL crowd-sourcing project](https://skillnet.nl/cemrol/).
 
+## Skillnet/CEMROL
+
+This project has finished and the application is no longer available for use. If you want, you can get the data here:
+
+* [Database Dump](https://skillnet.hum.uu.nl/data.tar.xz) (redacted)
+* [Export of the Results](https://skillnet.hum.uu.nl/scribe-skillnet-2024-02-29.tar.gz)
+
+[Contact us](https://cdh.uu.nl/contact) at the Centre for Digital Humanities if you have any questions about this project.
+
 ## For Project Creators
 
 Are you an organization or individual interested in using Scribe for your next crowdsourced transcription project? Start here!
